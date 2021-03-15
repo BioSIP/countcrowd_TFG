@@ -1,3 +1,20 @@
+#DEJAR LOS MODELOS EN LA CARPETA TAL CUAL LA TENÍAN ELLOS PARA IMPORTAR EL QUE HAGA FALTA.
+
+
+from easydict import EasyDict as edict
+import os
+import numpy as np
+import torch
+from torch import optim
+from torch.autograd import Variable
+from torch.optim.lr_scheduler import StepLR
+import torch.nn as nn
+import torch.nn.functional as F
+import pdb
+import argparse
+import time
+import matplotlib.pyplot as pyplot
+
 #Declaro la variable global cfg con edict para ir añadiéndole atributos sobre la marcha:
 cfg = edict()
 cfg_data = edict() 
@@ -37,8 +54,7 @@ def config():
 	#cfg.PRE_GCC_MODEL = 'path to model' # path to model
 
 
-
-	#No sé para qué sirve exactamente:
+    #Para poder continuar el training si se interrumpe:
 	cfg.RESUME = False # contine training
 	cfg.RESUME_PATH = '../trained_models/exp/image-noise-0.2-25-denoise-audio-wo_AC_CSRNet_1e-05/all_ep_274_mae_29.8_mse_48.5.pth' #
 
@@ -138,6 +154,9 @@ def setting():
 
 	cfg_data.VAL_BATCH_SIZE = 1  # must be 1
 
+#EJECUTAMOS LOS SETTINGS Y LOS CONFIGS:
+setting()
+config()
 
 #La clase que importa el modelo (Usada en la clase Tester):
 class CrowdCounter(nn.Module):
@@ -177,22 +196,23 @@ class CrowdCounter(nn.Module):
 
         self.model_name = model_name
 
+        #Se asigna a self.CNN la clase con el modelo de la red:
         self.CCN = net()
 
 
 		#Si hay GPUs:
         if device == 'True':
-	        if len(gpus)>1:
-	        	#Multiples GPU
-	            self.CCN = torch.nn.DataParallel(self.CCN, device_ids=gpus).cuda()
-	        else:
-	        	#1 GPU
-	            self.CCN=self.CCN.cuda()
-	        	self.loss_mse_fn = nn.MSELoss().cuda()
+            if len(gpus)>1:
+	           #Multiples GPU
+               self.CCN = torch.nn.DataParallel(self.CCN, device_ids=gpus).cuda()
+            else:
+	       #1 GPU
+                self.CCN=self.CCN.cuda()
+                self.loss_mse_fn = nn.MSELoss().cuda()
 
 	    #Si no hay GPUs, lo hacemos con la CPU:
         else:
-        	self.loss_mse_fn = nn.MSELoss()
+            self.loss_mse_fn = nn.MSELoss()
 
 
 
@@ -201,27 +221,31 @@ class CrowdCounter(nn.Module):
         return self.loss_mse
     
     def forward(self, img, gt_map):   
-    	#¿Dónde está aquí la estructura de las capas del modelo y eso?                            
+    	#El modelo de la red se importa desde un fichero externo dependiendo de la red que escojamos.  
+
+        #En el forward, se pasa como parámetro la imágen y se calcula el MSE. Luego, se devuelve el density map predicho:                       
         density_map = self.CCN(img)                          
+        #GT= Ground-Truth --> gt_map = Mapa de densidad original
         self.loss_mse= self.build_loss(density_map.squeeze(), gt_map.squeeze())               
         return density_map
     
+    #Calcula el MSE:
     def build_loss(self, density_map, gt_data):
         loss_mse = self.loss_mse_fn(density_map, gt_data)  
         return loss_mse
 
+    #ESTO EN UN PRINCIPIO NO SE USA y no sé para qué es¿?:
+    '''
     def test_forward(self, img):                               
         density_map = self.CCN(img)                    
         return density_map
-
-
+    '''
 
 
 #La clase que llevará nuestro entrenamiento:
 class Tester():
 
 	#Método para inicializar la clase (no hace falta llamarlo, se inicializa solo):
-	#¿Para qué es pwd, sirve para algo, se puede quitar?
     def __init__(self, dataloader, cfg_data, pwd):
 
 
@@ -249,24 +273,36 @@ class Tester():
         self.pwd = pwd
         self.net_name = cfg.NET
 
-        ############################################################################# ME HE QUEDADO POR AQUÍ --> ¡Lo de abajo es copiado!
-
+        #Ejecutamos el contador de personas con la red escogida:
         self.net = CrowdCounter(cfg.GPU_ID, self.net_name)  #.cuda()
+
+        #Se usa el optimizador Adam:
         self.optimizer = optim.Adam(self.net.CCN.parameters(), lr=cfg.LR, weight_decay=1e-4)
         # self.optimizer = optim.SGD(self.net.CCN.parameters(), cfg.LR, momentum=0.9, weight_decay=5e-4)
-        self.scheduler = StepLR(self.optimizer, step_size=cfg.NUM_EPOCH_LR_DECAY, gamma=cfg.LR_DECAY)
 
+        #Usamos un tipo scheduler para ir ajustando el Learning Rate (LR)
+        self.scheduler = StepLR(self.optimizer, step_size=cfg.NUM_EPOCH_LR_DECAY, gamma=cfg.LR_DECAY) 
+
+        #Para guardar las estadísticas y verlas más tarde:
         self.train_record = {'best_mae': 1e20, 'best_mse': 1e20, 'best_model_name': ''}
         self.timer = {'iter time': Timer(), 'train time': Timer(), 'val time': Timer()}
 
         self.epoch = 0
         self.i_tb = 0
 
+    
+        #NO USAREMOS GCC EN PRINCIPIO:
+        '''
         if cfg.PRE_GCC:
             self.net.load_state_dict(torch.load(cfg.PRE_GCC_MODEL))
 
+        '''
+
+        #Qué hace esto exactamente?
         self.train_loader, self.val_loader, self.test_loader, self.restore_transform = dataloader()
 
+        #Si se ha interrumpido el training, se intenta retomar desde donde se dejó:
+        #¿SI SALIMOS DE LA CLASE TESTER, SE PODRÁ RETOMAR EL TRAINING LUEGO?
         if cfg.RESUME:
             # latest_state = torch.load(cfg.RESUME_PATH)
             # self.net.load_state_dict(latest_state['net'])
@@ -282,10 +318,14 @@ class Tester():
             try:
                 self.net.load_state_dict(latest_state)
             except:
+                #Si curre un error al intentar cargar los datos anteriores para retomar el training:
+                #¿QUÉ HACE ESTOE EXACTAMENTE?????????????????????????????????????
                 self.net.load_state_dict({k.replace('module.', ''): v for k, v in latest_state.items()})
 
         # self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, 'exp', resume=cfg.RESUME)
 
+
+    #¿Por qué no usa directamente test_V1????????????????????????????????????????
     def forward(self):
 
         self.test_V1()
@@ -293,41 +333,58 @@ class Tester():
 
     def test_V1(self):  # test_v1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
 
+        #Para apagar partes que no interesan durante el test (como Dropout Layers o BatchNorm Layers):
+        #¿PERO PARA QUÉ EXACTAMENTE EN NUESTRO CASO?:
         self.net.eval()
 
+        #Todas las estadísticas de este tipo son del tipo AverageMeter:
         losses = AverageMeter()
         maes = AverageMeter()
         mses = AverageMeter()
 
+       
         for vi, data in enumerate(self.val_loader, 0):
+            #Nos va a mostrar el número por donde va la data guardándose en memoria:
             print(vi)
+            #Separamos la data en imágenes, ground-truth maps y audios:
             img = data[0]
             gt_map = data[1]
             audio_img = data[2]
 
+            #Si torch.no_grad usa junto con el net.eval() para apagar cosas que no interesan al hacer test.
+            #Apaga gradientes de computación:
+            #¿PARA QUÉ????¿PARA NO APRENDER DEL TEST??
             with torch.no_grad():
+                #¿QUÉ HACE VARIABLE()????????????????????
                 img = Variable(img) #.cuda()
                 gt_map = Variable(gt_map) #.cuda()
                 audio_img = Variable(audio_img) #.cuda()
 
+                #Si la red que hemos escogido trabaja también con audio, lo metemos junto con la imagen en la red:
+                #SE SACA UN MAPA PREDICHO CON LA ESTRUCTURA DE LA RED:
                 if 'Audio' in self.net_name:
                     pred_map = self.net([img, audio_img], gt_map)
                 else:
                     pred_map = self.net(img, gt_map)
 
+                #¿PARA QUÉ ES NUMPY??????????????¿Que hace esto?¿Cargar la info del mapa de densidad?
                 pred_map = pred_map.data.cpu().numpy()
                 gt_map = gt_map.data.cpu().numpy()
 
+
+                #Para cada mapa predicho se calculan el número de cabezas (personas) en la foto predicho y el original (y se dividen por cfg_data.LOG_PARA = 100 en este caso):
                 for i_img in range(pred_map.shape[0]):
                     pred_cnt = np.sum(pred_map[i_img]) / self.cfg_data.LOG_PARA
                     gt_count = np.sum(gt_map[i_img]) / self.cfg_data.LOG_PARA
 
+                    #Actualizamos las pérdidas, MAE Y MSE para cada mapa:
                     losses.update(self.net.loss.item())
                     maes.update(abs(gt_count - pred_cnt))
                     mses.update((gt_count - pred_cnt) * (gt_count - pred_cnt))
                 # if vi == 0:
                 #     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
 
+                #Guardamos resultados:
                 save_img_name = 'val-' + str(vi) + '.jpg'
                 raw_img = self.restore_transform(img.data.cpu()[0, :, :, :])
                 log_mel = audio_img.data.cpu().numpy()
@@ -344,6 +401,8 @@ class Tester():
                               pred_map[0, 0, :, :],
                               cmap='jet')
 
+
+        #Hacemos una media de las estadísticas de todas las predicciones:
         mae = maes.avg
         mse = np.sqrt(mses.avg)
         loss = losses.avg
@@ -353,4 +412,167 @@ class Tester():
         # self.writer.add_scalar('test_mse', mse, self.epoch + 1)
         print('test_mae: %.5f, test_mse: %.5f, test_loss: %.5f' % (mae, mse, loss))
 
+         ############################################################################# ME HE QUEDADO POR AQUÍ --> ¡Lo de abajo es copiado!
+
+def loading_data():
+    mean_std = cfg_data.MEAN_STD
+    log_para = cfg_data.LOG_PARA
+    factor = cfg_data.LABEL_FACTOR
+    train_main_transform = own_transforms.Compose([
+        own_transforms.RandomHorizontallyFlip()
+    ])
+    img_transform = standard_transforms.Compose([
+        standard_transforms.ToTensor(),
+        standard_transforms.Normalize(*mean_std)
+    ])
+    gt_transform = standard_transforms.Compose([
+        own_transforms.GTScaleDown(factor),
+        own_transforms.LabelNormalize(log_para)
+    ])
+    restore_transform = standard_transforms.Compose([
+        own_transforms.DeNormalize(*mean_std),
+        standard_transforms.ToPILImage()
+    ])
+
+    if cfg_data.IS_CROSS_SCENE:
+        train_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_train',
+                       aud_path=cfg_data.AUDIO_PATH,
+                       mode='train', main_transform=train_main_transform, img_transform=img_transform,
+                       gt_transform=gt_transform, is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                       noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE
+                       )
+    else:
+        train_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/train',
+                       aud_path=cfg_data.AUDIO_PATH,
+                       mode='train', main_transform=train_main_transform, img_transform=img_transform,
+                       gt_transform=gt_transform, is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                       noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
+                       black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
+                       )
+    train_loader = None
+    if cfg_data.TRAIN_BATCH_SIZE == 1:
+        train_loader = DataLoader(train_set, batch_size=1, num_workers=8, shuffle=True, drop_last=True)
+    elif cfg_data.TRAIN_BATCH_SIZE > 1:
+        train_loader = DataLoader(train_set, batch_size=cfg_data.TRAIN_BATCH_SIZE, num_workers=8,
+                                  collate_fn=AC_collate, shuffle=True, drop_last=True)
+
+    if cfg_data.IS_CROSS_SCENE:
+        val_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_val',
+                     aud_path=cfg_data.AUDIO_PATH,
+                     mode='val', main_transform=None, img_transform=img_transform, gt_transform=gt_transform,
+                     is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                     noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE
+                     )
+    else:
+        val_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/val',
+                     aud_path=cfg_data.AUDIO_PATH,
+                     mode='val', main_transform=None, img_transform=img_transform, gt_transform=gt_transform,
+                     is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                     noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
+                     black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
+                     )
+    val_loader = DataLoader(val_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
+
+    if cfg_data.IS_CROSS_SCENE:
+        test_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_test',
+                      aud_path=cfg_data.AUDIO_PATH,
+                     mode='test', main_transform=None, img_transform=img_transform, gt_transform=gt_transform,
+                     is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                     noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE
+                     )
+    else:
+        test_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/test',
+                      aud_path=cfg_data.AUDIO_PATH,
+                      mode='test', main_transform=None, img_transform=img_transform, gt_transform=gt_transform,
+                      is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
+                      noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
+                      black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
+                      )
+    test_loader = DataLoader(test_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
+
+    return train_loader, val_loader, test_loader, restore_transform
+
+
+if __name__ == '__main__':
+    train_loader, val_loader, test_loader, restore_transform = loading_data()
+
+    for i, data in enumerate(train_loader):
+        im = data[0]
+        den = data[1]
+        aud = data[2]
+        print('Training dataset', im.shape, den.shape, aud.shape, den.sum(-1).sum(-1)/100)
+        print(im)
+
+    for i, data in enumerate(val_loader):
+        im = data[0]
+        den = data[1]
+        aud = data[2]
+        print('Validation dataset', im.shape, den.shape, aud.shape, den.sum()/100)
+
+
+def Test():
+  
+  
+    #------------prepare enviroment------------
+    #¿QUÉ HACE ESTO????
+    '''
+    seed = cfg.SEED
+    if seed is not None:
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        torch.manual_seed(seed) #cuda
+
+    cfg.GPU_ID = [0,1]
+    gpus = cfg.GPU_ID
+    if len(gpus)==1:
+        torch.cuda.set_device(gpus[0])
+
+    torch.backends.cudnn.benchmark = True
+    '''
+
+    #Solo usaremos 1 dataset, lo comento:
+    '''
+        #------------prepare data loader------------
+    data_mode = cfg.DATASET
+    if data_mode is 'SHHA':
+        from datasets.SHHA.loading_data import loading_data
+        from datasets.SHHA.setting import cfg_data
+    elif data_mode is 'SHHB':
+        from datasets.SHHB.loading_data import loading_data
+        from datasets.SHHB.setting import cfg_data
+    elif data_mode is 'QNRF':
+        from datasets.QNRF.loading_data import loading_data
+        from datasets.QNRF.setting import cfg_data
+    elif data_mode is 'UCF50':
+        from datasets.UCF50.loading_data import loading_data
+        from datasets.UCF50.setting import cfg_data
+    elif data_mode is 'WE':
+        from datasets.WE.loading_data import loading_data
+        from datasets.WE.setting import cfg_data
+    elif data_mode is 'GCC':
+        from datasets.GCC.loading_data import loading_data
+        from datasets.GCC.setting import cfg_data
+    elif data_mode is 'Mall':
+        from datasets.Mall.loading_data import loading_data
+        from datasets.Mall.setting import cfg_data
+    elif data_mode is 'UCSD':
+        from datasets.UCSD.loading_data import loading_data
+        from datasets.UCSD.setting import cfg_data
+    elif data_mode is 'AC':  # Qingzhong
+        from datasets.AC.loading_data import loading_data
+        from datasets.AC.setting import cfg_data
+    '''
+
+
+    #¿Qué muestra esto?
+    print(cfg, cfg_data)
+
+    #------------Prepare Trainer------------
+    net = cfg.NET
+
+
+    #------------Start Training------------
+    pwd = os.path.split(os.path.realpath(__file__))[0]
+    cc_trainer = Tester(loading_data, cfg_data, pwd)
+    cc_trainer.forward()
 
