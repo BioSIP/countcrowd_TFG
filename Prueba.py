@@ -13,7 +13,15 @@ import torch.nn.functional as F
 import pdb
 import argparse
 import time
+from timeit import Timer
 import matplotlib.pyplot as pyplot
+import numbers
+import random
+from PIL import Image, ImageOps, ImageFilter
+import torchvision.transforms as standard_transforms
+from torch.utils.data import DataLoader
+import shutil
+
 
 #Declaro la variable global cfg con edict para ir añadiéndole atributos sobre la marcha:
 cfg = edict()
@@ -56,7 +64,7 @@ def config():
 
     #Para poder continuar el training si se interrumpe:
 	cfg.RESUME = False # contine training
-	cfg.RESUME_PATH = '../trained_models/exp/image-noise-0.2-25-denoise-audio-wo_AC_CSRNet_1e-05/all_ep_274_mae_29.8_mse_48.5.pth' #
+	cfg.RESUME_PATH = '/Users/cristinareyes/Desktop/TFG/GIT/countcrowd_TFG/trained_models/exp/image-noise-0.2-25-denoise-audio-wo_AC_CSRNet_1e-05/all_ep_274_mae_29.8_mse_48.5.pth' #
 
 
 
@@ -107,7 +115,7 @@ def config():
 
 	
 
-	cfg.EXP_PATH = '../trained_models/exp' # the path of logs, checkpoints, and current codes
+	cfg.EXP_PATH = '/Users/cristinareyes/Desktop/TFG/GIT/countcrowd_TFG/trained_models/exp' # the path of logs, checkpoints, and current codes
 
 
 	#------------------------------VAL------------------------
@@ -164,35 +172,35 @@ class CrowdCounter(nn.Module):
         super(CrowdCounter, self).__init__()        
 
         if model_name == 'AlexNet':
-            from .SCC_Model.AlexNet import AlexNet as net        
+            from models.SCC_Model.AlexNet import AlexNet as net        
         elif model_name == 'VGG':
-            from .SCC_Model.VGG import VGG as net
+            from models.SCC_Model.VGG import VGG as net
         elif model_name == 'VGG_DECODER':
-            from .SCC_Model.VGG_decoder import VGG_decoder as net
+            from models.SCC_Model.VGG_decoder import VGG_decoder as net
         elif model_name == 'MCNN':
-            from .SCC_Model.MCNN import MCNN as net
+            from models.SCC_Model.MCNN import MCNN as net
         elif model_name == 'CSRNet':
-            from .SCC_Model.CSRNet import CSRNet as net
+            from models.SCC_Model.CSRNet import CSRNet as net
         elif model_name == 'Res50':
-            from .SCC_Model.Res50 import Res50 as net
+            from models.SCC_Model.Res50 import Res50 as net
         elif model_name == 'Res101':
-            from .SCC_Model.Res101 import Res101 as net            
+            from models.SCC_Model.Res101 import Res101 as net            
         elif model_name == 'Res101_SFCN':
-            from .SCC_Model.Res101_SFCN import Res101_SFCN as net
+            from models.SCC_Model.Res101_SFCN import Res101_SFCN as net
         elif model_name == 'CSRNet_IN':  # Qingzhong
-            from .SCC_Model.CSRNet_IN import CSRNet as net
+            from models.SCC_Model.CSRNet_IN import CSRNet as net
         elif model_name == 'CSRNet_Audio':  # Qingzhong
-            from .SCC_Model.CSRWaveNet import CSRNet as net
+            from models.SCC_Model.CSRWaveNet import CSRNet as net
         elif model_name == 'CANNet':
-            from .SCC_Model.CACC import CANNet as net
+            from models.SCC_Model.CACC import CANNet as net
         elif model_name == 'CANNet_Audio':
-            from .SCC_Model.CANWaveNet import CANNet as net
+            from models.SCC_Model.CANWaveNet import CANNet as net
         elif model_name == 'CSRNet_Audio_Concat':
-            from .SCC_Model.CSRWaveNet import CSRNetConcat as net
+            from models.SCC_Model.CSRWaveNet import CSRNetConcat as net
         elif model_name == 'CANNet_Audio_Concat':
-            from.SCC_Model.CANWaveNet import CANNetConcat as net
+            from models.SCC_Model.CANWaveNet import CANNetConcat as net
         elif model_name == 'CSRNet_Audio_Guided':
-            from .SCC_Model.CSRWaveNet import CSRNetGuided as net
+            from models.SCC_Model.CSRWaveNet import CSRNetGuided as net
 
         self.model_name = model_name
 
@@ -240,6 +248,24 @@ class CrowdCounter(nn.Module):
         density_map = self.CCN(img)                    
         return density_map
     '''
+#MÉTODO NECESARIO PARA TESTER:
+class AverageMeter(object):
+    """Computes and stores the average and current value"""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.cur_val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, cur_val):
+        self.cur_val = cur_val
+        self.sum += cur_val
+        self.count += 1
+        self.avg = self.sum / self.count
 
 
 #La clase que llevará nuestro entrenamiento:
@@ -249,7 +275,7 @@ class Tester():
     def __init__(self, dataloader, cfg_data, pwd):
 
 
-    	#Para guardar los resultados del entrenamiento (si no existe la carpeya, se crea, y si no, se reescribe (se borra y se vuelve a crear)):
+    	#Para guardar los resultados del test (si no existe la carpeya, se crea, y si no, se reescribe (se borra y se vuelve a crear)):
         self.save_path = os.path.join('/Users/cristinareyes/Desktop/TFG/Resultados',
                                       str(cfg.NET) + '-' + 'noise-' + str(cfg_data.IS_NOISE) + '-' + str(
                                           cfg_data.BRIGHTNESS) +
@@ -273,7 +299,7 @@ class Tester():
         self.pwd = pwd
         self.net_name = cfg.NET
 
-        #Ejecutamos el contador de personas con la red escogida:
+        #Guardamos como "net" el contador de personas con la red escogida:
         self.net = CrowdCounter(cfg.GPU_ID, self.net_name)  #.cuda()
 
         #Se usa el optimizador Adam:
@@ -298,11 +324,11 @@ class Tester():
 
         '''
 
-        #Qué hace esto exactamente?
+        #Llama a la función dataloader(), que carga en estas variables los conjuntos de data, entre otras cosas:
         self.train_loader, self.val_loader, self.test_loader, self.restore_transform = dataloader()
 
-        #Si se ha interrumpido el training, se intenta retomar desde donde se dejó:
-        #¿SI SALIMOS DE LA CLASE TESTER, SE PODRÁ RETOMAR EL TRAINING LUEGO?
+        #Si se ha interrumpido el test, se intenta retomar desde donde se dejó:
+        #¿SI SALIMOS DE LA CLASE, SE PODRÁ RETOMAR EL TEST LUEGO?
         if cfg.RESUME:
             # latest_state = torch.load(cfg.RESUME_PATH)
             # self.net.load_state_dict(latest_state['net'])
@@ -384,7 +410,7 @@ class Tester():
                 # if vi == 0:
                 #     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
 
-                #Guardamos resultados:
+                #Guardamos resultados(?):
                 save_img_name = 'val-' + str(vi) + '.jpg'
                 raw_img = self.restore_transform(img.data.cpu()[0, :, :, :])
                 log_mel = audio_img.data.cpu().numpy()
@@ -412,36 +438,181 @@ class Tester():
         # self.writer.add_scalar('test_mse', mse, self.epoch + 1)
         print('test_mae: %.5f, test_mse: %.5f, test_loss: %.5f' % (mae, mse, loss))
 
-         ############################################################################# ME HE QUEDADO POR AQUÍ --> ¡Lo de abajo es copiado!
+  
+
+#CLASES PARA LAS TRANSFORMACIONES DE IMAGEN Y ETIQUETAS (no lo he mirado mucho en profundidad):
+class Compose(object):
+    def __init__(self, transforms):
+        self.transforms = transforms
+
+    def __call__(self, img, mask, bbx=None):
+        if bbx is None:
+            for t in self.transforms:
+                img, mask = t(img, mask)
+            return img, mask
+        for t in self.transforms:
+            img, mask, bbx = t(img, mask, bbx)
+        return img, mask, bbx
+
+class RandomHorizontallyFlip(object):
+    def __call__(self, img, mask, bbx=None):
+        if random.random() < 0.5:
+            if bbx is None:
+                return img.transpose(Image.FLIP_LEFT_RIGHT), mask.transpose(Image.FLIP_LEFT_RIGHT)
+            w, h = img.size
+            xmin = w - bbx[:,3]
+            xmax = w - bbx[:,1]
+            bbx[:,1] = xmin
+            bbx[:,3] = xmax
+            return img.transpose(Image.FLIP_LEFT_RIGHT), mask.transpose(Image.FLIP_LEFT_RIGHT), bbx
+        if bbx is None:
+            return img, mask
+        return img, mask, bbx
+
+class DeNormalize(object):
+    def __init__(self, mean, std):
+        self.mean = mean
+        self.std = std
+
+    def __call__(self, tensor):
+        for t, m, s in zip(tensor, self.mean, self.std):
+            t.mul_(s).add_(m)
+        return tensor
+
+class LabelNormalize(object):
+    def __init__(self, para):
+        self.para = para
+
+    def __call__(self, tensor):
+        # tensor = 1./(tensor+self.para).log()
+        tensor = torch.from_numpy(np.array(tensor))
+        tensor = tensor*self.para
+        return tensor
+
+class GTScaleDown(object):
+    def __init__(self, factor=8):
+        self.factor = factor
+
+    def __call__(self, img):
+        w, h = img.size
+        if self.factor==1:
+            return img
+        tmp = np.array(img.resize((int(w/self.factor), int(h/self.factor)), Image.BICUBIC))*self.factor*self.factor
+        img = Image.fromarray(tmp)
+        return img
+
+#Métodos necesarios para loading_data():
+def AC_collate(batch):
+    # @GJY
+    r"""Puts each data field into a tensor with outer dimension batch size"""
+
+    transposed = list(zip(*batch))  # imgs, dens and raw audios
+    imgs, dens, aud = [transposed[0], transposed[1], transposed[2]]
+
+    error_msg = "batch must contain tensors; found {}"
+    if isinstance(imgs[0], torch.Tensor) and isinstance(dens[0], torch.Tensor):
+
+        # min_ht, min_wd = get_min_size(imgs)
+
+        # print min_ht, min_wd
+
+        # pdb.set_trace()
+
+        cropped_imgs = []
+        cropped_dens = []
+        cropped_auds = []
+        for i_sample in range(len(batch)):
+            # _img, _den = random_crop(imgs[i_sample], dens[i_sample], [min_ht, min_wd])
+            cropped_imgs.append(imgs[i_sample])
+            cropped_dens.append(dens[i_sample])
+            cropped_auds.append(aud[i_sample])
+
+        cropped_imgs = torch.stack(cropped_imgs, 0, out=share_memory(cropped_imgs))
+        cropped_dens = torch.stack(cropped_dens, 0, out=share_memory(cropped_dens))
+        cropped_auds = torch.stack(cropped_auds, 0, out=share_memory(cropped_auds))
+
+        return [cropped_imgs, cropped_dens, cropped_auds]
+
+    raise TypeError((error_msg.format(type(batch[0]))))
+
 
 def loading_data():
+
+    #Cargamos todo lo que vamos a usar:
     mean_std = cfg_data.MEAN_STD
     log_para = cfg_data.LOG_PARA
     factor = cfg_data.LABEL_FACTOR
-    train_main_transform = own_transforms.Compose([
-        own_transforms.RandomHorizontallyFlip()
+    train_main_transform =  Compose([
+         RandomHorizontallyFlip()
     ])
     img_transform = standard_transforms.Compose([
         standard_transforms.ToTensor(),
         standard_transforms.Normalize(*mean_std)
     ])
     gt_transform = standard_transforms.Compose([
-        own_transforms.GTScaleDown(factor),
-        own_transforms.LabelNormalize(log_para)
+         GTScaleDown(factor),
+         LabelNormalize(log_para)
     ])
     restore_transform = standard_transforms.Compose([
-        own_transforms.DeNormalize(*mean_std),
+         DeNormalize(*mean_std),
         standard_transforms.ToPILImage()
     ])
 
+
+    train_set=edict()
+    train_set.img_path=cfg_data.IMAGE_PATH
+    train_set.aud_path=cfg_data.AUDIO_PATH
+    train_set.mode='train'
+    train_set.main_transform=train_main_transform
+    train_set.img_transform=img_transform
+    train_set.gt_transform=gt_transform
+    train_set.is_noise=cfg_data.IS_NOISE
+    train_set.brightness_decay=cfg_data.BRIGHTNESS
+    train_set.noise_sigma=cfg_data.NOISE_SIGMA
+    train_set.longest_side=cfg_data.LONGEST_SIDE
+
+
+    val_set=edict()
+    val_set.img_path=cfg_data.IMAGE_PATH
+    val_set.aud_path=cfg_data.AUDIO_PATH
+    val_set.mode='val'
+    val_set.main_transform=None
+    val_set.img_transform=img_transform
+    val_set.gt_transform=gt_transform
+    val_set.is_noise=cfg_data.IS_NOISE
+    val_set.brightness_decay=cfg_data.BRIGHTNESS
+    val_set.noise_sigma=cfg_data.NOISE_SIGMA
+    val_set.longest_side=cfg_data.LONGEST_SIDE
+
+    test_set=edict()
+    test_set.img_path=cfg_data.IMAGE_PATH
+    test_set.aud_path=cfg_data.AUDIO_PATH
+    test_set.mode='test'
+    test_set.main_transform=None
+    test_set.img_transform=img_transform
+    test_set.gt_transform=gt_transform
+    test_set.is_noise=cfg_data.IS_NOISE
+    test_set.brightness_decay=cfg_data.BRIGHTNESS
+    test_set.noise_sigma=cfg_data.NOISE_SIGMA
+    test_set.longest_side=cfg_data.LONGEST_SIDE
+
+
     if cfg_data.IS_CROSS_SCENE:
+        '''
         train_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_train',
                        aud_path=cfg_data.AUDIO_PATH,
                        mode='train', main_transform=train_main_transform, img_transform=img_transform,
                        gt_transform=gt_transform, is_noise=cfg_data.IS_NOISE, brightness_decay=cfg_data.BRIGHTNESS,
                        noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE
                        )
+        ''' 
+
+        train_set.den_path=cfg_data.DENSITY_PATH + '/cross_scene_train'
+        val_set.den_path=cfg_data.DENSITY_PATH + '/cross_scene_val'
+        test_set.den_path=cfg_data.DENSITY_PATH + '/cross_scene_test'
+
     else:
+        '''
         train_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/train',
                        aud_path=cfg_data.AUDIO_PATH,
                        mode='train', main_transform=train_main_transform, img_transform=img_transform,
@@ -449,14 +620,39 @@ def loading_data():
                        noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
                        black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
                        )
+        '''
+
+
+        train_set.den_path=cfg_data.DENSITY_PATH + '/train'
+        train_set.black_area_ratio=cfg_data.BLACK_AREA_RATIO
+        train_set.is_random=cfg_data.IS_RANDOM
+        train_set.is_denoise=cfg_data.IS_DENOISE
+
+
+        val_set.den_path=cfg_data.DENSITY_PATH + '/val'
+        val_set.black_area_ratio=cfg_data.BLACK_AREA_RATIO 
+        val_set.is_random=cfg_data.IS_RANDOM
+        val_set.s_denoise=cfg_data.IS_DENOISE
+
+        test_set.den_path=cfg_data.DENSITY_PATH + '/test'
+        test_set.black_area_ratio=cfg_data.BLACK_AREA_RATIO
+        test_set.is_random=cfg_data.IS_RANDOM 
+        test_set.is_denoise=cfg_data.IS_DENOISE
+
+
+
+    #Limpiamos para cargar correctamente aquí:
     train_loader = None
+
     if cfg_data.TRAIN_BATCH_SIZE == 1:
         train_loader = DataLoader(train_set, batch_size=1, num_workers=8, shuffle=True, drop_last=True)
     elif cfg_data.TRAIN_BATCH_SIZE > 1:
         train_loader = DataLoader(train_set, batch_size=cfg_data.TRAIN_BATCH_SIZE, num_workers=8,
                                   collate_fn=AC_collate, shuffle=True, drop_last=True)
 
+    '''
     if cfg_data.IS_CROSS_SCENE:
+
         val_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_val',
                      aud_path=cfg_data.AUDIO_PATH,
                      mode='val', main_transform=None, img_transform=img_transform, gt_transform=gt_transform,
@@ -471,8 +667,11 @@ def loading_data():
                      noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
                      black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
                      )
+    '''
+
     val_loader = DataLoader(val_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
 
+    '''
     if cfg_data.IS_CROSS_SCENE:
         test_set = AC(img_path=cfg_data.IMAGE_PATH, den_path=cfg_data.DENSITY_PATH + '/cross_scene_test',
                       aud_path=cfg_data.AUDIO_PATH,
@@ -488,11 +687,14 @@ def loading_data():
                       noise_sigma=cfg_data.NOISE_SIGMA, longest_side=cfg_data.LONGEST_SIDE,
                       black_area_ratio=cfg_data.BLACK_AREA_RATIO, is_random=cfg_data.IS_RANDOM, is_denoise=cfg_data.IS_DENOISE
                       )
+    '''
+
     test_loader = DataLoader(test_set, batch_size=cfg_data.VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
 
     return train_loader, val_loader, test_loader, restore_transform
 
-
+'''
+#PARA QUÉ ES ESTOO? --> está fuera del método, cuidao --> Tampoco se usa
 if __name__ == '__main__':
     train_loader, val_loader, test_loader, restore_transform = loading_data()
 
@@ -508,7 +710,7 @@ if __name__ == '__main__':
         den = data[1]
         aud = data[2]
         print('Validation dataset', im.shape, den.shape, aud.shape, den.sum()/100)
-
+'''
 
 def Test():
   
@@ -564,15 +766,549 @@ def Test():
     '''
 
 
-    #¿Qué muestra esto?
+    #Muestra todos los parámetros escogidos en Setting() y Config()
     print(cfg, cfg_data)
 
-    #------------Prepare Trainer------------
+    #------------Prepare Tester------------
     net = cfg.NET
 
 
-    #------------Start Training------------
+    #------------Start Test------------
     pwd = os.path.split(os.path.realpath(__file__))[0]
     cc_trainer = Tester(loading_data, cfg_data, pwd)
     cc_trainer.forward()
 
+
+
+
+#Necesario para el método logger():
+def copy_cur_env(work_dir, dst_dir, exception):
+
+    if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
+
+    for filename in os.listdir(work_dir):
+
+        file = os.path.join(work_dir,filename)
+        dst_file = os.path.join(dst_dir,filename)
+
+
+        if os.path.isdir(file) and exception not in filename:
+            shutil.copytree(file, dst_file)
+        elif os.path.isfile(file):
+            shutil.copyfile(file,dst_file)
+
+#Necesario para la clase TRAINER():
+#Crea un fichero de logs:
+def logger(exp_path, exp_name, work_dir, exception, resume=False):
+
+    from tensorboardX import SummaryWriter
+    
+    if not os.path.exists(exp_path):
+        os.mkdir(exp_path)
+    writer = SummaryWriter(exp_path+ '/' + exp_name)
+    log_file = exp_path + '/' + exp_name + '/' + exp_name + '.txt'
+    
+    
+    with open(log_file, 'a') as f:
+        f.write(''.join('cfg.NET = ' + cfg.NET + '\n' 
+        	+ 'cfg.RESUME = ' + str(cfg.RESUME) + '\n'
+        	+ 'cfg.RESUME_PATH =' + cfg.RESUME_PATH + '\n'
+        	+ 'cfg.LR = '+ str(cfg.LR) + '\n'
+        	+ 'cfg.LR_DECAY =' + str(cfg.LR_DECAY) + '\n'
+        	+ 'cfg.LR_DECAY_START =' + str(cfg.LR_DECAY_START) + '\n'
+        	+ 'cfg.NUM_EPOCH_LR_DECAY =' + str(cfg.NUM_EPOCH_LR_DECAY) + '\n'
+        	+ 'cfg.MAX_EPOCH =' + str(cfg.MAX_EPOCH) + '\n'
+        	+ 'cfg.LAMBDA_1 =' + str(cfg.LAMBDA_1) + '\n'
+        	+ 'cfg.SETTINGS =' + cfg.SETTINGS + '\n'
+        	+ 'cfg.EXP_NAME =' + cfg.EXP_NAME + '\n'
+        	+ 'cfg.EXP_PATH =' + cfg.EXP_PATH + '\n'
+        	+ 'cfg.VAL_DENSE_START =' + str(cfg.VAL_DENSE_START) + '\n'
+        	+ 'cfg.VAL_FREQ =' + str(cfg.VAL_FREQ) + '\n'
+        	+ 'cfg.VISIBLE_NUM_IMGS =' + str(cfg.VISIBLE_NUM_IMGS) + '\n'
+        	) + '\n\n\n\n')
+
+    if not resume:
+        copy_cur_env(work_dir, exp_path+ '/' + exp_name + '/code', exception)
+
+
+    return writer, log_file
+
+
+#CLASE PARA ENTRENAR LA RED (SE PARECE MUCHO A TESTER() ):
+class Trainer():
+    def __init__(self, dataloader, cfg_data, pwd):
+
+    	#Guardar los resulstados del train:
+        self.save_path = os.path.join('/Users/cristinareyes/Desktop/TFG/Resultados',
+                                      str(cfg.NET) + '-' + 'noise-' + str(cfg_data.IS_NOISE) + '-' + str(
+                                          cfg_data.BRIGHTNESS) +
+                                      '-' + str(cfg_data.NOISE_SIGMA) + '-' + str(cfg_data.LONGEST_SIDE) + '-' + str(
+                                          cfg_data.BLACK_AREA_RATIO) +
+                                      '-' + str(cfg_data.IS_RANDOM) + '-' + 'denoise-' + str(cfg_data.IS_DENOISE))
+        if not os.path.exists(self.save_path):
+            os.system('mkdir '+self.save_path)
+        else:
+            os.system('rm -rf ' + self.save_path)
+            os.system('mkdir ' + self.save_path)
+
+
+        self.cfg_data = cfg_data
+        self.cfg = cfg
+
+        #Lo deshabilito porque de momento sólo usaremos un dataset:
+        #self.data_mode = cfg.DATASET
+        self.exp_name = cfg.EXP_NAME
+        self.exp_path = cfg.EXP_PATH
+        self.pwd = pwd
+
+        self.net_name = cfg.NET
+        self.net = CrowdCounter(cfg.GPU_ID,self.net_name)	#.cuda()
+        self.optimizer = optim.Adam(self.net.CCN.parameters(), lr=cfg.LR, weight_decay=1e-4)
+        # self.optimizer = optim.SGD(self.net.CCN.parameters(), cfg.LR, momentum=0.9, weight_decay=5e-4)
+        self.scheduler = StepLR(self.optimizer, step_size=cfg.NUM_EPOCH_LR_DECAY, gamma=cfg.LR_DECAY)          
+
+        self.train_record = {'best_mae': 1e20, 'best_mse':1e20, 'best_model_name': ''}
+        self.timer = {'iter time' : Timer(),'train time' : Timer(),'val time' : Timer()} 
+
+        self.epoch = 0
+        self.i_tb = 0
+        
+        #No creo que acabe usando esto:
+        '''
+        if cfg.PRE_GCC:
+            self.net.load_state_dict(torch.load(cfg.PRE_GCC_MODEL))
+
+        self.train_loader, self.val_loader, self.test_loader, self.restore_transform = dataloader()
+		'''
+
+		#Para continuar el entrenamiento si se interrumpe:
+        if cfg.RESUME:
+            latest_state = torch.load(cfg.RESUME_PATH)
+            self.net.load_state_dict(latest_state['net'])
+            self.optimizer.load_state_dict(latest_state['optimizer'])
+            self.scheduler.load_state_dict(latest_state['scheduler'])
+            self.epoch = latest_state['epoch'] + 1
+            self.i_tb = latest_state['i_tb']
+            self.train_record = latest_state['train_record']
+            self.exp_path = latest_state['exp_path']
+            self.exp_name = latest_state['exp_name']
+
+        #Creamos un fichero de logs:
+        self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, 'exp', resume=cfg.RESUME)
+
+########################################################################################################################################################
+    def forward(self):
+
+        # self.validate_V3()
+        for epoch in range(self.epoch,self.cfg.MAX_EPOCH):
+            self.epoch = epoch
+            if epoch > self.cfg.LR_DECAY_START:
+                self.scheduler.step()
+                
+            # training    
+            self.timer['train time'].tic()
+            self.train()
+            self.timer['train time'].toc(average=False)
+
+            print( 'train time: {:.2f}s'.format(self.timer['train time'].diff) )
+            print( '='*20 )
+
+            # validation
+            if epoch%self.cfg.VAL_FREQ==0 or epoch>self.cfg.VAL_DENSE_START:
+                self.timer['val time'].tic()
+
+                #PARA OTROS DATASET:
+                '''
+                if self.data_mode in ['SHHA', 'SHHB', 'QNRF', 'UCF50', 'AC']:  # Qingzhong
+                    self.validate_V1()
+                    self.test_V1()
+                elif self.data_mode is 'WE':
+                    self.validate_V2()
+                elif self.data_mode is 'GCC':
+                    self.validate_V3()
+                '''
+                #Como usamos 'AC':
+                self.validate_V1()
+                self.test_V1()
+
+                self.timer['val time'].toc(average=False)
+                print( 'val time: {:.2f}s'.format(self.timer['val time'].diff) )
+
+
+    def train(self): # training for all datasets
+        self.net.train()
+        for i, data in enumerate(self.train_loader, 0):
+            self.timer['iter time'].tic()
+            img = data[0]
+            gt_map = data[1]
+            audio_img = data[2]
+
+            img = Variable(img)	#.cuda()
+            gt_map = Variable(gt_map)	#.cuda()
+            audio_img = Variable(audio_img) #.cuda()
+
+            self.optimizer.zero_grad()
+            if 'Audio' in self.net_name:
+                pred_map = self.net([img, audio_img], gt_map)
+            else:
+                pred_map = self.net(img, gt_map)
+            loss = self.net.loss
+            loss.backward()
+            self.optimizer.step()
+
+            if (i + 1) % self.cfg.PRINT_FREQ == 0:
+                self.i_tb += 1
+                self.writer.add_scalar('train_loss', loss.item(), self.i_tb)
+                self.timer['iter time'].toc(average=False)
+                print( '[ep %d][it %d][loss %.4f][lr %.4f][%.2fs]' % \
+                        (self.epoch + 1, i + 1, loss.item(), self.optimizer.param_groups[0]['lr']*10000, self.timer['iter time'].diff) )
+                print( '        [cnt: gt: %.1f pred: %.2f]' % (gt_map[0].sum().data/self.cfg_data.LOG_PARA, pred_map[0].sum().data/self.cfg_data.LOG_PARA) )           
+
+
+    def validate_V1(self):# validate_V1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
+
+        self.net.eval()
+        
+        losses = AverageMeter()
+        maes = AverageMeter()
+        mses = AverageMeter()
+
+        if not os.path.exists(self.save_path):
+            os.system('mkdir '+self.save_path)
+        else:
+            os.system('rm -rf ' + self.save_path)
+            os.system('mkdir ' + self.save_path)
+
+        for vi, data in enumerate(self.val_loader, 0):
+            img = data[0]
+            gt_map = data[1]
+            audio_img = data[2]
+
+            with torch.no_grad():
+                img = Variable(img).cuda()
+                gt_map = Variable(gt_map).cuda()
+                audio_img = Variable(audio_img).cuda()
+
+                if 'Audio' in self.net_name:
+                    pred_map = self.net([img, audio_img], gt_map)
+                else:
+                    pred_map = self.net(img, gt_map)
+
+                pred_map = pred_map.data.cpu().numpy()
+                gt_map = gt_map.data.cpu().numpy()
+
+                for i_img in range(pred_map.shape[0]):
+                
+                    pred_cnt = np.sum(pred_map[i_img])/self.cfg_data.LOG_PARA
+                    gt_count = np.sum(gt_map[i_img])/self.cfg_data.LOG_PARA
+
+                    
+                    losses.update(self.net.loss.item())
+                    maes.update(abs(gt_count-pred_cnt))
+                    mses.update((gt_count-pred_cnt)*(gt_count-pred_cnt))
+                if vi==0:
+                    vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
+
+                # print('---------------------val-----------------------')
+                # print('gt_cnt: %.3f, pred_cnt: %.3f'%(gt_count, pred_count))
+                save_img_name = 'val-' + str(vi) + '.jpg'
+                raw_img = self.restore_transform(img.data.cpu()[0, :, :, :])
+                log_mel = audio_img.data.cpu().numpy()
+
+                raw_img.save(os.path.join(self.save_path, 'raw_img' + save_img_name))
+                pyplot.imsave(os.path.join(self.save_path, 'log-mel-map' + save_img_name), log_mel[0, 0, :, :],
+                              cmap='jet')
+
+                pred_save_img_name = 'val-' + str(vi) + '-' + str(pred_cnt) + '.jpg'
+                gt_save_img_name = 'val-' + str(vi) + '-' + str(gt_count) + '.jpg'
+                pyplot.imsave(os.path.join(self.save_path, 'gt-den-map' + '-' + gt_save_img_name), gt_map[0, :, :],
+                              cmap='jet')
+                pyplot.imsave(os.path.join(self.save_path, 'pred-den-map' + '-' + pred_save_img_name),
+                              pred_map[0, 0, :, :],
+                              cmap='jet')
+            
+        mae = maes.avg
+        mse = np.sqrt(mses.avg)
+        loss = losses.avg
+
+        self.writer.add_scalar('val_loss', loss, self.epoch + 1)
+        self.writer.add_scalar('val_mae', mae, self.epoch + 1)
+        self.writer.add_scalar('val_mse', mse, self.epoch + 1)
+
+        self.train_record = update_model(self.net,self.optimizer,self.scheduler,self.epoch,self.i_tb,self.exp_path,self.exp_name, \
+            [mae, mse, loss],self.train_record,self.log_txt)
+        print_summary(self.exp_name,[mae, mse, loss],self.train_record)
+        print('val_mae: %.5f, val_mse: %.5f, val_loss: %.5f' % (mae, mse, loss))
+
+    def test_V1(self):  # test_v1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
+
+        self.net.eval()
+
+        losses = AverageMeter()
+        maes = AverageMeter()
+        mses = AverageMeter()
+
+        for vi, data in enumerate(self.test_loader, 0):
+            img = data[0]
+            gt_map = data[1]
+            audio_img = data[2]
+
+
+
+            with torch.no_grad():
+                img = Variable(img).cuda()
+                gt_map = Variable(gt_map).cuda()
+                audio_img = Variable(audio_img).cuda()
+
+                if 'Audio' in self.net_name:
+                    pred_map = self.net([img, audio_img], gt_map)
+                else:
+                    pred_map = self.net(img, gt_map)
+
+                pred_map = pred_map.data.cpu().numpy()
+                gt_map = gt_map.data.cpu().numpy()
+
+                for i_img in range(pred_map.shape[0]):
+                    pred_cnt = np.sum(pred_map[i_img]) / self.cfg_data.LOG_PARA
+                    gt_count = np.sum(gt_map[i_img]) / self.cfg_data.LOG_PARA
+
+                    losses.update(self.net.loss.item())
+                    maes.update(abs(gt_count - pred_cnt))
+                    mses.update((gt_count - pred_cnt) * (gt_count - pred_cnt))
+                if vi == 0:
+                    vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
+                # print('------------------------test-------------------------')
+                # print('gt_cnt: %.3f, pred_cnt: %.3f' % (gt_count, pred_count))
+
+
+        mae = maes.avg
+        mse = np.sqrt(mses.avg)
+        loss = losses.avg
+
+        self.writer.add_scalar('val_loss', loss, self.epoch + 1)
+        self.writer.add_scalar('test_mae', mae, self.epoch + 1)
+        self.writer.add_scalar('test_mse', mse, self.epoch + 1)
+        print('test_mae: %.5f, test_mse: %.5f, test_loss: %.5f' % (mae, mse, loss))
+
+
+
+	#Es para otros dataset, nosotros no lo usaremos:
+
+    '''
+    def validate_V2(self):# validate_V2 for WE
+
+        self.net.eval()
+
+        losses = AverageCategoryMeter(5)
+        maes = AverageCategoryMeter(5)
+
+        roi_mask = []
+        from datasets.WE.setting import cfg_data 
+        from scipy import io as sio
+        for val_folder in cfg_data.VAL_FOLDER:
+
+            roi_mask.append(sio.loadmat(os.path.join(cfg_data.DATA_PATH,'test',val_folder + '_roi.mat'))['BW'])
+        
+        for i_sub,i_loader in enumerate(self.val_loader,0):
+
+            mask = roi_mask[i_sub]
+            for vi, data in enumerate(i_loader, 0):
+                img, gt_map = data
+
+                with torch.no_grad():
+                    img = Variable(img).cuda()
+                    gt_map = Variable(gt_map).cuda()
+
+                    pred_map = self.net.forward(img,gt_map)
+
+                    pred_map = pred_map.data.cpu().numpy()
+                    gt_map = gt_map.data.cpu().numpy()
+
+                    for i_img in range(pred_map.shape[0]):
+                    
+                        pred_cnt = np.sum(pred_map[i_img])/self.cfg_data.LOG_PARA
+                        gt_count = np.sum(gt_map[i_img])/self.cfg_data.LOG_PARA
+
+                        losses.update(self.net.loss.item(),i_sub)
+                        maes.update(abs(gt_count-pred_cnt),i_sub)
+                    if vi==0:
+                        vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
+            
+        mae = np.average(maes.avg)
+        loss = np.average(losses.avg)
+
+        self.writer.add_scalar('val_loss', loss, self.epoch + 1)
+        self.writer.add_scalar('mae', mae, self.epoch + 1)
+        self.writer.add_scalar('mae_s1', maes.avg[0], self.epoch + 1)
+        self.writer.add_scalar('mae_s2', maes.avg[1], self.epoch + 1)
+        self.writer.add_scalar('mae_s3', maes.avg[2], self.epoch + 1)
+        self.writer.add_scalar('mae_s4', maes.avg[3], self.epoch + 1)
+        self.writer.add_scalar('mae_s5', maes.avg[4], self.epoch + 1)
+
+        self.train_record = update_model(self.net,self.optimizer,self.scheduler,self.epoch,self.i_tb,self.exp_path,self.exp_name, \
+            [mae, 0, loss],self.train_record,self.log_txt)
+        print_WE_summary(self.log_txt,self.epoch,[mae, 0, loss],self.train_record,maes)
+
+
+
+
+
+    def validate_V3(self):# validate_V3 for GCC
+
+        self.net.eval()
+        
+        losses = AverageMeter()
+        maes = AverageMeter()
+        mses = AverageMeter()
+
+        c_maes = {'level':AverageCategoryMeter(9), 'time':AverageCategoryMeter(8),'weather':AverageCategoryMeter(7)}
+        c_mses = {'level':AverageCategoryMeter(9), 'time':AverageCategoryMeter(8),'weather':AverageCategoryMeter(7)}
+
+
+        for vi, data in enumerate(self.val_loader, 0):
+            img, gt_map, attributes_pt = data
+
+            with torch.no_grad():
+                img = Variable(img).cuda()
+                gt_map = Variable(gt_map).cuda()
+
+
+                pred_map = self.net.forward(img,gt_map)
+
+                pred_map = pred_map.data.cpu().numpy()
+                gt_map = gt_map.data.cpu().numpy()
+
+                for i_img in range(pred_map.shape[0]):
+                
+                    pred_cnt = np.sum(pred_map[i_img])/self.cfg_data.LOG_PARA
+                    gt_count = np.sum(gt_map[i_img])/self.cfg_data.LOG_PARA
+
+                    s_mae = abs(gt_count-pred_cnt)
+                    s_mse = (gt_count-pred_cnt)*(gt_count-pred_cnt)
+
+                    losses.update(self.net.loss.item())
+                    maes.update(s_mae)
+                    mses.update(s_mse)   
+                    attributes_pt = attributes_pt.squeeze() 
+                    c_maes['level'].update(s_mae,attributes_pt[i_img][0])
+                    c_mses['level'].update(s_mse,attributes_pt[i_img][0])
+                    c_maes['time'].update(s_mae,attributes_pt[i_img][1]/3)
+                    c_mses['time'].update(s_mse,attributes_pt[i_img][1]/3)
+                    c_maes['weather'].update(s_mae,attributes_pt[i_img][2])
+                    c_mses['weather'].update(s_mse,attributes_pt[i_img][2])
+
+
+                if vi==0:
+                    vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
+            
+        loss = losses.avg
+        mae = maes.avg
+        mse = np.sqrt(mses.avg)
+
+
+        self.writer.add_scalar('val_loss', loss, self.epoch + 1)
+        self.writer.add_scalar('mae', mae, self.epoch + 1)
+        self.writer.add_scalar('mse', mse, self.epoch + 1)
+
+        self.train_record = update_model(self.net,self.optimizer,self.scheduler,self.epoch,self.i_tb,self.exp_path,self.exp_name, \
+            [mae, mse, loss],self.train_record,self.log_txt)
+
+
+        print_GCC_summary(self.log_txt,self.epoch,[mae, mse, loss],self.train_record,c_maes,c_mses)
+
+	'''
+
+#Ejecutar este método para entrenar la red:
+def Train():
+
+	#¿QUÉ HACE ESTOOOOOO?????
+	'''
+
+    #------------prepare enviroment------------
+    seed = cfg.SEED
+    if seed is not None:
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
+
+    gpus = cfg.GPU_ID
+    if len(gpus)==1:
+        torch.cuda.set_device(gpus[0])
+
+    torch.backends.cudnn.benchmark = True
+	
+
+#Solo usaremos 1 dataset, lo comento:
+
+    
+        #------------prepare data loader------------
+    data_mode = cfg.DATASET
+    if data_mode is 'SHHA':
+        from datasets.SHHA.loading_data import loading_data
+        from datasets.SHHA.setting import cfg_data
+    elif data_mode is 'SHHB':
+        from datasets.SHHB.loading_data import loading_data
+        from datasets.SHHB.setting import cfg_data
+    elif data_mode is 'QNRF':
+        from datasets.QNRF.loading_data import loading_data
+        from datasets.QNRF.setting import cfg_data
+    elif data_mode is 'UCF50':
+        from datasets.UCF50.loading_data import loading_data
+        from datasets.UCF50.setting import cfg_data
+    elif data_mode is 'WE':
+        from datasets.WE.loading_data import loading_data
+        from datasets.WE.setting import cfg_data
+    elif data_mode is 'GCC':
+        from datasets.GCC.loading_data import loading_data
+        from datasets.GCC.setting import cfg_data
+    elif data_mode is 'Mall':
+        from datasets.Mall.loading_data import loading_data
+        from datasets.Mall.setting import cfg_data
+    elif data_mode is 'UCSD':
+        from datasets.UCSD.loading_data import loading_data
+        from datasets.UCSD.setting import cfg_data
+    elif data_mode is 'AC':  # Qingzhong
+        from datasets.AC.loading_data import loading_data
+        from datasets.AC.setting import cfg_data
+
+    '''
+
+        # cfg_data.IS_NOISE = (opt.is_noise == 1)
+        # cfg_data.BRIGHTNESS = opt.brightness
+        # cfg_data.NOISE_SIGMA = opt.noise_sigma
+        # cfg_data.LONGEST_SIDE = opt.longest_side
+        # cfg_data.BLACK_AREA_RATIO = opt.black_area_ratio
+        # cfg_data.IS_RANDOM = (opt.is_random == 1)
+
+	print(cfg, cfg_data)
+
+
+    #------------Prepare Trainer------------
+
+    #CAMBIAR!!! QUE SE PUEDA ENTRENAR TAMBIÉN CON 'SANet', 'SANet_Audio', 'CMTL' y 'PCCNet'!!!!!!! CAMBIAR!
+	'''
+    net = cfg.NET
+    if net in ['MCNN', 'AlexNet', 'VGG', 'VGG_DECODER', 'Res50', 'Res101', 'CSRNet','Res101_SFCN',
+               'CSRNet_IN', 'CSRNet_Audio', 'CANNet', 'CANNet_Audio', 'CSRNet_Audio_Concat', 'CANNet_Audio_Concat',
+               'CSRNet_Audio_Guided', 'CANNet_Audio_Guided'
+               ]:
+        from trainer import Trainer
+    elif net in ['SANet', 'SANet_Audio']:
+        from trainer_for_M2TCC import Trainer # double losses but signle output
+    elif net in ['CMTL']: 
+        from trainer_for_CMTL import Trainer # double losses and double outputs
+    elif net in ['PCCNet']:
+        from trainer_for_M3T3OCC import Trainer
+	'''
+
+    #------------Start Training------------
+	pwd = os.path.split(os.path.realpath(__file__))[0]
+	cc_trainer = Trainer(loading_data, cfg_data, pwd)
+	cc_trainer.forward()
+
+
+#PRUEBA
+Train()
+
+#POR ALGUNA RAZÓN ME ESTÁ ITERANDO UNA Y OTRA VEZ Y ME CREA UNA CARPETA DENTRO DE OTRA AL ENTRENAR --> SOLUCIONAR
