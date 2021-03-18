@@ -1,5 +1,8 @@
-#DEJAR LOS MODELOS EN LA CARPETA TAL CUAL LA TENÍAN ELLOS PARA IMPORTAR EL QUE HAGA FALTA.
+#¡NO FUNCIONA!
 
+
+
+#DEJAR LOS MODELOS EN LA CARPETA TAL CUAL LA TENÍAN ELLOS PARA IMPORTAR EL QUE HAGA FALTA.
 
 from easydict import EasyDict as edict
 import os
@@ -33,7 +36,7 @@ device = torch.device("cuda" if use_cuda else "cpu")
 
 def config():
 
-	cfg.SEED = 3035 # random seed,  for reproduction
+	cfg.SEED = 3035 # random seed,  for reproduction --> ¿PARA QUÉ ES ESTO?????????????????????????????????????????????????????????
 
 	#Lo comento porque dudo que usemos más de un dataset:
 	#cfg.DATASET = 'AC' # dataset selection: GCC, SHHA, SHHB, UCF50, QNRF, WE, Mall, UCSD
@@ -62,9 +65,11 @@ def config():
 	#cfg.PRE_GCC_MODEL = 'path to model' # path to model
 
 
-    #Para poder continuar el training si se interrumpe:
+    #Para poder continuar el training si se interrumpe, poner en True:
 	cfg.RESUME = False # contine training
-	cfg.RESUME_PATH = '/Users/cristinareyes/Desktop/TFG/GIT/countcrowd_TFG/trained_models/exp/image-noise-0.2-25-denoise-audio-wo_AC_CSRNet_1e-05/all_ep_274_mae_29.8_mse_48.5.pth' #
+
+    #¿QUÉ PONGO EXACTAMENTE AQUÍ? ES ESTO LA CLAVE DE QUE ME FUNCIONE   ???????????????????????????????????????????????????????????
+	cfg.RESUME_PATH = '/Users/cristinareyes/Desktop/TFG/Resultados/CANNet-noise-False-1.0-0-512-0-False-denoise-False' #
 
 
 
@@ -89,17 +94,18 @@ def config():
 
 
 	# print 
-	#cfg.PRINT_FREQ = 10
+    #Para mostrar periódicamente las estadísticas del entrenamiento:
+	cfg.PRINT_FREQ = 10
 
 
 
-	#Variable que almacena la fecha y hora local del momento de ejecución:
+	#Variable que almacena la fecha y hora local del momento de ejecución, NO SE USA:
 	#now = time.strftime("%m-%d_%H-%M", time.localtime())
 
 
 
 
-	#CREAR NOMBRE SEGÚN EL EXPERIMENTO (red,dataset(ESO LO HE QUITADO)...):
+	#CREAR NOMBRE SEGÚN EL EXPERIMENTO (he quitado DATASET porque solo usaremos el que tenemos):
 	# settings = 'image-noise(0.2, 25)-audio-wo'  # image-clean/(0.3, 50)_audio-w/wo
 	cfg.SETTINGS = 'image-clean-audio-wo'  # image-clean/(0.3, 50)_audio-w/wo
 
@@ -115,7 +121,7 @@ def config():
 
 	
 
-	cfg.EXP_PATH = '/Users/cristinareyes/Desktop/TFG/GIT/countcrowd_TFG/trained_models/exp' # the path of logs, checkpoints, and current codes
+	cfg.EXP_PATH = '/Users/cristinareyes/Desktop/TFG/trained_models/exp' # the path of logs, checkpoints, and current codes
 
 
 	#------------------------------VAL------------------------
@@ -134,7 +140,7 @@ def setting():
 	#Path del dataset:
 	DATA_PATH = '/Volumes/Cristina /TFG/Data'
 
-	#Tamaño estándar de las fotos (¿Seguro que es este tamaño?):
+	#Tamaño estándar de las fotos (¿Seguro que es este tamaño?):????????????????????????????????????????????????????????
 	cfg_data.STD_SIZE = (768, 1024)
 
 	cfg_data.TRAIN_SIZE = (576, 768)  # 2D tuple or 1D scalar
@@ -158,6 +164,8 @@ def setting():
 	cfg_data.LOG_PARA = 100.
 
 	cfg_data.RESUME_MODEL = ''  # model path
+
+    #Cambiar a un batch size más grande para aliviar la computación:
 	cfg_data.TRAIN_BATCH_SIZE = 48  # imgs
 
 	cfg_data.VAL_BATCH_SIZE = 1  # must be 1
@@ -224,7 +232,10 @@ class CrowdCounter(nn.Module):
 
 
 
-    @property
+    @property   #¿PARA QUÉ ES ESTO?????????????????????????????????????????????????????????
+    def foo(self):
+        return self._foo
+    
     def loss(self):
         return self.loss_mse
     
@@ -242,13 +253,15 @@ class CrowdCounter(nn.Module):
         loss_mse = self.loss_mse_fn(density_map, gt_data)  
         return loss_mse
 
-    #ESTO EN UN PRINCIPIO NO SE USA y no sé para qué es¿?:
+    #ESTO EN UN PRINCIPIO NO SE USA y no sé para qué es, pero como no se usa...:
     '''
     def test_forward(self, img):                               
         density_map = self.CCN(img)                    
         return density_map
     '''
-#MÉTODO NECESARIO PARA TESTER:
+
+
+#MÉTODO NECESARIO PARA TESTER (no me he parado mucho en detalle a verlo):
 class AverageMeter(object):
     """Computes and stores the average and current value"""
 
@@ -300,7 +313,14 @@ class Tester():
         self.net_name = cfg.NET
 
         #Guardamos como "net" el contador de personas con la red escogida:
-        self.net = CrowdCounter(cfg.GPU_ID, self.net_name)  #.cuda()
+        #Si hay GPUs:
+        if device == 'True':
+            self.net = CrowdCounter(cfg.GPU_ID, self.net_name).cuda()
+
+        #Si no hay GPUs disponibles:
+        else:
+            self.net = CrowdCounter(cfg.GPU_ID, self.net_name)
+
 
         #Se usa el optimizador Adam:
         self.optimizer = optim.Adam(self.net.CCN.parameters(), lr=cfg.LR, weight_decay=1e-4)
@@ -317,7 +337,7 @@ class Tester():
         self.i_tb = 0
 
     
-        #NO USAREMOS GCC EN PRINCIPIO:
+        #NO USAREMOS EL DATASET GCC EN PRINCIPIO:
         '''
         if cfg.PRE_GCC:
             self.net.load_state_dict(torch.load(cfg.PRE_GCC_MODEL))
@@ -328,7 +348,7 @@ class Tester():
         self.train_loader, self.val_loader, self.test_loader, self.restore_transform = dataloader()
 
         #Si se ha interrumpido el test, se intenta retomar desde donde se dejó:
-        #¿SI SALIMOS DE LA CLASE, SE PODRÁ RETOMAR EL TEST LUEGO?
+        #EN PRINCIPIO SE PODRÁ RETOMAR EL TEST LUEGO PONIENDO cfg.RESUME=TRUE en config() --> No estoy segura   ?????????????????????????????????????????????????????????
         if cfg.RESUME:
             # latest_state = torch.load(cfg.RESUME_PATH)
             # self.net.load_state_dict(latest_state['net'])
@@ -351,16 +371,11 @@ class Tester():
         # self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, 'exp', resume=cfg.RESUME)
 
 
-    #¿Por qué no usa directamente test_V1????????????????????????????????????????
+
     def forward(self):
 
-        self.test_V1()
-
-
-    def test_V1(self):  # test_v1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
-
         #Para apagar partes que no interesan durante el test (como Dropout Layers o BatchNorm Layers):
-        #¿PERO PARA QUÉ EXACTAMENTE EN NUESTRO CASO?:
+        #Porque no estamos entrenando:
         self.net.eval()
 
         #Todas las estadísticas de este tipo son del tipo AverageMeter:
@@ -379,12 +394,22 @@ class Tester():
 
             #Si torch.no_grad usa junto con el net.eval() para apagar cosas que no interesan al hacer test.
             #Apaga gradientes de computación:
-            #¿PARA QUÉ????¿PARA NO APRENDER DEL TEST??
+            #PARA NO APRENDER DEL TEST:
             with torch.no_grad():
-                #¿QUÉ HACE VARIABLE()????????????????????
-                img = Variable(img) #.cuda()
-                gt_map = Variable(gt_map) #.cuda()
-                audio_img = Variable(audio_img) #.cuda()
+
+                #PARA PASAR DE TENSORES A VARIABLES Y PODER TRABAJAR BIEN CON ELLOS:
+                #Si hay GPUs:
+                if device == 'True':
+                    img = Variable(img).cuda()
+                    gt_map = Variable(gt_map).cuda()
+                    audio_img = Variable(audio_img).cuda()
+
+                #No hay GPUs disponibles:
+                else:
+                    img = Variable(img) 
+                    gt_map = Variable(gt_map)   
+                    audio_img = Variable(audio_img)
+
 
                 #Si la red que hemos escogido trabaja también con audio, lo metemos junto con la imagen en la red:
                 #SE SACA UN MAPA PREDICHO CON LA ESTRUCTURA DE LA RED:
@@ -410,7 +435,7 @@ class Tester():
                 # if vi == 0:
                 #     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
 
-                #Guardamos resultados(?):
+                #Guardamos resultados en imagen:
                 save_img_name = 'val-' + str(vi) + '.jpg'
                 raw_img = self.restore_transform(img.data.cpu()[0, :, :, :])
                 log_mel = audio_img.data.cpu().numpy()
@@ -437,6 +462,7 @@ class Tester():
         # self.writer.add_scalar('test_mae', mae, self.epoch + 1)
         # self.writer.add_scalar('test_mse', mse, self.epoch + 1)
         print('test_mae: %.5f, test_mse: %.5f, test_loss: %.5f' % (mae, mse, loss))
+
 
   
 
@@ -641,7 +667,7 @@ def loading_data():
 
 
 
-    #Limpiamos para cargar correctamente aquí:
+    #Limpiamos antes train_loader para cargar correctamente aquí:
     train_loader = None
 
     if cfg_data.TRAIN_BATCH_SIZE == 1:
@@ -714,23 +740,25 @@ if __name__ == '__main__':
 
 def Test():
   
-  
     #------------prepare enviroment------------
-    #¿QUÉ HACE ESTO????
+
+    #Para sintetizar más el código, poner la SEED deseada desde config y ya está.
     '''
     seed = cfg.SEED
     if seed is not None:
         np.random.seed(seed)
         torch.manual_seed(seed)
-        torch.manual_seed(seed) #cuda
-
-    cfg.GPU_ID = [0,1]
-    gpus = cfg.GPU_ID
-    if len(gpus)==1:
-        torch.cuda.set_device(gpus[0])
-
-    torch.backends.cudnn.benchmark = True
+        torch.cuda.manual_seed(seed)
     '''
+
+    #¿ESTÁ ESTO BIEN ASÍ??????????????????????????????????????????????????????¿QUÉ HACE EXACTAMENTE???????????????????????
+    if device=='True':
+        cfg.GPU_ID = [0,1]
+        gpus = cfg.GPU_ID
+        if len(gpus)==1:
+            torch.cuda.set_device(gpus[0])
+        torch.backends.cudnn.benchmark = True
+
 
     #Solo usaremos 1 dataset, lo comento:
     '''
@@ -798,7 +826,52 @@ def copy_cur_env(work_dir, dst_dir, exception):
         elif os.path.isfile(file):
             shutil.copyfile(file,dst_file)
 
-#Necesario para la clase TRAINER():
+
+#Métodos necesarios para la clase TRAINER() (No me he parado aquí en detalle):
+
+def vis_results(exp_name, epoch, writer, restore, img, pred_map, gt_map):
+
+    pil_to_tensor = standard_transforms.ToTensor()
+
+    x = []
+    
+    for idx, tensor in enumerate(zip(img.cpu().data, pred_map, gt_map)):
+        if idx>1:# show only one group
+            break
+        pil_input = restore(tensor[0])
+        pil_output = torch.from_numpy(tensor[1]/(tensor[2].max()+1e-10)).repeat(3,1,1)
+        pil_label = torch.from_numpy(tensor[2]/(tensor[2].max()+1e-10)).repeat(3,1,1)
+        x.extend([pil_to_tensor(pil_input.convert('RGB')), pil_label, pil_output])
+    x = torch.stack(x, 0)
+    x = vutils.make_grid(x, nrow=3, padding=5)
+    x = (x.numpy()*255).astype(np.uint8)
+
+    writer.add_image(exp_name + '_epoch_' + str(epoch+1), x)
+
+class Timer(object):
+    """A simple timer."""
+    def __init__(self):
+        self.total_time = 0.
+        self.calls = 0
+        self.start_time = 0.
+        self.diff = 0.
+        self.average_time = 0.
+
+    def tic(self):
+        # using time.time instead of time.clock because time time.clock
+        # does not normalize for multithreading
+        self.start_time = time.time()
+
+    def toc(self, average=True):
+        self.diff = time.time() - self.start_time
+        self.total_time += self.diff
+        self.calls += 1
+        self.average_time = self.total_time / self.calls
+        if average:
+            return self.average_time
+        else:
+            return self.diff
+
 #Crea un fichero de logs:
 def logger(exp_path, exp_name, work_dir, exception, resume=False):
 
@@ -829,6 +902,7 @@ def logger(exp_path, exp_name, work_dir, exception, resume=False):
         	) + '\n\n\n\n')
 
     if not resume:
+        #Se copia la carpeta del código dentro del EXP_PATH: ¿ES IMPORTANTE, PARA QUÉ???????????????????????????????????????????????
         copy_cur_env(work_dir, exp_path+ '/' + exp_name + '/code', exception)
 
 
@@ -863,7 +937,16 @@ class Trainer():
         self.pwd = pwd
 
         self.net_name = cfg.NET
-        self.net = CrowdCounter(cfg.GPU_ID,self.net_name)	#.cuda()
+
+        #Si hay GPUs:
+        if device == 'True':
+            self.net = CrowdCounter(cfg.GPU_ID,self.net_name).cuda()
+
+        #Si no hay GPUs disponibles:
+        else:
+            self.net = CrowdCounter(cfg.GPU_ID,self.net_name)  
+
+
         self.optimizer = optim.Adam(self.net.CCN.parameters(), lr=cfg.LR, weight_decay=1e-4)
         # self.optimizer = optim.SGD(self.net.CCN.parameters(), cfg.LR, momentum=0.9, weight_decay=5e-4)
         self.scheduler = StepLR(self.optimizer, step_size=cfg.NUM_EPOCH_LR_DECAY, gamma=cfg.LR_DECAY)          
@@ -878,9 +961,10 @@ class Trainer():
         '''
         if cfg.PRE_GCC:
             self.net.load_state_dict(torch.load(cfg.PRE_GCC_MODEL))
-
+        '''
+        
         self.train_loader, self.val_loader, self.test_loader, self.restore_transform = dataloader()
-		'''
+		
 
 		#Para continuar el entrenamiento si se interrumpe:
         if cfg.RESUME:
@@ -897,25 +981,40 @@ class Trainer():
         #Creamos un fichero de logs:
         self.writer, self.log_txt = logger(self.exp_path, self.exp_name, self.pwd, 'exp', resume=cfg.RESUME)
 
-########################################################################################################################################################
+
     def forward(self):
 
-        # self.validate_V3()
+        #Para cada época:
         for epoch in range(self.epoch,self.cfg.MAX_EPOCH):
             self.epoch = epoch
-            if epoch > self.cfg.LR_DECAY_START:
-                self.scheduler.step()
-                
+            
+            #Calculamos el tiempo del entrenamiento (entre tic y toc)
             # training    
             self.timer['train time'].tic()
+            #Ejecutamos el métdo train() de Trainer() definido más abajo:
             self.train()
             self.timer['train time'].toc(average=False)
 
+            #Se imprime cuánto se ha tardado en entrenar:
             print( 'train time: {:.2f}s'.format(self.timer['train time'].diff) )
             print( '='*20 )
 
+
+            #HE CAMBIADO ESTO DEBAJO DEL TRAIN PORQUE ME DABA UN WARNING --> Optimizer debe ejecutarse antes del lr_scheduler   #¿ES CORRECTO ENTONCES HACER ESTO???????????????
+            #Sólo si estamos en una epoch después de la que hemos decidido en "cfg.LR_DECAY_START", el Learning Rate comenzará a decaer:
+            if epoch > self.cfg.LR_DECAY_START:
+                #El scheduler.step() va cambiando el Learning Rate en cada epoch:
+                self.scheduler.step()
+                
+
+
             # validation
+
+            #Antes de VAL_DENSE-START se valida con VAL_FREQ:
+            #Si la epoch es múltiplo de VAL_FREQ o la epoch es posterior a VAL_DENSE_START: #¿NO SERÍA UN AND?????????????????????????????????
             if epoch%self.cfg.VAL_FREQ==0 or epoch>self.cfg.VAL_DENSE_START:
+
+                #Se calcula el tiempo de la validación (entre tic y toc)
                 self.timer['val time'].tic()
 
                 #PARA OTROS DATASET:
@@ -930,33 +1029,60 @@ class Trainer():
                 '''
                 #Como usamos 'AC':
                 self.validate_V1()
-                self.test_V1()
+
+                #He quitado este porque lo veo redundante con el de arriba:
+                #self.test_V1()
 
                 self.timer['val time'].toc(average=False)
                 print( 'val time: {:.2f}s'.format(self.timer['val time'].diff) )
 
 
     def train(self): # training for all datasets
+
+        #La clase CrowdCounter(nn.module),por su tipo, tiene un módulo .train() que avisa al modelo de que estás entrenando.
+        #OJO: esto NO significa que ponga el modelo a entrenar, sino que antes de programar el entrenamiento avises al modelo de que
+        #debe hacer los Dropout, Batchnorm y otros procesos que sólo se hacen en training y no en test por ejemplo:
         self.net.train()
         for i, data in enumerate(self.train_loader, 0):
+            #Por cada muestra tomamos su imagen, su audio y su mapa de densidad ground-truth:
             self.timer['iter time'].tic()
             img = data[0]
             gt_map = data[1]
             audio_img = data[2]
 
-            img = Variable(img)	#.cuda()
-            gt_map = Variable(gt_map)	#.cuda()
-            audio_img = Variable(audio_img) #.cuda()
+            #PARA PASAR DE TENSORES A VARIABLES Y PODER TRABAJAR BIEN CON ELLOS:
+            #Si hay GPUs:
+            if device == 'True':
+                img = Variable(img).cuda()
+                gt_map = Variable(gt_map).cuda()
+                audio_img = Variable(audio_img).cuda()
 
+            #No hay GPUs disponibles:
+            else:
+                img = Variable(img) 
+                gt_map = Variable(gt_map)   
+                audio_img = Variable(audio_img)
+
+            #En PyTorch tenemos que poner los gradientes a cero antes de la backpropagation
+            #porque PyTorch acumula (sumatorio) los gradientes. Por ello, los actualizaré más tarde manualmente.
             self.optimizer.zero_grad()
+
+            #Si la red que hemos escogido trabaja también con audio, lo metemos junto con la imagen en la red:
+            #SE SACA UN MAPA PREDICHO CON LA ESTRUCTURA DE LA RED:
             if 'Audio' in self.net_name:
                 pred_map = self.net([img, audio_img], gt_map)
             else:
                 pred_map = self.net(img, gt_map)
+
             loss = self.net.loss
+
+            #Backpropagation (ajuste de los pesos):
             loss.backward()
+
+            #Usamos el optimizador para calcular mejor la dirección de menor pérdida:
             self.optimizer.step()
 
+            #Cuando la siguiente iteración sea múltiplo de PRINT_FREQ, se mostrarán las estadísticas del training:
             if (i + 1) % self.cfg.PRINT_FREQ == 0:
                 self.i_tb += 1
                 self.writer.add_scalar('train_loss', loss.item(), self.i_tb)
@@ -968,50 +1094,81 @@ class Trainer():
 
     def validate_V1(self):# validate_V1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
 
+        #Para apagar partes que no interesan durante el test (como Dropout Layers o BatchNorm Layers) --> contrario de net.train():
+        #Porque no estamos entrenando:
         self.net.eval()
-        
+
+        #Todas las estadísticas de este tipo son del tipo AverageMeter:
         losses = AverageMeter()
         maes = AverageMeter()
         mses = AverageMeter()
 
+        #Vamos a guardar resultados de la validación en la carpeta "Resultados"--> si no existe la crea y si existe, la reemplaza:
         if not os.path.exists(self.save_path):
             os.system('mkdir '+self.save_path)
         else:
             os.system('rm -rf ' + self.save_path)
             os.system('mkdir ' + self.save_path)
 
+        #Por cada muestra en validación cogemos el audio, imagen y mapa:
         for vi, data in enumerate(self.val_loader, 0):
             img = data[0]
             gt_map = data[1]
             audio_img = data[2]
 
-            with torch.no_grad():
-                img = Variable(img).cuda()
-                gt_map = Variable(gt_map).cuda()
-                audio_img = Variable(audio_img).cuda()
 
+            #torch.no_grad usa junto con el net.eval() para apagar cosas que no interesan al hacer test.
+            #Apaga gradientes de computación:
+            #PARA NO APRENDER DEL TEST:
+            with torch.no_grad():
+
+                #PARA PASAR DE TENSORES A VARIABLES Y PODER TRABAJAR BIEN CON ELLOS:
+
+                #Si hay GPUs:
+                if device == 'True':
+                    img = Variable(img).cuda()
+                    gt_map = Variable(gt_map).cuda()
+                    audio_img = Variable(audio_img).cuda()
+
+                #No hay GPUs disponibles:
+                else:
+                    img = Variable(img) 
+                    gt_map = Variable(gt_map)   
+                    audio_img = Variable(audio_img) 
+
+                #Si la red que hemos escogido trabaja también con audio, lo metemos junto con la imagen en la red:
+                #SE SACA UN MAPA PREDICHO CON LA ESTRUCTURA DE LA RED:
                 if 'Audio' in self.net_name:
                     pred_map = self.net([img, audio_img], gt_map)
                 else:
                     pred_map = self.net(img, gt_map)
 
+                #¿Para qué es esto????????????????
                 pred_map = pred_map.data.cpu().numpy()
                 gt_map = gt_map.data.cpu().numpy()
 
+
+                #Para cada mapa predicho se calculan el número de cabezas (personas) en la foto predicho y el original (y se dividen por cfg_data.LOG_PARA = 100 en este caso):
                 for i_img in range(pred_map.shape[0]):
                 
                     pred_cnt = np.sum(pred_map[i_img])/self.cfg_data.LOG_PARA
                     gt_count = np.sum(gt_map[i_img])/self.cfg_data.LOG_PARA
 
-                    
+                    #Actualizamos las pérdidas, MAE Y MSE para cada mapa:
                     losses.update(self.net.loss.item())
                     maes.update(abs(gt_count-pred_cnt))
                     mses.update((gt_count-pred_cnt)*(gt_count-pred_cnt))
+
+
+                #Para la primera muestra de audio, vídeo y mapa, visualizamos los resultados (creo que pinta la imagen y todo):
                 if vi==0:
                     vis_results(self.exp_name, self.epoch, self.writer, self.restore_transform, img, pred_map, gt_map)
 
                 # print('---------------------val-----------------------')
                 # print('gt_cnt: %.3f, pred_cnt: %.3f'%(gt_count, pred_count))
+
+
+                #Guardamos resultados en imagen:
                 save_img_name = 'val-' + str(vi) + '.jpg'
                 raw_img = self.restore_transform(img.data.cpu()[0, :, :, :])
                 log_mel = audio_img.data.cpu().numpy()
@@ -1041,25 +1198,45 @@ class Trainer():
         print_summary(self.exp_name,[mae, mse, loss],self.train_record)
         print('val_mae: %.5f, val_mse: %.5f, val_loss: %.5f' % (mae, mse, loss))
 
+
+
+    #ESTO NO LO USO:
+    '''
     def test_V1(self):  # test_v1 for SHHA, SHHB, UCF-QNRF, UCF50, AC
 
+        #Para apagar partes que no interesan durante el test (como Dropout Layers o BatchNorm Layers) --> contrario de net.train():
+        #Porque no estamos entrenando:
         self.net.eval()
 
+        #Todas las estadísticas de este tipo son del tipo AverageMeter:
         losses = AverageMeter()
         maes = AverageMeter()
         mses = AverageMeter()
 
+        #Por cada muestra en test cogemos el audio, imagen y mapa:
         for vi, data in enumerate(self.test_loader, 0):
             img = data[0]
             gt_map = data[1]
             audio_img = data[2]
 
 
-
+            #torch.no_grad usa junto con el net.eval() para apagar cosas que no interesan al hacer test.
+            #Apaga gradientes de computación:
+            #PARA NO APRENDER DEL TEST:
             with torch.no_grad():
-                img = Variable(img).cuda()
-                gt_map = Variable(gt_map).cuda()
-                audio_img = Variable(audio_img).cuda()
+
+                #Si hay GPUs:
+                if device == 'True':
+                    img = Variable(img).cuda()
+                    gt_map = Variable(gt_map).cuda()
+                    audio_img = Variable(audio_img).cuda()
+
+                #No hay GPUs disponibles:
+                else:
+                    img = Variable(img) 
+                    gt_map = Variable(gt_map)   
+                    audio_img = Variable(audio_img) 
+
 
                 if 'Audio' in self.net_name:
                     pred_map = self.net([img, audio_img], gt_map)
@@ -1090,12 +1267,11 @@ class Trainer():
         self.writer.add_scalar('test_mae', mae, self.epoch + 1)
         self.writer.add_scalar('test_mse', mse, self.epoch + 1)
         print('test_mae: %.5f, test_mse: %.5f, test_loss: %.5f' % (mae, mse, loss))
-
+    
 
 
 	#Es para otros dataset, nosotros no lo usaremos:
 
-    '''
     def validate_V2(self):# validate_V2 for WE
 
         self.net.eval()
@@ -1221,28 +1397,32 @@ class Trainer():
 
 #Ejecutar este método para entrenar la red:
 def Train():
-
-	#¿QUÉ HACE ESTOOOOOO?????
-	'''
+	
 
     #------------prepare enviroment------------
+
+    #Para sintetizar más el código, poner la SEED deseada desde config y ya está.
+    '''
     seed = cfg.SEED
     if seed is not None:
         np.random.seed(seed)
         torch.manual_seed(seed)
         torch.cuda.manual_seed(seed)
+    '''
 
-    gpus = cfg.GPU_ID
-    if len(gpus)==1:
-        torch.cuda.set_device(gpus[0])
+    #¿ESTÁ ESTO BIEN ASÍ??????????????????????????????????????????????????????¿QUÉ HACE EXACTAMENTE???????????????????????
+    if device=='True':
+        cfg.GPU_ID = [0,1]
+        gpus = cfg.GPU_ID
+        if len(gpus)==1:
+            torch.cuda.set_device(gpus[0])
+        torch.backends.cudnn.benchmark = True
 
-    torch.backends.cudnn.benchmark = True
-	
 
-#Solo usaremos 1 dataset, lo comento:
-
+    #Solo usaremos 1 dataset, lo comento:
+    '''
     
-        #------------prepare data loader------------
+    #------------prepare data loader------------
     data_mode = cfg.DATASET
     if data_mode is 'SHHA':
         from datasets.SHHA.loading_data import loading_data
@@ -1274,20 +1454,20 @@ def Train():
 
     '''
 
-        # cfg_data.IS_NOISE = (opt.is_noise == 1)
-        # cfg_data.BRIGHTNESS = opt.brightness
-        # cfg_data.NOISE_SIGMA = opt.noise_sigma
-        # cfg_data.LONGEST_SIDE = opt.longest_side
-        # cfg_data.BLACK_AREA_RATIO = opt.black_area_ratio
-        # cfg_data.IS_RANDOM = (opt.is_random == 1)
+    # cfg_data.IS_NOISE = (opt.is_noise == 1)
+    # cfg_data.BRIGHTNESS = opt.brightness
+    # cfg_data.NOISE_SIGMA = opt.noise_sigma
+    # cfg_data.LONGEST_SIDE = opt.longest_side
+    # cfg_data.BLACK_AREA_RATIO = opt.black_area_ratio
+    # cfg_data.IS_RANDOM = (opt.is_random == 1)
 
-	print(cfg, cfg_data)
+    print(cfg, cfg_data)
 
 
     #------------Prepare Trainer------------
 
     #CAMBIAR!!! QUE SE PUEDA ENTRENAR TAMBIÉN CON 'SANet', 'SANet_Audio', 'CMTL' y 'PCCNet'!!!!!!! CAMBIAR!
-	'''
+    '''
     net = cfg.NET
     if net in ['MCNN', 'AlexNet', 'VGG', 'VGG_DECODER', 'Res50', 'Res101', 'CSRNet','Res101_SFCN',
                'CSRNet_IN', 'CSRNet_Audio', 'CANNet', 'CANNet_Audio', 'CSRNet_Audio_Concat', 'CANNet_Audio_Concat',
@@ -1303,12 +1483,10 @@ def Train():
 	'''
 
     #------------Start Training------------
-	pwd = os.path.split(os.path.realpath(__file__))[0]
-	cc_trainer = Trainer(loading_data, cfg_data, pwd)
-	cc_trainer.forward()
+    pwd = os.path.split(os.path.realpath(__file__))[0]
+    cc_trainer = Trainer(loading_data, cfg_data, pwd)
+    cc_trainer.forward()
 
 
 #PRUEBA
 Train()
-
-#POR ALGUNA RAZÓN ME ESTÁ ITERANDO UNA Y OTRA VEZ Y ME CREA UNA CARPETA DENTRO DE OTRA AL ENTRENAR --> SOLUCIONAR
