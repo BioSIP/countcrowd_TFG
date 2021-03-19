@@ -37,6 +37,12 @@ device = torch.device("cuda" if use_cuda else "cpu")
 def config():
 
 	cfg.SEED = 3035 # random seed,  for reproduction --> ¿PARA QUÉ ES ESTO?????????????????????????????????????????????????????????
+	""" Los métodos que producen números aleatorios, en realidad no son aleatorios del todo. Implementan
+	un algoritmo que, a partir de una semilla (seed) generan un número de forma "pseudoaleatoria". Habitualmente
+	se toman cosas fuera del alcance del usuario, por ejemplo, el timestamp (número de segundos desde no se qué día de 1970),
+	pero si queremos replicar exactamente los mismos resultados, ponemos una semilla y de esa manera siempre 
+	saldrán los mismos resultados.  
+	"""
 
 	#Lo comento porque dudo que usemos más de un dataset:
 	#cfg.DATASET = 'AC' # dataset selection: GCC, SHHA, SHHB, UCF50, QNRF, WE, Mall, UCSD
@@ -69,8 +75,10 @@ def config():
 	cfg.RESUME = False # contine training
 
     #¿QUÉ PONGO EXACTAMENTE AQUÍ? ES ESTO LA CLAVE DE QUE ME FUNCIONE   ???????????????????????????????????????????????????????????
-	cfg.RESUME_PATH = '/Users/cristinareyes/Desktop/TFG/Resultados/CANNet-noise-False-1.0-0-512-0-False-denoise-False' #
-
+    # Yo diría que no, porque apenas varía la ejecución cuando cambio la ruta. 
+    
+	cfg.RESUME_PATH = '/home/pakitochus/' #
+	# paths /home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/Resultados /Users/cristinareyes/Desktop/TFG/Resultados/CANNet-noise-False-1.0-0-512-0-False-denoise-False
 
 
 	#No usaremos GPU, pero habilitaremos la opción de hacerlo con CUDA:
@@ -121,7 +129,8 @@ def config():
 
 	
 
-	cfg.EXP_PATH = '/Users/cristinareyes/Desktop/TFG/trained_models/exp' # the path of logs, checkpoints, and current codes
+	cfg.EXP_PATH = '/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/exp' # the path of logs, checkpoints, and current codes
+	# paths: '/Users/cristinareyes/Desktop/TFG/trained_models/exp' /home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG
 
 
 	#------------------------------VAL------------------------
@@ -138,7 +147,8 @@ def config():
 def setting():
 
 	#Path del dataset:
-	DATA_PATH = '/Volumes/Cristina /TFG/Data'
+	DATA_PATH = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset'
+	# para mi: /home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset o '/Volumes/Cristina /TFG/Data'
 
 	#Tamaño estándar de las fotos (¿Seguro que es este tamaño?):????????????????????????????????????????????????????????
 	cfg_data.STD_SIZE = (768, 1024)
@@ -289,7 +299,8 @@ class Tester():
 
 
     	#Para guardar los resultados del test (si no existe la carpeya, se crea, y si no, se reescribe (se borra y se vuelve a crear)):
-        self.save_path = os.path.join('/Users/cristinareyes/Desktop/TFG/Resultados',
+    	# paths: /Users/cristinareyes/Desktop/TFG/Resultados /home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/Resultados
+        self.save_path = os.path.join('/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/Resultados',
                                       str(cfg.NET) + '-' + 'noise-' + str(cfg_data.IS_NOISE) + '-' + str(
                                           cfg_data.BRIGHTNESS) +
                                       '-' + str(cfg_data.NOISE_SIGMA) + '-' + str(cfg_data.LONGEST_SIDE) + '-' + str(
