@@ -129,7 +129,7 @@ def config():
 
 	
 
-	cfg.EXP_PATH = '/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/exp' # the path of logs, checkpoints, and current codes
+	cfg.EXP_PATH = '/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG' # the path of logs, checkpoints, and current codes
 	# paths: '/Users/cristinareyes/Desktop/TFG/trained_models/exp' /home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG
 
 
@@ -925,7 +925,9 @@ class Trainer():
     def __init__(self, dataloader, cfg_data, pwd):
 
     	#Guardar los resulstados del train:
-        self.save_path = os.path.join('/Users/cristinareyes/Desktop/TFG/Resultados',
+
+    	# paths: /Users/cristinareyes/Desktop/TFG/Resultados /home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/Resultados
+        self.save_path = os.path.join('/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/Resultados',
                                       str(cfg.NET) + '-' + 'noise-' + str(cfg_data.IS_NOISE) + '-' + str(
                                           cfg_data.BRIGHTNESS) +
                                       '-' + str(cfg_data.NOISE_SIGMA) + '-' + str(cfg_data.LONGEST_SIDE) + '-' + str(
