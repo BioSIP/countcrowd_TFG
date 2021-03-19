@@ -27,6 +27,10 @@ Voy a ver qué puedo ir haciendo yo:
 import torch 
 
 
+
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda" if use_cuda else "cpu")
+
 #%% CREAMOS DATALOADER
 from torch.utils.data import DataLoader
 import os
@@ -87,9 +91,6 @@ elif TRAIN_BATCH_SIZE > 1:
 
 #%% CREAMOS EL MODELO 
 from models.CC import CrowdCounter
-
-use_cuda = torch.cuda.is_available()
-device = torch.device("cuda" if use_cuda else "cpu")
 
 net_name = 'CANNet'
 net = CrowdCounter(gpus=[0], model_name=net_name)
