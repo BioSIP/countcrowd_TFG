@@ -4,7 +4,13 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 import torch
 import torchaudio 
+import torch.nn as nn
+from torch import optim
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
+
+#Para comprobar si tenemos GPUs disponibles para usar o no:
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda" if use_cuda else "cpu")
 
 class AudioDataset(Dataset):
 	def __init__(self, audio_path, density_path, transform=None, ynorm=100):
@@ -46,8 +52,8 @@ class AudioDataset(Dataset):
 		#DENSITY MAP
 		map_path = self.density_path + self.mapfiles[idx]
 		mapa = loadmat(map_path)
-		y = torch.as_tensor(mapa['map'].sum()) #<-- Así está bien? Por qué tiene que ser un tensor?
-		#y_norm=y/ynorm <--- Normalizo entonces o no?
+		y = torch.as_tensor(mapa['map'].sum()) 
+		#y_norm=y/ynorm <--- Normalizo entonces o no???????????
 
 		#AUDIO
 		#Encuentro el path del archivo:
@@ -65,7 +71,7 @@ class AudioDataset(Dataset):
 		return x, y
 		
 #class SpectrogramDataset(Dataset):
-	#alsdjfañlskdfj a
+	#PROGRAMAR LUEGO!!!
 
 
 
@@ -84,21 +90,80 @@ testset = AudioDataset(audio_path, test_density_path)
 #print(trainset.__getitem__(20))
 #print(testset.__getitem__(20))
 
-train_loader = DataLoader(trainset,batch_size=3) #BATCH_SIZE: pequeño (1-3)
-
+#BATCH_SIZE: pequeño (1-3)
+batch_size=3
+train_loader = DataLoader(trainset,batch_size,shuffle=True) #BATCH_SIZE: pequeño (1-3)
+test_loader = DataLoader(testset,batch_size,shuffle=False)
 
 #RED:
+'''
+#Por si quiero probar luego con LeNet (CAMBIAR INPUTS!):
+class LeNet(nn.Module):
+    def __init__(self):
+        super(LeNet, self).__init__() # esta linea es siempre necesaria
+        self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
+        self.mp1 = nn.MaxPool2d(1,2)
+        self.conv2 = nn.Conv2d(6, 16, 5, padding=2)
+        self.mp2 = nn.MaxPool2d(2)
+        self.conv3 = nn.Conv2d(16, 120, 3, padding=1)
+        self.fc1 = nn.Linear(7*7*120, 256)#capa oculta
+        self.fc2 = nn.Linear(256, 10)#capa de salida
+        
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = self.mp1(x)
+        x = F.relu(self.conv2(x))
+        x = self.mp2(x)
+        x = F.relu(self.conv3(x))
+        x = x.view(-1, 7*7*120)
+        x = F.relu(self.fc1(x))#Función de activación relu en la salida de la capa oculta
+        x = F.softmax(self.fc2(x), dim=1)#Función de activación softmax en la salida de la capa oculta
+        return x
+'''
+
 # MaxPool2d((1,2))
 # torch.nn.Conv2d(in_channels, out_channels, kernel_size) -> kernel_size = (1, 61)
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
+class CrisNet(nn.Module):
+    def __init__(self):
+        super(CrisNet, self).__init__() # esta linea es siempre necesaria
+        self.max_pool = nn.MaxPool2d((1,2))
+        self.conv = nn.Conv2d(2, 32, 5)
+    def forward(self, x):
+    	x = self.max_pool(x)
+    	#Con función de activación ReLu
+    	x = nn.funcional.relu(self.conv(x))
+    	return x
 
+modelo=CrisNet()
+criterion = nn.CrossEntropyLoss() # definimos la pérdida
+optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
+#print(modelo)
+
+
+#ENTRENAMIENTO
+n_epochs = 20
+
+for epoch in range(n_epochs):
+    println("Entrenando...	epoch = " + str(epoch)) # Esta será la parte de entrenamiento
+    running_loss = 0.0 # el loss en cada epoch de entrenamiento
+    running_acc = 0.0 # el accuracy de cada epoch
+    total = 0
 '''
-for x,y in train_loader:
-	x = x.to(device)
-	y = y.to(device)
+    for x,y in train_loader:
+    	total +=  #FALTA!!!!!
+    	# ponemos a cero todos los gradientes en todas las neuronas:
+        optimizer.zero_grad()
+
+		x = x.to(device)
+		y = y.to(device)
 	
-	yhat = model(x) # forward 
+		output = model(x) # forward 
+		loss = criterion(output, #FALTA!!!!! ) # evaluación del loss
+		loss.backward()# backward pass
+        optimizador.step() # optimización 
+        	
 	# loss estimation -> MSE, MAE
 	# optimizer step  
 '''
