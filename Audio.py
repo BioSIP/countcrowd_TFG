@@ -99,26 +99,26 @@ test_loader = DataLoader(testset,batch_size,shuffle=False)
 '''
 #Por si quiero probar luego con LeNet (CAMBIAR INPUTS!):
 class LeNet(nn.Module):
-    def __init__(self):
-        super(LeNet, self).__init__() # esta linea es siempre necesaria
-        self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
-        self.mp1 = nn.MaxPool2d(1,2)
-        self.conv2 = nn.Conv2d(6, 16, 5, padding=2)
-        self.mp2 = nn.MaxPool2d(2)
-        self.conv3 = nn.Conv2d(16, 120, 3, padding=1)
-        self.fc1 = nn.Linear(7*7*120, 256)#capa oculta
-        self.fc2 = nn.Linear(256, 10)#capa de salida
-        
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = self.mp1(x)
-        x = F.relu(self.conv2(x))
-        x = self.mp2(x)
-        x = F.relu(self.conv3(x))
-        x = x.view(-1, 7*7*120)
-        x = F.relu(self.fc1(x))#Función de activación relu en la salida de la capa oculta
-        x = F.softmax(self.fc2(x), dim=1)#Función de activación softmax en la salida de la capa oculta
-        return x
+	def __init__(self):
+		super(LeNet, self).__init__() # esta linea es siempre necesaria
+		self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
+		self.mp1 = nn.MaxPool2d(1,2)
+		self.conv2 = nn.Conv2d(6, 16, 5, padding=2)
+		self.mp2 = nn.MaxPool2d(2)
+		self.conv3 = nn.Conv2d(16, 120, 3, padding=1)
+		self.fc1 = nn.Linear(7*7*120, 256)#capa oculta
+		self.fc2 = nn.Linear(256, 10)#capa de salida
+		
+	def forward(self, x):
+		x = F.relu(self.conv1(x))
+		x = self.mp1(x)
+		x = F.relu(self.conv2(x))
+		x = self.mp2(x)
+		x = F.relu(self.conv3(x))
+		x = x.view(-1, 7*7*120)
+		x = F.relu(self.fc1(x))#Función de activación relu en la salida de la capa oculta
+		x = F.softmax(self.fc2(x), dim=1)#Función de activación softmax en la salida de la capa oculta
+		return x
 '''
 
 # MaxPool2d((1,2))
@@ -126,35 +126,48 @@ class LeNet(nn.Module):
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
 class CrisNet(nn.Module):
-    def __init__(self):
-        super(CrisNet, self).__init__() # esta linea es siempre necesaria
-        self.max_pool = nn.MaxPool2d((1,2))
-        self.conv = nn.Conv2d(2, 32, 5)
-    def forward(self, x):
-    	x = self.max_pool(x)
-    	#Con función de activación ReLu
-    	x = nn.funcional.relu(self.conv(x))
-    	return x
+	def __init__(self):
+		super(CrisNet, self).__init__() # esta linea es siempre necesaria
+		self.max_pool = nn.MaxPool2d((1,2))
+		self.conv = nn.Conv2d(2, 32, 5)
+	def forward(self, x):
+		x = self.max_pool(x)
+		#Con función de activación ReLu
+		x = nn.funcional.relu(self.conv(x))
+		return x
 
 modelo=CrisNet()
 criterion = nn.CrossEntropyLoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
 #print(modelo)
 
+#print(train_loader)
+#print(type(train_loader))
+
 
 #ENTRENAMIENTO
 n_epochs = 20
 
+#TENGO QUE HACER ESTO O NO?
+# convertimos train_loader en un iterador
+dataiter = iter(train_loader) 
+# y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
+x, y = dataiter.next() 
+
 for epoch in range(n_epochs):
-    println("Entrenando...	epoch = " + str(epoch)) # Esta será la parte de entrenamiento
-    running_loss = 0.0 # el loss en cada epoch de entrenamiento
-    running_acc = 0.0 # el accuracy de cada epoch
-    total = 0
-'''
-    for x,y in train_loader:
-    	total +=  #FALTA!!!!!
-    	# ponemos a cero todos los gradientes en todas las neuronas:
-        optimizer.zero_grad()
+	print("Entrenando...	epoch = " + str(epoch+1) + '\n') # Esta será la parte de entrenamiento
+	running_loss = 0.0 # el loss en cada epoch de entrenamiento
+	running_acc = 0.0 # el accuracy de cada epoch
+	total = 0
+	
+	#¿CÓMO HAGO ESTE BUCLE?
+	'''
+	for x,y in  train_loader:
+		
+
+		total +=  #FALTA!!!!!
+		# ponemos a cero todos los gradientes en todas las neuronas:
+		optimizer.zero_grad()
 
 		x = x.to(device)
 		y = y.to(device)
@@ -162,8 +175,11 @@ for epoch in range(n_epochs):
 		output = model(x) # forward 
 		loss = criterion(output, #FALTA!!!!! ) # evaluación del loss
 		loss.backward()# backward pass
-        optimizador.step() # optimización 
-        	
+		optimizador.step() # optimización 
+		'''
+			
 	# loss estimation -> MSE, MAE
 	# optimizer step  
-'''
+
+
+
