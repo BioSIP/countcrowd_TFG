@@ -6,6 +6,7 @@ import torch
 import torchaudio 
 import torch.nn as nn
 from torch import optim
+import torch.nn.functional as F
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
 
 #Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -24,24 +25,23 @@ class AudioDataset(Dataset):
 		self.audio_path=audio_path
 		self.transform=transform
 
-		self.mapfiles = os.listdir(density_path)
-
+		self.mapfiles = os.listdir(self.density_path)
+		#Para no incluir los archivos con '._':
+		self.mapfiles = [el for el in self.mapfiles if el.startswith('._')==False]
 		self.mapfiles_wo_ext=[el[:-4] for el in self.mapfiles]
 
-		#Para no incluir los archivos con 'stage':
-		#self.mapfiles_wo_ext=[el[:-4] for el in self.mapfiles if el.startswith('stage')==False]
 		# list comprehension
 
 		#audio_path = '/Volumes/Cristina /TFG/Data/auds/'
 		self.audiofiles = os.listdir(audio_path)
 		self.audiofiles_wo_ext=[el[:-4] for el in self.audiofiles]
-		self.audiofiles = [el for el in self.audiofiles_wo_ext if el in self.mapfiles_wo_ext]
+		self.audiofiles = [el + '.wav' for el in self.audiofiles_wo_ext if el in self.mapfiles_wo_ext]
 
 
 		#Añadir extensiones a archivos de audio:
-		for i in range(len(self.audiofiles)):
+		#for i in range(len(self.audiofiles)):
 			#Añado la extensión al nombre del archivo que quiero importar:
-			self.audiofiles[i] = [self.audiofiles[i] + '.wav']
+			#self.audiofiles[i] = [self.audiofiles[i] + '.wav']
 		
 	
 	def __len__(self):
@@ -52,9 +52,7 @@ class AudioDataset(Dataset):
 		#DENSITY MAP
 		map_path = self.density_path + self.mapfiles[idx]
 		mapa = loadmat(map_path)
-		y = torch.as_tensor(mapa['map'].sum()) 
-		#y_norm=y/ynorm <--- Normalizo entonces o no???????????
-
+		y = torch.as_tensor(mapa['map'].sum(), dtype=torch.float32) 
 		#AUDIO
 		#Encuentro el path del archivo:
 		filename=str(self.audiofiles[idx])
@@ -65,7 +63,7 @@ class AudioDataset(Dataset):
 		waveform, sample_rate = torchaudio.load(aud_path)	#waveform es un tensor
 		#SE USARÁ EL SAMPLE_RATE PARA ALGO????????????????
 		
-		x = waveform.view((1,-1,2)) # dimensiones
+		x = waveform.view((2,1,-1)) # dimensiones
 		if self.transform:
 			x = self.transform(x)
 		return x, y
@@ -129,15 +127,19 @@ class CrisNet(nn.Module):
 	def __init__(self):
 		super(CrisNet, self).__init__() # esta linea es siempre necesaria
 		self.max_pool = nn.MaxPool2d((1,2))
-		self.conv = nn.Conv2d(2, 32, 5)
+		self.conv = nn.Conv2d(2, 32, (1,5))
+		self.fc1 = nn.Linear(23998*32,1)
+
 	def forward(self, x):
-		x = self.max_pool(x)
 		#Con función de activación ReLu
-		x = nn.funcional.relu(self.conv(x))
+		x = F.relu(self.conv(x))
+		x = self.max_pool(x)
+		x = x.view((x.size(0),-1))
+		x = self.fc1(x)
 		return x
 
 modelo=CrisNet()
-criterion = nn.CrossEntropyLoss() # definimos la pérdida
+criterion = nn.MSELoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
 #print(modelo)
 
@@ -154,32 +156,44 @@ dataiter = iter(train_loader)
 # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
 x, y = dataiter.next() 
 
+#print(x)
+#print(x.size())
+#print(y)
+#print(y.size())
+
+#Para predecir y, la normalizaremos. Siempre por el mismo valor:
+Y_NORM = 500
+
 for epoch in range(n_epochs):
 	print("Entrenando...	epoch = " + str(epoch+1) + '\n') # Esta será la parte de entrenamiento
 	running_loss = 0.0 # el loss en cada epoch de entrenamiento
-	running_acc = 0.0 # el accuracy de cada epoch
 	total = 0
-	
-	#¿CÓMO HAGO ESTE BUCLE?
-	'''
-	for x,y in  train_loader:
-		
 
-		total +=  #FALTA!!!!!
+	
+	for x,y in  train_loader:
+
+		total += y.shape[0]
 		# ponemos a cero todos los gradientes en todas las neuronas:
-		optimizer.zero_grad()
+		optimizador.zero_grad()
+
+		y=y/Y_NORM #normalizamos
 
 		x = x.to(device)
 		y = y.to(device)
 	
-		output = model(x) # forward 
-		loss = criterion(output, #FALTA!!!!! ) # evaluación del loss
+		output = modelo(x) # forward 
+		output = output.flatten()
+		loss = criterion(output,y) # evaluación del loss
 		loss.backward()# backward pass
 		optimizador.step() # optimización 
-		'''
+
+		running_loss += loss.item() # acumulamos el loss de este batch
 			
 	# loss estimation -> MSE, MAE
-	# optimizer step  
+	# optimizer step 
+
+	#print(f"Pérdida epoch {epoch}: {running_loss}")
+	print("Pérdida = " + str(running_loss) + '\n') 
 
 
 
