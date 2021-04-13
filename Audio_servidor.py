@@ -74,24 +74,24 @@ class AudioDataset(Dataset):
 
 
 
-audio_path = '/Volumes/Cristina /TFG/Data/auds/'
-train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
-test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'
+audio_path = '/media/NAS/home/cristfg/datasets/auds/'
+train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
+val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
 #val_density_path = '/Volumes/Cristina /TFG/Data/density/val'	--> Lo obviamos por ahora
 
 
 
 trainset = AudioDataset(audio_path, train_density_path)
-testset = AudioDataset(audio_path, test_density_path)
+valset = AudioDataset(audio_path, val_density_path)
 
-#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y test:
+#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y val:
 #print(trainset.__getitem__(20))
-#print(testset.__getitem__(20))
+#print(valset.__getitem__(20))
 
 #BATCH_SIZE: pequeño (1-3)
 batch_size=3
 train_loader = DataLoader(trainset,batch_size,shuffle=True) #BATCH_SIZE: pequeño (1-3)
-test_loader = DataLoader(testset,batch_size,shuffle=False)
+val_loader = DataLoader(valset,batch_size,shuffle=False)
 
 #RED:
 '''
@@ -123,7 +123,6 @@ class LeNet(nn.Module):
 # torch.nn.Conv2d(in_channels, out_channels, kernel_size) -> kernel_size = (1, 61)
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
-
 class CrisNet(nn.Module):
 	def __init__(self):
 		super(CrisNet, self).__init__() # esta linea es siempre necesaria
@@ -174,25 +173,23 @@ class CrisNet(nn.Module):
 
 
 		x = x.view((x.size(0),-1))
-		print(x.shape)
 		x = self.fc1(x)
-		print(x.shape)
 
 
 		return x
- 
+
 modelo=CrisNet()
-print(modelo)
 modelo=modelo.to(device)
 criterion = nn.MSELoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
+#print(modelo)
 
 #print(train_loader)
 #print(type(train_loader))
 
 
 #ENTRENAMIENTO
-n_epochs = 20
+n_epochs = 500
 
 #TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
@@ -207,8 +204,6 @@ x, y = dataiter.next()
 
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
-
-
 
 for epoch in range(n_epochs):
 	print("Entrenando...	epoch = " + str(epoch+1) + '\n') # Esta será la parte de entrenamiento
@@ -238,7 +233,7 @@ for epoch in range(n_epochs):
 	# loss estimation -> MSE, MAE
 	# optimizer step 
 
-	#print(f"Pérdida epoch {epoch}: {running_loss}")
+	#print(f"Pérdida epoch {epoch}: {running_loss}") (HAY QUE MULTIPLICAR POR Y_NORM)
 	print("Pérdida = " + str(running_loss) + '\n') 
 
 
