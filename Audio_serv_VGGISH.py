@@ -74,10 +74,10 @@ class AudioDataset(Dataset):
 
 
 
-audio_path = '/Volumes/Cristina /TFG/Data/auds/'
-train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
-val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
-test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'	
+audio_path = '/media/NAS/home/cristfg/datasets/auds/'
+train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
+val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
+test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'	
 
 
 
@@ -85,9 +85,9 @@ trainset = AudioDataset(audio_path, train_density_path)
 valset = AudioDataset(audio_path, val_density_path)
 testset = AudioDataset(audio_path, test_density_path)
 
-#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y test:
+#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y val:
 #print(trainset.__getitem__(20))
-#print(testset.__getitem__(20))
+#print(valset.__getitem__(20))
 
 #BATCH_SIZE: pequeño (1-3)
 batch_size=3
@@ -126,73 +126,69 @@ class LeNet(nn.Module):
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
 
-class CrisNet(nn.Module):
-	def __init__(self):
-		super(CrisNet, self).__init__() # esta linea es siempre necesaria
-		self.max_pool1 = nn.MaxPool2d((1,2))
+class VGGish(nn.Module):
+    """
+    PyTorch implementation of the VGGish model.
 
-		self.conv1 = nn.Conv2d(2, 32, (1,5))
-		self.conv2 = nn.Conv2d(32, 64, (1,5))
-		self.conv3 = nn.Conv2d(64, 128, (1,5))
-		self.conv4 = nn.Conv2d(128, 256, (1,5))
-		self.conv5 = nn.Conv2d(256, 512, (1,5))
-		self.conv6 = nn.Conv2d(512, 1024, (1,5))
+    Adapted from: https://github.com/harritaylor/torch-vggish
+    The following modifications were made: (i) correction for the missing ReLU layers, (ii) correction for the
+    improperly formatted data when transitioning from NHWC --> NCHW in the fully-connected layers, and (iii)
+    correction for flattening in the fully-connected layers.
+    """
 
-		self.fc1 = nn.Linear(763904,1)
-		'''
-		self.conv2 = nn.Conv2d()
-		self.max_pool2 = nn.MaxPool2d((1,2))
-		self.fc2 = nn.Linear()
-		'''
+    def __init__(self):
+        super(VGGish, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(2, 64, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d((1,2), stride=2),
 
-	def forward(self, x):
-		#Con función de activación ReLu
+            nn.Conv2d(64, 128, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d((1,2), stride=2),
 
-		#PRIMERA CAPA
-		x = F.relu(self.conv1(x))
-		x = self.max_pool1(x)
+            nn.Conv2d(128, 256, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d((1,2), stride=2),
 
+            nn.Conv2d(256, 512, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(512, 512, 3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d((1,2), stride=2)
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(1536000, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, 128),
+            nn.ReLU(inplace=True),
+        )
 
-		#SEGUNDA CAPA
-		x = F.relu(self.conv2(x))
-		x = self.max_pool1(x)
-
-		#TERCERA CAPA
-		x = F.relu(self.conv3(x))
-		x = self.max_pool1(x)
-
-		#CUARTA CAPA
-		x = F.relu(self.conv4(x))
-		x = self.max_pool1(x)
-
-		#QUINTA CAPA
-		x = F.relu(self.conv5(x))
-		x = self.max_pool1(x)
-
-
-		#SEXTA CAPA
-		x = F.relu(self.conv6(x))
-		x = self.max_pool1(x)
-
-
-		x = x.view((x.size(0),-1))
-		x = self.fc1(x)
+    def forward(self, x):
+        x = self.features(x).permute(0, 2, 3, 1).contiguous()
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        # b, c, w, h = x.shape
+        # x = x.view(b, c, -1).mean(-1)
+        return x
 
 
-		return x
- 
-modelo=CrisNet()
-print(modelo)
+modelo=VGGish()
 modelo=modelo.to(device)
 criterion = nn.MSELoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
+#print(modelo)
 
 #print(train_loader)
 #print(type(train_loader))
 
 
 #ENTRENAMIENTO
-n_epochs = 20
+n_epochs = 500
 
 #TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
@@ -207,7 +203,6 @@ x, y = dataiter.next()
 
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
-
 
 
 for epoch in range(n_epochs):
@@ -249,7 +244,7 @@ for epoch in range(n_epochs):
 		loss = criterion(output,y)
 		val_loss += loss.item()
 
-	print(f'Epoch {e+1} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
 	
 #TEST
 test_loss = 0.0

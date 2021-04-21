@@ -77,12 +77,13 @@ class AudioDataset(Dataset):
 audio_path = '/media/NAS/home/cristfg/datasets/auds/'
 train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
 val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
-#val_density_path = '/Volumes/Cristina /TFG/Data/density/val'	--> Lo obviamos por ahora
+test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'	
 
 
 
 trainset = AudioDataset(audio_path, train_density_path)
 valset = AudioDataset(audio_path, val_density_path)
+testset = AudioDataset(audio_path, test_density_path)
 
 #PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y val:
 #print(trainset.__getitem__(20))
@@ -92,6 +93,7 @@ valset = AudioDataset(audio_path, val_density_path)
 batch_size=3
 train_loader = DataLoader(trainset,batch_size,shuffle=True) #BATCH_SIZE: pequeño (1-3)
 val_loader = DataLoader(valset,batch_size,shuffle=False)
+test_loader = DataLoader(testset,batch_size,shuffle=False)
 
 #RED:
 '''
@@ -205,15 +207,16 @@ x, y = dataiter.next()
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
 
-for epoch in range(n_epochs):
-	print("Entrenando...	epoch = " + str(epoch+1) + '\n') # Esta será la parte de entrenamiento
-	running_loss = 0.0 # el loss en cada epoch de entrenamiento
-	total = 0
 
-	
+for epoch in range(n_epochs):
+	print("Entrenando... \n") # Esta será la parte de entrenamiento
+	training_loss = 0.0 # el loss en cada epoch de entrenamiento
+	#total = 0
+
+	modelo.train() #Para preparar el modelo para el training	
 	for x,y in  train_loader:
 
-		total += y.shape[0]
+		#total += y.shape[0]
 		# ponemos a cero todos los gradientes en todas las neuronas:
 		optimizador.zero_grad()
 
@@ -228,13 +231,39 @@ for epoch in range(n_epochs):
 		loss.backward()# backward pass
 		optimizador.step() # optimización 
 
-		running_loss += loss.item() # acumulamos el loss de este batch
+		training_loss += loss.item() # acumulamos el loss de este batch
 			
-	# loss estimation -> MSE, MAE
-	# optimizer step 
+	val_loss = 0.0
+	modelo.eval() #Preparar el modelo para validación y/o test
+	print("Validando... \n")
+	for x,y in val_loader:
+		
+		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
 
-	#print(f"Pérdida epoch {epoch}: {running_loss}") (HAY QUE MULTIPLICAR POR Y_NORM)
-	print("Pérdida = " + str(running_loss) + '\n') 
+		x = x.to(device)
+		y = y.to(device)
 
+		output = modelo(x) 
+		loss = criterion(output,y)
+		val_loss += loss.item()
+
+	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+	
+#TEST
+test_loss = 0.0
+modelo.eval() #Preparar el modelo para validación y/o test
+print("Testing... \n")
+for x,y in test_loader:
+	
+	y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN? ---> ¿DÓNDE DESNORMALIZO?
+
+	x = x.to(device)
+	y = y.to(device)
+
+	output = modelo(x) 
+	loss = criterion(output,y)
+	test_loss += loss.item()
+
+print(f'Test Loss: {test_loss}')
 
 
