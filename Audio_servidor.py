@@ -8,6 +8,7 @@ import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
 import pickle 
+import numpy as np 
 
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
 
@@ -81,8 +82,6 @@ train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
 val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
 test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'	
 
-# Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'resultados_modelo.pickle'
 
 trainset = AudioDataset(audio_path, train_density_path)
 valset = AudioDataset(audio_path, val_density_path)
@@ -185,7 +184,7 @@ class CrisNet(nn.Module):
 
 modelo=CrisNet()
 modelo=modelo.to(device)
-criterion = nn.MSELoss() # definimos la pérdida
+criterion = nn.MSELoss(reduction='sum') # definimos la pérdida
 # criterion = nn.L1Loss(reduction='sum')
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
 #print(modelo)
@@ -193,9 +192,15 @@ optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
 #print(train_loader)
 #print(type(train_loader))
 
+# Nombre de archivo para guardar resultados
+SAVE_FILENAME = 'resultados_modelo_combinado_mse_sum.pickle'
 
-#ENTRENAMIENTO
-n_epochs = 500
+"""
+ COSAS A PROBAR: 
+ - modificar learning rates (adam, sgd)
+ - prueba las dos loses: mse, l1loss, con y sin redución. (reduction='sum')
+ - extraer PARA TODAS LAS COMBINACIONES QUE HAGAS, guarda los datos, especialmente el de test. 
+"""
 
 #TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
@@ -211,7 +216,10 @@ x, y = dataiter.next()
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
 
-losses = {'train': list(), 'validacion': list(), 'test': list()}
+losses = {'train': list(), 'validacion': list()}
+
+#ENTRENAMIENTO
+n_epochs = 20
 
 for epoch in range(n_epochs):
 	print("Entrenando... \n") # Esta será la parte de entrenamiento
@@ -265,11 +273,77 @@ for epoch in range(n_epochs):
 	with open(SAVE_FILENAME, 'wb') as handle:
 		pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
 	
+
+#ENTRENAMIENTO
+n_epochs = 200
+optimizador = optim.SGD(modelo.parameters(), lr=0.0001) 
+
+for epoch in range(n_epochs):
+	print("Entrenando... \n") # Esta será la parte de entrenamiento
+	training_loss = 0.0 # el loss en cada epoch de entrenamiento
+	total = 0
+
+	modelo.train() #Para preparar el modelo para el training	
+	for x,y in  train_loader:
+		# ponemos a cero todos los gradientes en todas las neuronas:
+		optimizador.zero_grad()
+
+		y=y/Y_NORM #normalizamos
+
+		x = x.to(device)
+		y = y.to(device)
+		total += y.shape[0]
+	
+		output = modelo(x) # forward 
+		output = output.flatten()
+		loss = criterion(output,y) # evaluación del loss
+		loss.backward()# backward pass
+		optimizador.step() # optimización 
+
+		training_loss += loss.cpu().item() # acumulamos el loss de este batch
+	
+	training_loss /= total
+	losses['train'].append(training_loss)#.item())
+
+	val_loss = 0.0
+	total = 0
+
+	modelo.eval() #Preparar el modelo para validación y/o test
+	print("Validando... \n")
+	for x,y in val_loader:
+		
+		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
+
+		x = x.to(device)
+		y = y.to(device)
+		total += y.shape[0]
+
+		output = modelo(x) 
+		loss = criterion(output,y)
+		val_loss += loss.cpu().item()
+
+	val_loss /= total
+	losses['validacion'].append(val_loss)#.item())
+
+	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+	with open(SAVE_FILENAME, 'wb') as handle:
+		pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+	
+
 #TEST
-test_loss = 0.0
 modelo.eval() #Preparar el modelo para validación y/o test
 print("Testing... \n")
 total = 0
+
+mse = nn.MSELoss(reduction='sum') # definimos la pérdida
+mae = nn.L1Loss(reduction='sum')
+test_loss_mse = 0.0
+test_loss_mae = 0.0
+
+yreal = list()
+ypredicha = list()
+
 for x,y in test_loader:
 	
 	y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN? ---> ¿DÓNDE DESNORMALIZO?
@@ -279,12 +353,28 @@ for x,y in test_loader:
 	total += y.shape[0]
 
 	output = modelo(x) 
-	loss = criterion(output,y)
-	test_loss += loss.cpu().item()
+	mse_loss = mse(output,y)
+	test_loss_mse += mse_loss.cpu().item()
+	mae_loss = mae(output,y)
+	test_loss_mae += mae_loss.cpu().item()
 
-test_loss /= total
-print(f'Test Loss: {test_loss}')
-losses['test'].append(test_loss)#.item())
+	# para guardar las etqieutas. 
+	yreal.append(y.detach().cpu().numpy())
+	ypredicha.append(output.detach().cpu().numpy())
+
+test_loss_mse *= Y_NORM/total # Esto siemrpe que reduction='sum' -> equiparable a número de personas. 
+test_loss_mae *= Y_NORM/total # Esto siemrpe que reduction='sum' -> equiparable a número de personas. 
+
+# yreal = np.array(yreal).flatten()
+# ypredicha = np.array(ypredicha).flatten() # comprobar si funciona. 
+
+losses['yreal'] = yreal
+losses['ypredicha'] = ypredicha
+
+print(f'Test Loss (MSE): {test_loss_mse}')
+losses['test_mse'] = test_loss_mse #.item())
+print(f'Test Loss (MAE): {test_loss_mae}')
+losses['test_mae'] = test_loss_mae #.item())
 
 with open(SAVE_FILENAME, 'wb') as handle:
     pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
