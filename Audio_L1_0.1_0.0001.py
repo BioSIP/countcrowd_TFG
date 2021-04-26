@@ -12,6 +12,9 @@ import numpy as np
 
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
 
+# Nombre de archivo para guardar resultados
+SAVE_FILENAME = 'crisnet_L1_0.1_0.0001.pickle'
+
 #Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
@@ -184,16 +187,15 @@ class CrisNet(nn.Module):
 
 modelo=CrisNet()
 modelo=modelo.to(device)
-criterion = nn.MSELoss(reduction='sum') # definimos la pérdida
-# criterion = nn.L1Loss(reduction='sum')
-optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
+#criterion = nn.MSELoss(reduction='sum') # definimos la pérdida
+criterion = nn.L1Loss(reduction='sum')
+optimizador = optim.Adam(modelo.parameters(), lr=0.1, weight_decay=1e-4) 
 #print(modelo)
 
 #print(train_loader)
 #print(type(train_loader))
 
-# Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'resultados_modelo_combinado_mse_sum.pickle'
+
 
 """
  COSAS A PROBAR: 
@@ -255,7 +257,7 @@ for epoch in range(n_epochs):
 	print("Validando... \n")
 	for x,y in val_loader:
 		
-		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
+		y=y/Y_NORM #normalizamos 
 
 		x = x.to(device)
 		y = y.to(device)
@@ -312,8 +314,7 @@ for epoch in range(n_epochs):
 	print("Validando... \n")
 	for x,y in val_loader:
 		
-		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
-
+		y=y/Y_NORM #normalizamos 
 		x = x.to(device)
 		y = y.to(device)
 		total += y.shape[0]
@@ -346,7 +347,7 @@ ypredicha = list()
 
 for x,y in test_loader:
 	
-	y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN? ---> ¿DÓNDE DESNORMALIZO?
+	y=y/Y_NORM #normalizamos 
 
 	x = x.to(device)
 	y = y.to(device)
@@ -379,6 +380,9 @@ losses['test_mae'] = test_loss_mae #.item())
 with open(SAVE_FILENAME, 'wb') as handle:
     pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+
+#PARA LEER FICHEROS .pickle:
+#import pickle
 # with open('filename.pickle', 'rb') as handle:
 #     b = pickle.load(handle)
 # import matplotlib.pyplot as plt 

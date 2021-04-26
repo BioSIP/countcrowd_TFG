@@ -7,7 +7,13 @@ import torchaudio
 import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
+import pickle 
+import numpy as np 
+
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
+
+# Nombre de archivo para guardar resultados
+SAVE_FILENAME = 'crisnet_MSE_0.01_0.0001_mean.pickle'
 
 #Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
@@ -80,7 +86,6 @@ val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
 test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'	
 
 
-
 trainset = AudioDataset(audio_path, train_density_path)
 valset = AudioDataset(audio_path, val_density_path)
 testset = AudioDataset(audio_path, test_density_path)
@@ -125,61 +130,65 @@ class LeNet(nn.Module):
 # torch.nn.Conv2d(in_channels, out_channels, kernel_size) -> kernel_size = (1, 61)
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
+class CrisNet(nn.Module):
+	def __init__(self):
+		super(CrisNet, self).__init__() # esta linea es siempre necesaria
+		self.max_pool1 = nn.MaxPool2d((1,2))
 
-class VGGish(nn.Module):
-    """
-    PyTorch implementation of the VGGish model.
+		self.conv1 = nn.Conv2d(2, 32, (1,5))
+		self.conv2 = nn.Conv2d(32, 64, (1,5))
+		self.conv3 = nn.Conv2d(64, 128, (1,5))
+		self.conv4 = nn.Conv2d(128, 256, (1,5))
+		self.conv5 = nn.Conv2d(256, 512, (1,5))
+		self.conv6 = nn.Conv2d(512, 1024, (1,5))
 
-    Adapted from: https://github.com/harritaylor/torch-vggish
-    The following modifications were made: (i) correction for the missing ReLU layers, (ii) correction for the
-    improperly formatted data when transitioning from NHWC --> NCHW in the fully-connected layers, and (iii)
-    correction for flattening in the fully-connected layers.
-    """
+		self.fc1 = nn.Linear(763904,1)
+		'''
+		self.conv2 = nn.Conv2d()
+		self.max_pool2 = nn.MaxPool2d((1,2))
+		self.fc2 = nn.Linear()
+		'''
 
-    def __init__(self):
-        super(VGGish, self).__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(2, 64, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
+	def forward(self, x):
+		#Con función de activación ReLu
 
-            nn.Conv2d(64, 128, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
-
-            nn.Conv2d(128, 256, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
-
-            nn.Conv2d(256, 512, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(512, 512, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2)
-        )
-        self.fc = nn.Sequential(
-            nn.Linear(1536000, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 128),
-            nn.ReLU(inplace=True),
-        )
-
-    def forward(self, x):
-        x = self.features(x).permute(0, 2, 3, 1).contiguous()
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
-        # b, c, w, h = x.shape
-        # x = x.view(b, c, -1).mean(-1)
-        return x
+		#PRIMERA CAPA
+		x = F.relu(self.conv1(x))
+		x = self.max_pool1(x)
 
 
-modelo=VGGish()
+		#SEGUNDA CAPA
+		x = F.relu(self.conv2(x))
+		x = self.max_pool1(x)
+
+		#TERCERA CAPA
+		x = F.relu(self.conv3(x))
+		x = self.max_pool1(x)
+
+		#CUARTA CAPA
+		x = F.relu(self.conv4(x))
+		x = self.max_pool1(x)
+
+		#QUINTA CAPA
+		x = F.relu(self.conv5(x))
+		x = self.max_pool1(x)
+
+
+		#SEXTA CAPA
+		x = F.relu(self.conv6(x))
+		x = self.max_pool1(x)
+
+
+		x = x.view((x.size(0),-1))
+		x = self.fc1(x)
+
+
+		return x
+
+modelo=CrisNet()
 modelo=modelo.to(device)
-criterion = nn.MSELoss() # definimos la pérdida
+criterion = nn.MSELoss(reduction='mean') # definimos la pérdida
+# criterion = nn.L1Loss(reduction='sum')
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
 #print(modelo)
 
@@ -187,8 +196,13 @@ optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
 #print(type(train_loader))
 
 
-#ENTRENAMIENTO
-n_epochs = 500
+
+"""
+ COSAS A PROBAR: 
+ - modificar learning rates (adam, sgd)
+ - prueba las dos loses: mse, l1loss, con y sin redución. (reduction='sum')
+ - extraer PARA TODAS LAS COMBINACIONES QUE HAGAS, guarda los datos, especialmente el de test. 
+"""
 
 #TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
@@ -204,16 +218,18 @@ x, y = dataiter.next()
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
 
+losses = {'train': list(), 'validacion': list()}
+
+#ENTRENAMIENTO
+n_epochs = 20
 
 for epoch in range(n_epochs):
 	print("Entrenando... \n") # Esta será la parte de entrenamiento
 	training_loss = 0.0 # el loss en cada epoch de entrenamiento
-	#total = 0
+	total = 0
 
 	modelo.train() #Para preparar el modelo para el training	
 	for x,y in  train_loader:
-
-		#total += y.shape[0]
 		# ponemos a cero todos los gradientes en todas las neuronas:
 		optimizador.zero_grad()
 
@@ -221,6 +237,7 @@ for epoch in range(n_epochs):
 
 		x = x.to(device)
 		y = y.to(device)
+		total += y.shape[0]
 	
 		output = modelo(x) # forward 
 		output = output.flatten()
@@ -228,39 +245,147 @@ for epoch in range(n_epochs):
 		loss.backward()# backward pass
 		optimizador.step() # optimización 
 
-		training_loss += loss.item() # acumulamos el loss de este batch
-			
+		training_loss += loss.cpu().item() # acumulamos el loss de este batch
+	
+	training_loss /= total
+	losses['train'].append(training_loss)#.item())
+
 	val_loss = 0.0
+	total = 0
+
 	modelo.eval() #Preparar el modelo para validación y/o test
 	print("Validando... \n")
 	for x,y in val_loader:
 		
-		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
+		y=y/Y_NORM #normalizamos 
 
 		x = x.to(device)
 		y = y.to(device)
+		total += y.shape[0]
 
 		output = modelo(x) 
 		loss = criterion(output,y)
-		val_loss += loss.item()
+		val_loss += loss.cpu().item()
+
+	val_loss /= total
+	losses['validacion'].append(val_loss)#.item())
 
 	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+	with open(SAVE_FILENAME, 'wb') as handle:
+		pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
 	
+
+#ENTRENAMIENTO
+n_epochs = 200
+optimizador = optim.SGD(modelo.parameters(), lr=0.0001) 
+
+for epoch in range(n_epochs):
+	print("Entrenando... \n") # Esta será la parte de entrenamiento
+	training_loss = 0.0 # el loss en cada epoch de entrenamiento
+	total = 0
+
+	modelo.train() #Para preparar el modelo para el training	
+	for x,y in  train_loader:
+		# ponemos a cero todos los gradientes en todas las neuronas:
+		optimizador.zero_grad()
+
+		y=y/Y_NORM #normalizamos
+
+		x = x.to(device)
+		y = y.to(device)
+		total += y.shape[0]
+	
+		output = modelo(x) # forward 
+		output = output.flatten()
+		loss = criterion(output,y) # evaluación del loss
+		loss.backward()# backward pass
+		optimizador.step() # optimización 
+
+		training_loss += loss.cpu().item() # acumulamos el loss de este batch
+	
+	training_loss /= total
+	losses['train'].append(training_loss)#.item())
+
+	val_loss = 0.0
+	total = 0
+
+	modelo.eval() #Preparar el modelo para validación y/o test
+	print("Validando... \n")
+	for x,y in val_loader:
+		
+		y=y/Y_NORM #normalizamos 
+		x = x.to(device)
+		y = y.to(device)
+		total += y.shape[0]
+
+		output = modelo(x) 
+		loss = criterion(output,y)
+		val_loss += loss.cpu().item()
+
+	val_loss /= total
+	losses['validacion'].append(val_loss)#.item())
+
+	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+	with open(SAVE_FILENAME, 'wb') as handle:
+		pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+	
+
 #TEST
-test_loss = 0.0
 modelo.eval() #Preparar el modelo para validación y/o test
 print("Testing... \n")
+total = 0
+
+mse = nn.MSELoss(reduction='sum') # definimos la pérdida
+mae = nn.L1Loss(reduction='sum')
+test_loss_mse = 0.0
+test_loss_mae = 0.0
+
+yreal = list()
+ypredicha = list()
+
 for x,y in test_loader:
 	
-	y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN? ---> ¿DÓNDE DESNORMALIZO?
+	y=y/Y_NORM #normalizamos 
 
 	x = x.to(device)
 	y = y.to(device)
+	total += y.shape[0]
 
 	output = modelo(x) 
-	loss = criterion(output,y)
-	test_loss += loss.item()
+	mse_loss = mse(output,y)
+	test_loss_mse += mse_loss.cpu().item()
+	mae_loss = mae(output,y)
+	test_loss_mae += mae_loss.cpu().item()
 
-print(f'Test Loss: {test_loss}')
+	# para guardar las etqieutas. 
+	yreal.append(y.detach().cpu().numpy())
+	ypredicha.append(output.detach().cpu().numpy())
+
+test_loss_mse *= Y_NORM/total # Esto siemrpe que reduction='sum' -> equiparable a número de personas. 
+test_loss_mae *= Y_NORM/total # Esto siemrpe que reduction='sum' -> equiparable a número de personas. 
+
+# yreal = np.array(yreal).flatten()
+# ypredicha = np.array(ypredicha).flatten() # comprobar si funciona. 
+
+losses['yreal'] = yreal
+losses['ypredicha'] = ypredicha
+
+print(f'Test Loss (MSE): {test_loss_mse}')
+losses['test_mse'] = test_loss_mse #.item())
+print(f'Test Loss (MAE): {test_loss_mae}')
+losses['test_mae'] = test_loss_mae #.item())
+
+with open(SAVE_FILENAME, 'wb') as handle:
+    pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+#PARA LEER FICHEROS .pickle:
+#import pickle
+# with open('filename.pickle', 'rb') as handle:
+#     b = pickle.load(handle)
+# import matplotlib.pyplot as plt 
+# plt.plot()
 
 

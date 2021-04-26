@@ -74,10 +74,10 @@ class AudioDataset(Dataset):
 
 
 
-audio_path = '/media/NAS/home/cristfg/datasets/auds/'
-train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
-val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
-test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'	
+audio_path = '/Volumes/Cristina /TFG/Data/auds/'
+train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
+val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
+test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'	
 
 
 
@@ -85,9 +85,9 @@ trainset = AudioDataset(audio_path, train_density_path)
 valset = AudioDataset(audio_path, val_density_path)
 testset = AudioDataset(audio_path, test_density_path)
 
-#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y val:
+#PRUEBA para ver tensores de audio y de mapas de los conjuntos de train y test:
 #print(trainset.__getitem__(20))
-#print(valset.__getitem__(20))
+#print(testset.__getitem__(20))
 
 #BATCH_SIZE: pequeño (1-3)
 batch_size=3
@@ -160,7 +160,7 @@ class VGGish(nn.Module):
             nn.MaxPool2d((1,2), stride=2)
         )
         self.fc = nn.Sequential(
-            nn.Linear(1536000, 4096),
+            nn.Linear(1536000 * 64, 4096),
             nn.ReLU(inplace=True),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
@@ -178,17 +178,17 @@ class VGGish(nn.Module):
 
 
 modelo=VGGish()
+print(modelo)
 modelo=modelo.to(device)
 criterion = nn.MSELoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
-#print(modelo)
 
 #print(train_loader)
 #print(type(train_loader))
 
 
 #ENTRENAMIENTO
-n_epochs = 500
+n_epochs = 20
 
 #TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
@@ -203,6 +203,7 @@ x, y = dataiter.next()
 
 #Para predecir y, la normalizaremos. Siempre por el mismo valor:
 Y_NORM = 500
+
 
 
 for epoch in range(n_epochs):
@@ -244,7 +245,7 @@ for epoch in range(n_epochs):
 		loss = criterion(output,y)
 		val_loss += loss.item()
 
-	print(f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+	print(f'Epoch {e+1} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
 	
 #TEST
 test_loss = 0.0

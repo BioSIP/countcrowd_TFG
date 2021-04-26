@@ -125,59 +125,62 @@ class LeNet(nn.Module):
 # torch.nn.Conv2d(in_channels, out_channels, kernel_size) -> kernel_size = (1, 61)
 # in_channels ->2, out_channels -> [32,64]. 
 # optim - > adam
+class CrisNet(nn.Module):
+	def __init__(self):
+		super(CrisNet, self).__init__() # esta linea es siempre necesaria
+		self.max_pool1 = nn.MaxPool2d((1,2))
 
-class VGGish(nn.Module):
-    """
-    PyTorch implementation of the VGGish model.
+		self.conv1 = nn.Conv2d(2, 32, (1,5))
+		self.conv2 = nn.Conv2d(32, 64, (1,5))
+		self.conv3 = nn.Conv2d(64, 128, (1,5))
+		self.conv4 = nn.Conv2d(128, 256, (1,5))
+		self.conv5 = nn.Conv2d(256, 512, (1,5))
+		self.conv6 = nn.Conv2d(512, 1024, (1,5))
 
-    Adapted from: https://github.com/harritaylor/torch-vggish
-    The following modifications were made: (i) correction for the missing ReLU layers, (ii) correction for the
-    improperly formatted data when transitioning from NHWC --> NCHW in the fully-connected layers, and (iii)
-    correction for flattening in the fully-connected layers.
-    """
+		self.fc1 = nn.Linear(763904,1)
+		'''
+		self.conv2 = nn.Conv2d()
+		self.max_pool2 = nn.MaxPool2d((1,2))
+		self.fc2 = nn.Linear()
+		'''
 
-    def __init__(self):
-        super(VGGish, self).__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(2, 64, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
+	def forward(self, x):
+		#Con función de activación ReLu
 
-            nn.Conv2d(64, 128, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
-
-            nn.Conv2d(128, 256, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2),
-
-            nn.Conv2d(256, 512, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(512, 512, 3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((1,2), stride=2)
-        )
-        self.fc = nn.Sequential(
-            nn.Linear(1536000, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, 128),
-            nn.ReLU(inplace=True),
-        )
-
-    def forward(self, x):
-        x = self.features(x).permute(0, 2, 3, 1).contiguous()
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
-        # b, c, w, h = x.shape
-        # x = x.view(b, c, -1).mean(-1)
-        return x
+		#PRIMERA CAPA
+		x = F.relu(self.conv1(x))
+		x = self.max_pool1(x)
 
 
-modelo=VGGish()
+		#SEGUNDA CAPA
+		x = F.relu(self.conv2(x))
+		x = self.max_pool1(x)
+
+		#TERCERA CAPA
+		x = F.relu(self.conv3(x))
+		x = self.max_pool1(x)
+
+		#CUARTA CAPA
+		x = F.relu(self.conv4(x))
+		x = self.max_pool1(x)
+
+		#QUINTA CAPA
+		x = F.relu(self.conv5(x))
+		x = self.max_pool1(x)
+
+
+		#SEXTA CAPA
+		x = F.relu(self.conv6(x))
+		x = self.max_pool1(x)
+
+
+		x = x.view((x.size(0),-1))
+		x = self.fc1(x)
+
+
+		return x
+
+modelo=CrisNet()
 modelo=modelo.to(device)
 criterion = nn.MSELoss() # definimos la pérdida
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4) 
