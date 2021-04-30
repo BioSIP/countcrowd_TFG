@@ -19,9 +19,9 @@ from torch import nn
 
 
 class RMSLELoss(nn.Module):
-    def __init__(self):
+    def __init__(self, reduction='mean'):
         super().__init__()
-        self.mse = nn.MSELoss()
+        self.mse = nn.MSELoss(reduction=reduction)
         
     def forward(self, pred, actual):
         return torch.sqrt(self.mse(torch.log(pred + 1), torch.log(actual + 1)))
