@@ -10,11 +10,11 @@ import torch.optim as optim
 #definimos la clase Encoder
 
 def crop_img(tensor, target_tensor):
-    target_size = target_tensor.size()[2]
-    tensor_size = tensor.size()[2]
-    delta = tensor_size - target_size
+    target_size = target_tensor.size()[2:]
+    tensor_size = tensor.size()[2:]
+    delta = torch.Tensor(tensor_size) - torch.Tensor(target_size)
     delta = delta // 2
-    return tensor[:, :, delta:tensor_size-delta, delta:tensor_size-delta]
+    return tensor[:, :, delta[0]:tensor_size[0]-delta[0], delta[1]:tensor_size[1]-delta[1]]
 
 
 class UNET(nn.Module):
