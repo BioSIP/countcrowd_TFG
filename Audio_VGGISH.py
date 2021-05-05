@@ -1,3 +1,4 @@
+from losses import LogCoshLoss
 import os
 from scipy.io import loadmat
 from torch.utils.data import DataLoader
@@ -90,7 +91,7 @@ testset = AudioDataset(audio_path, test_density_path)
 # print(valset.__getitem__(20))
 
 #BATCH_SIZE: pequeño (1-3)
-batch_size = 3
+batch_size = 2
 # BATCH_SIZE: pequeño (1-3)
 train_loader = DataLoader(trainset, batch_size, shuffle=True)
 val_loader = DataLoader(valset, 32, shuffle=False)
@@ -137,6 +138,7 @@ class GlobalAvgPool2d(nn.Module):
         B, C, W, H = x.size()
         return F.avg_pool2d(x, (W, H)).view(B, C)
 
+
 class GlobalMaxPool2d(nn.Module):
     def __init__(self):
         super(GlobalMaxPool2d, self).__init__()
@@ -145,6 +147,7 @@ class GlobalMaxPool2d(nn.Module):
         assert len(x.size()) == 4, x.size()
         B, C, W, H = x.size()
         return F.max_pool2d(x, (W, H)).view(B, C)
+
 
 class VGGish(nn.Module):
     """
@@ -160,32 +163,30 @@ class VGGish(nn.Module):
         super(VGGish, self).__init__()
         self.pools = [4, 4, 2, 2]
         self.features = nn.Sequential(
-            nn.Conv2d(2, 64, 7, stride=1, padding=3),
-            nn.ELU(), #remove inplace=True
+            nn.Conv2d(2, 64, (1, 7), stride=1, padding=(0, 3)),
+            nn.ELU(),  # remove inplace=True
             nn.MaxPool2d((1, self.pools[0]), stride=self.pools[0]),
 
-            nn.Conv2d(64, 128, 5, stride=1, padding=2),
+            nn.Conv2d(64, 128, (1, 5), stride=1, padding=(0, 2)),
             nn.ELU(),
             nn.MaxPool2d((1, self.pools[1]), stride=self.pools[1]),
 
-            nn.Conv2d(128, 256, 3, stride=1, padding=1),
+            nn.Conv2d(128, 256, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
-            nn.Conv2d(256, 256, 3, stride=1, padding=1),
+            nn.Conv2d(256, 256, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
             nn.MaxPool2d((1, self.pools[2]), stride=self.pools[2]),
 
-            nn.Conv2d(256, 512, 3, stride=1, padding=1),
+            nn.Conv2d(256, 512, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
-            nn.Conv2d(512, 1024, 3, stride=1, padding=1),
+            nn.Conv2d(512, 1024, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
             # nn.MaxPool2d((1,self.pools[3]), stride=self.pools[3])
         )
-        self.avgpool = GlobalMaxPool2d()
+        self.avgpool = GlobalAvgPool2d()
         self.fc = nn.Sequential(
             nn.Linear(1024, 4096),
-            nn.ELU(),
-            nn.Linear(4096, 1),
-            nn.ReLU(),
+            nn.Linear(4096, 1)
         )
         # así y todo se nos queda en 1572864000
 
@@ -202,7 +203,9 @@ class VGGish(nn.Module):
 modelo = VGGish()
 modelo = modelo.to(device)
 criterion = nn.MSELoss(reduction='sum')  # definimos la pérdida
-optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
+# criterion = LogCoshLoss(reduction='sum')
+optimizador = optim.Adam(modelo.parameters())#, lr=0.01, weight_decay=1e-4)
+# optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
 # print(modelo)
 
 # print(train_loader)
@@ -224,8 +227,9 @@ x, y = dataiter.next()
 # print(y.size())
 
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
-Y_NORM = 500
+Y_NORM = 100
 
+losses = {'train': list(), 'validacion': list()}
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
@@ -253,6 +257,7 @@ for epoch in range(n_epochs):
         training_loss += loss.item()  # acumulamos el loss de este batch
 
     training_loss *= Y_NORM/total
+    losses['train'].append(training_loss)  # .item())
     val_loss = 0.0
     total = 0
     modelo.eval()  # Preparar el modelo para validación y/o test
@@ -271,6 +276,7 @@ for epoch in range(n_epochs):
         val_loss += loss.item()
 
     val_loss *= Y_NORM/total
+    losses['validacion'].append(val_loss)  # .item())
     print(
         f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
 
@@ -321,3 +327,12 @@ print(f'Test Loss (MSE): {test_loss_mse}')
 losses['test_mse'] = test_loss_mse  # .item())
 print(f'Test Loss (MAE): {test_loss_mae}')
 losses['test_mae'] = test_loss_mae  # .item())
+#%% 
+'''
+Testing... 
+
+Test Loss (MSE): 122.91883238156636
+Test Loss (MAE): 74.75587590535481
+
+
+'''
