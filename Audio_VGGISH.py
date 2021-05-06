@@ -17,7 +17,7 @@ device = torch.device("cuda" if use_cuda else "cpu")
 
 
 class AudioDataset(Dataset):
-    def __init__(self, audio_path, density_path, transform=None, ynorm=100):
+    def __init__(self, audio_path, density_path, transform=None):
 
         # 3 opciones para el density_path:
         #density_path = '/Volumes/Cristina /TFG/Data/density/train'

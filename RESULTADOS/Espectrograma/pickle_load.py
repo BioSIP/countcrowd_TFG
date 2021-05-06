@@ -2,7 +2,7 @@
 import pickle
 import matplotlib.pyplot as plt
 
-with open('crisnet_Adam_0.01_Spec_batch1.pickle', 'rb') as handle: 
+with open('crisnet_Adam_0.01_Spec.pickle', 'rb') as handle: 
 	b = pickle.load(handle) 
 
 
