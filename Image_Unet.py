@@ -10,6 +10,10 @@ from torch.utils.data import DataLoader
 from torch import optim
 import pickle
 
+# Nombre de archivo para guardar resultados
+SAVE_FILENAME = 'UNET_Image.pickle'
+
+
 # Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
@@ -20,13 +24,13 @@ train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
 val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
 test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'
 
-
+'''
 image_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/imgs/'
 train_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/train/'
 val_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/val/'
 test_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/test/'
 
-'''
+
 image_path = '/Volumes/Cristina /TFG/Data/imgs/'
 train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
 val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
@@ -88,11 +92,12 @@ testset = ImageDataset(image_path, test_density_path)
 # print(testset.__getitem__(20))
 
 
-batch_size = 3
+train_batch_size = 2
+eval_batch_size = 3
 # train BATCH_SIZE: pequeño (1-3)
-train_loader = DataLoader(trainset, batch_size, shuffle=True)
-val_loader = DataLoader(valset, batch_size, shuffle=False)
-test_loader = DataLoader(testset, batch_size, shuffle=False)
+train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
+val_loader = DataLoader(valset, eval_batch_size, shuffle=False)
+test_loader = DataLoader(testset, eval_batch_size, shuffle=False)
 
 
 # RED UNET
@@ -272,8 +277,9 @@ class UNET(nn.Module):
 
 
 modelo = UNET()
-pytorch_total_params = sum(p.numel() for p in modelo.parameters())
-print(pytorch_total_params)
+
+#pytorch_total_params = sum(p.numel() for p in modelo.parameters())
+#print(pytorch_total_params)
 
 modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
@@ -293,7 +299,7 @@ x, y = dataiter.next()  # x e y son tensores
 losses = {'train': list(), 'validacion': list()}
 
 # PRUEBAS:
-print(x.size())
+# print(x.size())
 # print(y['map'].size())
 # print(torch.max(x))
 # print(x)
@@ -342,7 +348,7 @@ for epoch in range(n_epochs):
         total += y.shape[0]
 
         output = modelo(x)
-        output = output.flatten()
+        #output = output.flatten()
         loss = criterion(output, y)
         val_loss += loss.cpu().item()
 
@@ -379,7 +385,7 @@ for x, y in test_loader:
     total += y.shape[0]
 
     output = modelo(x)
-    output = output.flatten()
+    #output = output.flatten()
     mse_loss = mse(output, y)
     test_loss_mse += mse_loss.cpu().item()
     mae_loss = mae(output, y)
