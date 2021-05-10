@@ -163,19 +163,16 @@ class VGGish(nn.Module):
         super(VGGish, self).__init__()
         self.pools = [4, 4, 2, 2]
         self.features = nn.Sequential(
-            nn.Conv2d(2, 64, (1, 7), stride=1, padding=(0, 3)),
-            nn.ELU(),  # remove inplace=True
-            nn.MaxPool2d((1, self.pools[0]), stride=self.pools[0]),
-
-            nn.Conv2d(64, 128, (1, 5), stride=1, padding=(0, 2)),
+            nn.Conv2d(2, 64, (1, 7),  stride=(1, self.pools[0]), padding=(0, 3)),
             nn.ELU(),
-            nn.MaxPool2d((1, self.pools[1]), stride=self.pools[1]),
+
+            nn.Conv2d(64, 128, (1, 5), stride=(1, self.pools[1]), padding=(0, 2)),
+            nn.ELU(),
 
             nn.Conv2d(128, 256, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
-            nn.Conv2d(256, 256, (1, 3), stride=1, padding=(0, 1)),
+            nn.Conv2d(256, 256, (1, 3), stride=(1, self.pools[2]), padding=(0, 1)),
             nn.ELU(),
-            nn.MaxPool2d((1, self.pools[2]), stride=self.pools[2]),
 
             nn.Conv2d(256, 512, (1, 3), stride=1, padding=(0, 1)),
             nn.ELU(),
@@ -211,10 +208,6 @@ optimizador = optim.Adam(modelo.parameters())#, lr=0.01, weight_decay=1e-4)
 # print(train_loader)
 # print(type(train_loader))
 
-
-# ENTRENAMIENTO
-n_epochs = 500
-
 # TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
 dataiter = iter(train_loader)
@@ -230,6 +223,71 @@ x, y = dataiter.next()
 Y_NORM = 100
 
 losses = {'train': list(), 'validacion': list()}
+min_val_loss = float('Inf') 
+expcode = 'vggish_adam_mse'
+
+for epoch in range(20):
+    print("Entrenando... \n")  # Esta será la parte de entrenamiento
+    training_loss = 0.0  # el loss en cada epoch de entrenamiento
+    total = 0
+
+    modelo.train()  # Para preparar el modelo para el training
+    for x, y in train_loader:
+
+        total += y.shape[0]
+        # ponemos a cero todos los gradientes en todas las neuronas:
+        optimizador.zero_grad()
+
+        y = y/Y_NORM  # normalizamos
+
+        x = x.to(device)
+        y = y.to(device)
+
+        output = modelo(x)  # forward
+        output = output.squeeze()
+        loss = criterion(output, y)  # evaluación del loss
+        loss.backward()  # backward pass
+        optimizador.step()  # optimización
+
+        training_loss += loss.item()  # acumulamos el loss de este batch
+
+    training_loss *= Y_NORM/total
+    losses['train'].append(training_loss)  # .item())
+    val_loss = 0.0
+    total = 0
+    modelo.eval()  # Preparar el modelo para validación y/o test
+    print("Validando... \n")
+    for x, y in val_loader:
+        total += y.shape[0]
+
+        y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
+
+        x = x.to(device)
+        y = y.to(device)
+
+        output = modelo(x)
+        output = output.squeeze()
+        loss = criterion(output, y)
+        val_loss += loss.item()
+
+    val_loss *= Y_NORM/total
+    if val_loss <= min_val_loss:
+        min_val_loss = val_loss
+        filename = expcode+'.pt'
+        print(f'Saving as {filename}')
+        torch.save(modelo, filename)
+
+    losses['validacion'].append(val_loss)  # .item())
+    print(
+        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+
+# ENTRENAMIENTO
+n_epochs = 500
+
+modelo = torch.load(filename)
+optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
+epoch_ni = 0 # epochs not improving. 
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
@@ -276,11 +334,26 @@ for epoch in range(n_epochs):
         val_loss += loss.item()
 
     val_loss *= Y_NORM/total
+    if val_loss <= min_val_loss:
+        min_val_loss = val_loss
+        filename = expcode+'.pt'
+        print(f'Saving as {filename}')
+        torch.save(modelo, filename)
+        epoch_ni = 0
+    else:
+        epoch_ni +=1
+        if epoch_ni > 50:
+            break
+
     losses['validacion'].append(val_loss)  # .item())
     print(
         f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
 
+
+
 # TEST
+
+modelo = torch.load(filename)
 modelo.eval()  # Preparar el modelo para validación y/o test
 print("Testing... \n")
 total = 0
