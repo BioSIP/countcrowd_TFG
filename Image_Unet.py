@@ -1,4 +1,5 @@
 import torch
+import torchvision
 import torch.nn as nn
 from torch.utils.data import Dataset
 import numpy as np
@@ -13,15 +14,17 @@ import pickle
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-#image_path = '/media/NAS/home/cristfg/datasets/imgs/'
-#train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
-#val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
-#test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'
+image_path = '/media/NAS/home/cristfg/datasets/imgs/'
+train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
+val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
+test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'
 
+'''
 image_path = '/Volumes/Cristina /TFG/Data/imgs/'
 train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
 val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
 test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'	
+'''
 
 class ImageDataset(Dataset):
 	def __init__(self, image_path, density_path):
@@ -59,6 +62,14 @@ class ImageDataset(Dataset):
 		img_path = self.image_path + filename
 		# Cargamos la imagen:
 		x = plt.imread(img_path)
+
+
+		x = np.reshape(x,(3,1080,1920)) #He juntado los valores RGB con las columnas de la imagen ????????????
+		#x = x.flatten()
+		#print(np.shape(x))
+
+		#X normalizada a los 255 valores de brillo:
+		x = x / 255.0
 	   
 		return x, y
 
@@ -95,71 +106,143 @@ class UNET(nn.Module):
 	def __init__(self):
 		super(UNET, self).__init__()
 		#ENCODER
-		self.conv1 =  nn.Sequential(nn.Conv2d(1080, 8, 11, padding = 5), 
+		self.conv1 =  nn.Sequential(nn.Conv2d(3, 64, 3, padding = 1), 
 									nn.ReLU(inplace=True),
-									nn.Conv2d(8, 8, 11, padding = 5),
+									nn.Conv2d(64, 64, 3, padding = 1),
 									nn.ReLU(inplace=True))
-		self.mp1 = nn.MaxPool2d((1,2))
+		self.mp1 = nn.MaxPool2d(2,2)
+		
 
-		self.conv2 =  nn.Sequential(nn.Conv2d(8, 16, 7, padding = 3), 
+		self.conv2 =  nn.Sequential(nn.Conv2d(64, 128, 3, padding = 1), 
 									nn.ReLU(inplace=True),
-									nn.Conv2d(16, 16, 7, padding = 3),
+									nn.Conv2d(128, 128, 3, padding = 1),
 									nn.ReLU(inplace=True))
-		self.mp2 = nn.MaxPool2d((1,2))
+		self.mp2 = nn.MaxPool2d(2,2)
 
-		self.conv3 =  nn.Sequential(nn.Conv2d(16, 32, 5, padding = 2), 
+		self.conv3 =  nn.Sequential(nn.Conv2d(128, 256, 3, padding = 1), 
 									nn.ReLU(inplace=True),
-									nn.Conv2d(32, 32, 5, padding = 2),
+									nn.Conv2d(256, 256, 3, padding = 1),
 									nn.ReLU(inplace=True))
+
+		self.conv4 =  nn.Sequential(nn.Conv2d(256, 512, 3, padding = 1), 
+									nn.ReLU(inplace=True),
+									nn.Conv2d(512, 512, 3, padding = 1),
+									nn.ReLU(inplace=True))
+									
 		  
 		
 		#DECODER
-		self.up_conv5 = nn.ConvTranspose2d(32, 16, 5, stride=2, padding=2, output_padding=1)
+		self.up_conv5 = nn.ConvTranspose2d(512, 512, 3, padding=1)
 		
-		self.up_conv6 = nn.Sequential(nn.Conv2d(32, 16, 5, padding = 2),
+		self.up_conv6 = nn.Sequential(nn.Conv2d(512, 256, 2, padding = 2),
 									  nn.ReLU(inplace=True),
-									  nn.Conv2d(16, 16, 5, padding = 2), 
+									  nn.Conv2d(256, 256, 2, padding = 2), 
 									  nn.ReLU(inplace=True))
 
-		self.up_conv7 = nn.ConvTranspose2d(16, 8, 7, stride=2, padding=3, output_padding=1)
+		self.up_conv7 = nn.ConvTranspose2d(256, 128, 2, stride=2, padding=3, output_padding=1)
 		
-		self.up_conv8 = nn.Sequential(nn.Conv2d(16, 8, 7, padding = 3),
+		self.up_conv8 = nn.Sequential(nn.Conv2d(256, 128, 2, padding = 3),
 									  nn.ReLU(inplace=True),
-									  nn.Conv2d(8, 8, 7, padding = 3), 
+									  nn.Conv2d(128, 128, 2, padding = 3), 
 									  nn.ReLU(inplace=True))
 
-		self.out = nn.Conv2d(8, 2, 11, padding = 5)
+		self.out = nn.Conv2d(128, 64, 2, padding = 5)
 		
 
 	def forward(self, x):
 		
 		#ENCODER
 		x1 = self.conv1(x)
-		#print(x1.size())
+		print(x1.size())
 		x2 = self.mp1(x1)
+		print(x2.size())
 
 		x3 = self.conv2(x2)
+		print(x3.size())
 		x4 = self.mp2(x3)
+		print(x4.size())
 
 		x5 = self.conv3(x4)
-		#print(x5.size())
+		#MAXPOOL FALTA
+		x6 = self.conv4(x5)
+		#MAXPOOL FALTA
+		print(x5.size())
+
 
 		#DECODER
-		x6 = self.up_conv5(x5)
-		y1 = crop_img(x3, x6)
-		x7 = self.up_conv6(torch.cat([x6, y1], 1))
+		x7 = self.up_conv5(x6)
+		y1 = crop_img(x3, x7)
+		x8 = self.up_conv6(torch.cat([x7, y1], 1))
 
-		x8 = self.up_conv7(x7)
-		y2 = crop_img(x1, x8)
-		x9 = self.up_conv8(torch.cat([x8, y2], 1))
-		#print(x9.size())
+		x9 = self.up_conv7(x8)
+		y2 = crop_img(x1, x9)
+		x10 = self.up_conv8(torch.cat([x9, y2], 1))
+		#print(x10.size())
 
-		x = self.out(x9)
+		x = self.out(x10)
 		#print(x.size())
 		
 		return x
+'''
+
+class UNET(nn.Module):
+    
+    def __init__(self):
+        super(UNET, self).__init__()
+        self.contracting_11 = self.conv_block(in_channels=3, out_channels=64)
+        self.contracting_12 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.contracting_21 = self.conv_block(in_channels=64, out_channels=128)
+        self.contracting_22 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.contracting_31 = self.conv_block(in_channels=128, out_channels=256)
+        self.contracting_32 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.contracting_41 = self.conv_block(in_channels=256, out_channels=512)
+        self.contracting_42 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.middle = self.conv_block(in_channels=512, out_channels=1024)
+        self.expansive_11 = nn.ConvTranspose2d(in_channels=1024, out_channels=512, kernel_size=3, stride=2, padding=1, output_padding=1)
+        self.expansive_12 = self.conv_block(in_channels=1024, out_channels=512)
+        self.expansive_21 = nn.ConvTranspose2d(in_channels=512, out_channels=256, kernel_size=3, stride=2, padding=1, output_padding=1)
+        self.expansive_22 = self.conv_block(in_channels=512, out_channels=256)
+        self.expansive_31 = nn.ConvTranspose2d(in_channels=256, out_channels=128, kernel_size=3, stride=2, padding=1, output_padding=1)
+        self.expansive_32 = self.conv_block(in_channels=256, out_channels=128)
+        self.expansive_41 = nn.ConvTranspose2d(in_channels=128, out_channels=64, kernel_size=3, stride=2, padding=1, output_padding=1)
+        self.expansive_42 = self.conv_block(in_channels=128, out_channels=64)
+        self.output = nn.Conv2d(in_channels=64, out_channels=1080, kernel_size=3, stride=1, padding=1)
+        
+    def conv_block(self, in_channels, out_channels):
+        block = nn.Sequential(nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, stride=1, padding=1),
+                                    nn.ReLU(),
+                                    nn.BatchNorm2d(num_features=out_channels),
+                                    nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, stride=1, padding=1),
+                                    nn.ReLU(),
+                                    nn.BatchNorm2d(num_features=out_channels))
+        return block
+    
+    def forward(self, X):
+        contracting_11_out = self.contracting_11(X) # [-1, 64, 256, 256]
+        contracting_12_out = self.contracting_12(contracting_11_out) # [-1, 64, 128, 128]
+        contracting_21_out = self.contracting_21(contracting_12_out) # [-1, 128, 128, 128]
+        contracting_22_out = self.contracting_22(contracting_21_out) # [-1, 128, 64, 64]
+        contracting_31_out = self.contracting_31(contracting_22_out) # [-1, 256, 64, 64]
+        contracting_32_out = self.contracting_32(contracting_31_out) # [-1, 256, 32, 32]
+        contracting_41_out = self.contracting_41(contracting_32_out) # [-1, 512, 32, 32]
+        contracting_42_out = self.contracting_42(contracting_41_out) # [-1, 512, 16, 16]
+        middle_out = self.middle(contracting_42_out) # [-1, 1024, 16, 16]
+        expansive_11_out = self.expansive_11(middle_out) # [-1, 512, 32, 32]
+        expansive_12_out = self.expansive_12(torch.cat((expansive_11_out, contracting_41_out), dim=1)) # [-1, 1024, 32, 32] -> [-1, 512, 32, 32]
+        expansive_21_out = self.expansive_21(expansive_12_out) # [-1, 256, 64, 64]
+        expansive_22_out = self.expansive_22(torch.cat((expansive_21_out, contracting_31_out), dim=1)) # [-1, 512, 64, 64] -> [-1, 256, 64, 64]
+        expansive_31_out = self.expansive_31(expansive_22_out) # [-1, 128, 128, 128]
+        expansive_32_out = self.expansive_32(torch.cat((expansive_31_out, contracting_21_out), dim=1)) # [-1, 256, 128, 128] -> [-1, 128, 128, 128]
+        expansive_41_out = self.expansive_41(expansive_32_out) # [-1, 64, 256, 256]
+        expansive_42_out = self.expansive_42(torch.cat((expansive_41_out, contracting_11_out), dim=1)) # [-1, 128, 256, 256] -> [-1, 64, 256, 256]
+        output_out = self.output(expansive_42_out) # [-1, num_classes, 256, 256]
+        return output_out
+
+'''
 
 modelo=UNET()
+#El modelo calculará con double:
+modelo.double()
 modelo=modelo.to(device)
 #Definimos el criterion de pérdida:
 criterion = nn.MSELoss(reduction='sum')
@@ -177,9 +260,11 @@ x, y = dataiter.next() #x e y son tensores
 
 losses = {'train': list(), 'validacion': list()}
 
-#PRUEBA:
-#print(x.size())
+#PRUEBAS:
+print(x.size())
 #print(y['map'].size())
+#print(torch.max(x))
+#print(x)
 
 
 #ENTRENAMIENTO 
