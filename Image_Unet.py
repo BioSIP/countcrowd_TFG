@@ -14,6 +14,7 @@ import pickle
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
+
 image_path = '/media/NAS/home/cristfg/datasets/imgs/'
 train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
 val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
@@ -52,8 +53,7 @@ class ImageDataset(Dataset):
 		# DENSITY MAP
 		map_path = self.density_path + self.mapfiles[idx]
 		y = loadmat(map_path)
-		#mapa = loadmat(map_path)
-		#y = torch.as_tensor(mapa['map'].sum(), dtype=torch.float32)
+		y = torch.as_tensor(y['map'], dtype=torch.float32)
 
 		# IMAGES
 		filename = str(self.imagefiles[idx])
@@ -64,10 +64,8 @@ class ImageDataset(Dataset):
 		x = plt.imread(img_path)
 
 
-		x = np.reshape(x,(3,1080,1920)) #He juntado los valores RGB con las columnas de la imagen ????????????
-		#x = x.flatten()
-		#print(np.shape(x))
-
+		x = x.transpose((2, 0, 1)) #Cambiar posición
+		x = torch.as_tensor(x, dtype=torch.float32)
 		#X normalizada a los 255 valores de brillo:
 		x = x / 255.0
 	   
@@ -100,6 +98,7 @@ def crop_img(tensor, target_tensor):
 	delta = delta // 2
 	return tensor[:, :, delta[0]:tensor_size[0]-delta[0], delta[1]:tensor_size[1]-delta[1]]
 
+'''
 
 class UNET(nn.Module):
 	# https://lmb.informatik.uni-freiburg.de/research/funded_projects/bioss_deeplearning/unet.png
@@ -183,6 +182,8 @@ class UNET(nn.Module):
 		#print(x.size())
 		
 		return x
+
+
 '''
 
 class UNET(nn.Module):
@@ -206,7 +207,7 @@ class UNET(nn.Module):
         self.expansive_32 = self.conv_block(in_channels=256, out_channels=128)
         self.expansive_41 = nn.ConvTranspose2d(in_channels=128, out_channels=64, kernel_size=3, stride=2, padding=1, output_padding=1)
         self.expansive_42 = self.conv_block(in_channels=128, out_channels=64)
-        self.output = nn.Conv2d(in_channels=64, out_channels=1080, kernel_size=3, stride=1, padding=1)
+        self.output = nn.Conv2d(in_channels=64, out_channels=3, kernel_size=3, stride=1, padding=1)
         
     def conv_block(self, in_channels, out_channels):
         block = nn.Sequential(nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, stride=1, padding=1),
@@ -238,11 +239,12 @@ class UNET(nn.Module):
         output_out = self.output(expansive_42_out) # [-1, num_classes, 256, 256]
         return output_out
 
-'''
+
 
 modelo=UNET()
-#El modelo calculará con double:
-modelo.double()
+pytorch_total_params = sum(p.numel() for p in modelo.parameters())
+print(pytorch_total_params)
+
 modelo=modelo.to(device)
 #Definimos el criterion de pérdida:
 criterion = nn.MSELoss(reduction='sum')
@@ -284,7 +286,7 @@ for epoch in range(n_epochs):
 		#y=y/Y_NORM #normalizamos
 
 		x = x.to(device)
-		y = y['map'].to(device)
+		y = y.to(device)
 		total += y.shape[0]
 	
 		output = modelo(x) # forward 
