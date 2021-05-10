@@ -336,7 +336,7 @@ for epoch in range(n_epochs):
     print("Validando... \n")
     for x, y in val_loader:
 
-        y = y/Y_NORM  # normalizamos
+        # y = y/Y_NORM  # normalizamos
         x = x.to(device)
         y = y.to(device)
         total += y.shape[0]
@@ -390,9 +390,9 @@ for x, y in test_loader:
     ypredicha.append(output.detach().cpu().numpy())
 
 # Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mse *= Y_NORM/total
+test_loss_mse /= total # *= Y_NORM/total
 # Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mae *= Y_NORM/total
+test_loss_mae /= total # *= Y_NORM/total
 
 # yreal = np.array(yreal).flatten()
 # ypredicha = np.array(ypredicha).flatten() # comprobar si funciona.
