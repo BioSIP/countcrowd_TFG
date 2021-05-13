@@ -11,7 +11,7 @@ from torch import optim
 import pickle
 
 # Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'UNET_Image.pickle'
+SAVE_FILENAME = 'UNET_MSEsum_(15)0.01_(25)0.001_batch1(eval_y_train).pickle'
 
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -92,8 +92,8 @@ testset = ImageDataset(image_path, test_density_path)
 # print(testset.__getitem__(20))
 
 
-train_batch_size = 2
-eval_batch_size = 3
+train_batch_size = 1
+eval_batch_size = 1
 # train BATCH_SIZE: pequeño (1-3)
 train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
 val_loader = DataLoader(valset, eval_batch_size, shuffle=False)
@@ -217,9 +217,66 @@ losses = {'train': list(), 'validacion': list()}
 # print(x)
 
 
-# ENTRENAMIENTO
-n_epochs = 200
+# ENTRENAMIENTO 1
+n_epochs = 15
 optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
+
+for epoch in range(n_epochs):
+    print("Entrenando... \n")  # Esta será la parte de entrenamiento
+    training_loss = 0.0  # el loss en cada epoch de entrenamiento
+    total = 0
+
+    modelo.train()  # Para preparar el modelo para el training
+    for x, y in train_loader:
+        # ponemos a cero todos los gradientes en todas las neuronas:
+        optimizador.zero_grad()
+
+        # y=y/Y_NORM #normalizamos
+
+        x = x.to(device)
+        y = y.to(device)
+        total += y.shape[0]
+
+        output = modelo(x)  # forward
+        loss = criterion(output, y)  # evaluación del loss
+        loss.backward()  # backward pass
+        optimizador.step()  # optimización
+
+        training_loss += loss.cpu().item()  # acumulamos el loss de este batch
+
+    training_loss /= total
+    losses['train'].append(training_loss)  # .item())
+
+    val_loss = 0.0
+    total = 0
+
+    modelo.eval()  # Preparar el modelo para validación y/o test
+    print("Validando... \n")
+    for x, y in val_loader:
+
+        # y = y/Y_NORM  # normalizamos
+        x = x.to(device)
+        y = y.to(device)
+        total += y.shape[0]
+
+        output = modelo(x)
+        #output = output.flatten()
+        loss = criterion(output, y)
+        val_loss += loss.cpu().item()
+
+    val_loss /= total
+    losses['validacion'].append(val_loss)  # .item())
+
+    print(
+        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+    with open(SAVE_FILENAME, 'wb') as handle:
+        pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+# ENTRENAMIENTO 2
+n_epochs = 25
+optimizador = optim.SGD(modelo.parameters(), lr=0.001)
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
