@@ -145,9 +145,11 @@ def AC_collate(batch):
 
 #%% CLASE DEL DATASET
 
-class DISCO(data.dataset):
+class DISCO(data.Dataset):
+
     def __init__(self, image_path, density_path, mode='train', main_transform=None,
                 img_transform=None, den_transform=None, longest_side=1024, black_area_ratio=0):
+        
         self.density_path = os.path.join(density_path, mode) # directamente le decimos el "modo" y no hay que especificarlo
         self.image_path = image_path # ruta a las imágenes
 
@@ -184,26 +186,26 @@ class DISCO(data.dataset):
 
     def load_image_den(self, img, den):
         # para replicar lo del paper, vamos a usar su smismas rutinas, así que no convertimos a tensor aquí.
-        img = Image.open(os.path.join(self.img_path, img))
+        img = Image.open(os.path.join(self.image_path, img))
         if img.mode == 'L':
             img = img.convert('RGB')
         img = self.random_black(img, self.black_area_ratio) # he copiado esta rutina que les funciona bien
         w, h = img.size
         if w > h: # cambian el tamaño y lo reducen con interpolación bicúbica
-            factor = w / self.longest_size
-            img = img.resize((self.longest_size, int(h / factor)), Image.BICUBIC)
+            factor = w / self.longest_side
+            img = img.resize((self.longest_side, int(h / factor)), Image.BICUBIC)
         else:
-            factor = h / self.longest_size
-            img = img.resize((int(w / factor), self.longest_size), Image.BICUBIC)
+            factor = h / self.longest_side
+            img = img.resize((int(w / factor), self.longest_side), Image.BICUBIC)
 
-        den = loadmat(os.path.join(self.den_path, den)) # esto es loq ue hacíamos nosotros
+        den = loadmat(os.path.join(self.density_path, den)) # esto es loq ue hacíamos nosotros
         den = den['map']
         den = den.astype(np.float32, copy=False)
         den = Image.fromarray(den)  # salvo converitrlo a imágenes. Nosotros lo hacíamos a tensores. 
         if w > h: # otra vez cambian el tamaño
-            den = np.array(den.resize((self.longest_size, int(h / factor)), Image.BICUBIC)) * factor * factor
+            den = np.array(den.resize((self.longest_side, int(h / factor)), Image.BICUBIC)) * factor * factor
         else:
-            den = np.array(den.resize((int(w / factor), self.longest_size), Image.BICUBIC)) * factor * factor
+            den = np.array(den.resize((int(w / factor), self.longest_side), Image.BICUBIC)) * factor * factor
         den = Image.fromarray(den)
         
         return img, den
@@ -271,7 +273,7 @@ def load_datasets():
                                   collate_fn=AC_collate, shuffle=True, drop_last=True)
     val_loader = data.DataLoader(val_set, batch_size=VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
     test_loader = data.DataLoader(test_set, batch_size=VAL_BATCH_SIZE, num_workers=1, shuffle=False, drop_last=False)
-    return train_loader, val_loader, test_loader
+    return train_loader, val_loader, test_loader, restore_transform
 
 
 

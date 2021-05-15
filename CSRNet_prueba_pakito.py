@@ -1,14 +1,13 @@
 import torch
 import torchvision
 import torch.nn as nn
-from torch.utils.data import Dataset
 import numpy as np
 from scipy.io import loadmat
 import os
 import matplotlib.pyplot as plt
-from torch.utils.data import DataLoader
 from torch import optim
 import pickle
+from datasets import load_datasets
 
 # Nombre de archivo para guardar resultados
 SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
@@ -18,88 +17,7 @@ SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-
-# image_path = '/media/NAS/home/cristfg/datasets/imgs/'
-# train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
-# val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
-# test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'
-
-image_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/imgs/'
-train_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/train/'
-val_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/val/'
-test_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/test/'
-
-
-'''
-image_path = '/Volumes/Cristina /TFG/Data/imgs/'
-train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
-val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
-test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'	
-'''
-
-
-class ImageDataset(Dataset):
-    def __init__(self, image_path, density_path):
-
-        self.density_path = density_path
-        self.image_path = image_path
-
-        self.mapfiles = os.listdir(self.density_path)
-        # Para no incluir los archivos con '._':
-        self.mapfiles = [
-            el for el in self.mapfiles if el.startswith('._') == False]
-        self.mapfiles_wo_ext = [el[:-4] for el in self.mapfiles]
-
-        self.imagefiles = os.listdir(image_path)
-        self.imagefiles_wo_ext = [el[:-4] for el in self.imagefiles]
-        self.imagefiles = [
-            el + '.jpg' for el in self.imagefiles_wo_ext if el in self.mapfiles_wo_ext]
-
-    def __len__(self):
-        return len(self.imagefiles)
-
-    def __getitem__(self, idx):
-
-        # DENSITY MAP
-        map_path = self.density_path + self.mapfiles[idx]
-        y = loadmat(map_path)
-        y = torch.as_tensor(y['map'], dtype=torch.float32)
-        y = y.unsqueeze(0)
-
-        # IMAGES
-        filename = str(self.imagefiles[idx])
-        filename = filename.lstrip("['")
-        filename = filename.rstrip("']")
-        img_path = self.image_path + filename
-        # Cargamos la imagen:
-        x = plt.imread(img_path).copy()
-
-        x = x.transpose((2, 0, 1))  # Cambiar posición
-        x = torch.as_tensor(x, dtype=torch.float32)
-        # X normalizada a los 255 valores de brillo:
-        x = x / 255.0
-
-        return x, y
-
-
-# CARGAMOS LOS DATOS:
-trainset = ImageDataset(image_path, train_density_path)
-valset = ImageDataset(image_path, val_density_path)
-testset = ImageDataset(image_path, test_density_path)
-
-# PRUEBA
-# print(trainset.__getitem__(20))
-#torch.set_printoptions(profile="full")
-#print(testset.__getitem__(70)[1])
-#print(testset.__getitem__(70)[1].sum())
-
-
-train_batch_size = 2
-eval_batch_size = 2
-# train BATCH_SIZE: pequeño (1-3)
-train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
-val_loader = DataLoader(valset, eval_batch_size, shuffle=False)
-test_loader = DataLoader(testset, eval_batch_size, shuffle=False)
+train_loader, val_loader, test_loader, restore_transform = load_datasets()
 
 from torchvision import models
 import torch.nn.functional as F
@@ -183,10 +101,16 @@ losses = {'train': list(), 'validacion': list()}
 # print(torch.max(x))
 # print(x)
 
+# Parámetros (de la configuracion china original)
+LR = 1e-5
+WD = 1e-4
+NUM_EPOCH_LR_DECAY = 1
+LR_DECAY = 0.99
 
 # ENTRENAMIENTO 1
 n_epochs = 120
-optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
+optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
+scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
