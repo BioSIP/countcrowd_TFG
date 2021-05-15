@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from torch import optim
 import pickle
 from datasets import load_datasets
+from torch.optim.lr_scheduler import StepLR
 
 # Nombre de archivo para guardar resultados
 SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
@@ -129,7 +130,7 @@ for epoch in range(n_epochs):
         total += y.shape[0]
 
         output = modelo(x)  # forward
-        loss = criterion(output, y)  # evaluación del loss
+        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
@@ -152,7 +153,7 @@ for epoch in range(n_epochs):
 
         output = modelo(x)
         #output = output.flatten()
-        loss = criterion(output, y)
+        loss = criterion(output.squeeze(), y.squeeze())
         val_loss += loss.cpu().item()
 
     val_loss /= total

@@ -121,25 +121,26 @@ def AC_collate(batch):
     r"""Puts each data field into a tensor with outer dimension batch size"""
 
     transposed = list(zip(*batch))  # imgs, dens and raw audios
-    imgs, dens, aud = [transposed[0], transposed[1], transposed[2]]
+    # imgs, dens, aud = [transposed[0], transposed[1], transposed[2]]
+    imgs, dens = [transposed[0], transposed[1]]
 
     error_msg = "batch must contain tensors; found {}"
     if isinstance(imgs[0], torch.Tensor) and isinstance(dens[0], torch.Tensor):
 
         cropped_imgs = []
         cropped_dens = []
-        cropped_auds = []
+        # cropped_auds = []
         for i_sample in range(len(batch)):
             # _img, _den = random_crop(imgs[i_sample], dens[i_sample], [min_ht, min_wd])
             cropped_imgs.append(imgs[i_sample])
             cropped_dens.append(dens[i_sample])
-            cropped_auds.append(aud[i_sample])
+            # cropped_auds.append(aud[i_sample])
 
         cropped_imgs = torch.stack(cropped_imgs, 0, out=share_memory(cropped_imgs))
         cropped_dens = torch.stack(cropped_dens, 0, out=share_memory(cropped_dens))
-        cropped_auds = torch.stack(cropped_auds, 0, out=share_memory(cropped_auds))
+        # cropped_auds = torch.stack(cropped_auds, 0, out=share_memory(cropped_auds))
 
-        return [cropped_imgs, cropped_dens, cropped_auds]
+        return [cropped_imgs, cropped_dens] # , cropped_auds]
 
     raise TypeError((error_msg.format(type(batch[0]))))
 
