@@ -12,7 +12,7 @@ from torch.optim.lr_scheduler import StepLR
 
 # Nombre de archivo para guardar resultados
 SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
-
+MODEL_FILENAME = 'CSRNet_Prueba.pt'
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
@@ -82,7 +82,7 @@ modelo = CSRNet()
 modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
 criterion = nn.MSELoss(reduction='mean')
-# criterion = nn.L1Loss(reduction='sum')
+# criterion = nn.L1Loss(reduction='mean')
 
 # convertimos train_loader en un iterador
 dataiter = iter(train_loader)
@@ -103,15 +103,18 @@ losses = {'train': list(), 'validacion': list()}
 # print(x)
 
 # Parámetros (de la configuracion china original)
-LR = 1e-5
+LR = 1e-4
 WD = 1e-4
 NUM_EPOCH_LR_DECAY = 1
 LR_DECAY = 0.99
 
 # ENTRENAMIENTO 1
-n_epochs = 120
-optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
+n_epochs = 1000
+optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=WD)
 scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
+
+min_loss = float('Inf')
+MAX_ACCUM = 50
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
@@ -137,6 +140,7 @@ for epoch in range(n_epochs):
         training_loss += loss.cpu().item()  # acumulamos el loss de este batch
 
     training_loss /= total
+        
     losses['train'].append(training_loss)  # .item())
 
     val_loss = 0.0
@@ -158,9 +162,19 @@ for epoch in range(n_epochs):
 
     val_loss /= total
     losses['validacion'].append(val_loss)  # .item())
-
     print(
         f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+
+    # EARLY STOPPING
+    if val_loss <= min_loss:
+        print('Saving model...')
+        min_loss = val_loss 
+        torch.save(modelo, MODEL_FILENAME)
+        accum = 0
+    else: 
+        accum += 1
+        if accum>MAX_ACCUM:
+            break
 
     with open(SAVE_FILENAME, 'wb') as handle:
         pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -247,9 +261,9 @@ for x, y in test_loader:
 
     output = modelo(x)
     #output = output.flatten()
-    mse_loss = mse(output, y)
+    mse_loss = mse(output.squeeze(), y.squeeze())
     test_loss_mse += mse_loss.cpu().item()
-    mae_loss = mae(output, y)
+    mae_loss = mae(output.squeeze(), y.squeeze())
     test_loss_mae += mae_loss.cpu().item()
 
     # para guardar las etqieutas.
