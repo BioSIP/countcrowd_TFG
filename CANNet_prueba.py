@@ -1,3 +1,5 @@
+#PROBAR LUEGO EL DATA PARALELL DE CUDA Y MÁS OPTIMIZACIÓN DE ESTE ESTILO!
+#PROBAR PONER SCHEDULER TRAS OPTIM PARA QUE NO SE SALTE EL VALOR INICIAL DE LR
 import torch
 import torchvision
 import torch.nn as nn
@@ -8,10 +10,13 @@ import os
 import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from torch import optim
+from torchvision import models
+from torch.optim.lr_scheduler import StepLR
+from torch.nn import functional as F
 import pickle
 
 # Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'CSRNet_MSEmean_(120)Adam0.01_batch2(eval_y_train).pickle'
+SAVE_FILENAME = 'CANNet_MSEmean_(20)Adam1e-5_batch2(eval_y_train).pickle'
 
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -102,29 +107,60 @@ train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
 val_loader = DataLoader(valset, eval_batch_size, shuffle=False)
 test_loader = DataLoader(testset, eval_batch_size, shuffle=False)
 
-from torchvision import models
-import torch.nn.functional as F
 
-class CSRNet(nn.Module):
+
+class ContextualModule(nn.Module):
+    def __init__(self, features, out_features=512, sizes=(1, 2, 3, 6)):
+        super(ContextualModule, self).__init__()
+        self.scales = []
+        self.scales = nn.ModuleList([self._make_scale(features, size) for size in sizes])
+        self.bottleneck = nn.Conv2d(features * 2, out_features, kernel_size=1)
+        self.relu = nn.ReLU()
+        self.weight_net = nn.Conv2d(features,features,kernel_size=1)
+
+    def __make_weight(self,feature,scale_feature):
+        weight_feature = feature - scale_feature
+        return F.sigmoid(self.weight_net(weight_feature))
+
+    def _make_scale(self, features, size):
+        prior = nn.AdaptiveAvgPool2d(output_size=(size, size))
+        conv = nn.Conv2d(features, features, kernel_size=1, bias=False)
+        return nn.Sequential(prior, conv)
+
+    def forward(self, feats):
+        h, w = feats.size(2), feats.size(3)
+        multi_scales = [F.upsample(input=stage(feats), size=(h, w), mode='bilinear') for stage in self.scales]
+        weights = [self.__make_weight(feats,scale_feature) for scale_feature in multi_scales]
+        overall_features = [(multi_scales[0]*weights[0]+multi_scales[1]*weights[1]+multi_scales[2]*weights[2]+multi_scales[3]*weights[3])/(weights[0]+weights[1]+weights[2]+weights[3])]+ [feats]
+        bottle = self.bottleneck(torch.cat(overall_features, 1))
+        return self.relu(bottle)
+
+
+class CANNet(nn.Module):
     def __init__(self, load_weights=False):
-        super(CSRNet, self).__init__()
+        super(CANNet, self).__init__()
         self.seen = 0
+        self.context = ContextualModule(512, 512)
         self.frontend_feat = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512]
-        self.backend_feat  = [512, 512, 512, 256, 128, 64]
+        self.backend_feat  = [512, 512, 512,256,128,64]
         self.frontend = make_layers(self.frontend_feat)
-        self.backend = make_layers(self.backend_feat,in_channels = 512,dilation = True)
+        self.backend = make_layers(self.backend_feat,in_channels = 512,batch_norm=True, dilation = True)
         self.output_layer = nn.Conv2d(64, 1, kernel_size=1)
         if not load_weights:
             mod = models.vgg16(pretrained = True)
             self._initialize_weights()
             self.frontend.load_state_dict(mod.features[0:23].state_dict())
+            # for i in range(len(self.frontend.state_dict().items())):
+            #     self.frontend.state_dict().items()[i][1].data[:] = mod.state_dict().items()[i][1].data[:]
 
     def forward(self,x):
         x = self.frontend(x)
+        x = self.context(x)
         x = self.backend(x)
         x = self.output_layer(x)
-        x = F.interpolate(x,scale_factor=8)
+        x = F.upsample(x, scale_factor=8)
         return x
+
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -134,8 +170,8 @@ class CSRNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
-            
-                
+
+
 def make_layers(cfg, in_channels = 3,batch_norm=False,dilation = False):
     if dilation:
         d_rate = 2
@@ -152,18 +188,18 @@ def make_layers(cfg, in_channels = 3,batch_norm=False,dilation = False):
             else:
                 layers += [conv2d, nn.ReLU(inplace=True)]
             in_channels = v
-    return nn.Sequential(*layers)                
+    return nn.Sequential(*layers)
 
 
 
-modelo = CSRNet()
+modelo = CANNet()
 
 #pytorch_total_params = sum(p.numel() for p in modelo.parameters())
 #print(pytorch_total_params)
 
 modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
-criterion = nn.MSELoss(reduction='mean')
+criterion = nn.MSELoss() #(reduction='mean')
 # criterion = nn.L1Loss(reduction='sum')
 
 # convertimos train_loader en un iterador
@@ -186,13 +222,19 @@ losses = {'train': list(), 'validacion': list()}
 
 
 # ENTRENAMIENTO 1
-n_epochs = 120
-optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
+n_epochs = 20
+optimizador = optim.Adam(modelo.parameters(), lr=1e-5, weight_decay=1e-4)
+scheduler = StepLR(optimizador, step_size=1, gamma=0.99)
+LR_DECAY_START=-1; #Cuando se sobrepasa esta epoch, el LR empezará a decaer.
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
     total = 0
+
+    if epoch > LR_DECAY_START:
+        scheduler.step()
+                
 
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:

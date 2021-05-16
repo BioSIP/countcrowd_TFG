@@ -11,7 +11,7 @@ from torch import optim
 import pickle
 
 # Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'CSRNet_MSEmean_(120)Adam0.01_batch2(eval_y_train).pickle'
+SAVE_FILENAME = 'CSRNet_MSEmean_(120)Adam0.01_batch1(eval_y_train).pickle'
 
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -95,8 +95,8 @@ testset = ImageDataset(image_path, test_density_path)
 #print(testset.__getitem__(70)[1].sum())
 
 
-train_batch_size = 2
-eval_batch_size = 2
+train_batch_size = 1
+eval_batch_size = 1
 # train BATCH_SIZE: pequeño (1-3)
 train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
 val_loader = DataLoader(valset, eval_batch_size, shuffle=False)

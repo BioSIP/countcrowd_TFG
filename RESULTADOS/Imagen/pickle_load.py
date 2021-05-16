@@ -2,7 +2,7 @@
 import pickle
 import matplotlib.pyplot as plt
 
-with open('UNET_MSEsum_(15)0.1_(25)0.0001_batch1(eval_y_train).pickle', 'rb') as handle: 
+with open('CANNet_MSEmean_(20)Adam1e-5_batch2(eval_y_train).pickle', 'rb') as handle: 
 	b = pickle.load(handle) 
 
 
