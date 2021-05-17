@@ -180,11 +180,11 @@ for epoch in range(n_epochs):
     losses['val_mae'].append(mae_accum)  # .item())
     losses['val_mse'].append(mse_accum)  # .item())
     print(
-        f'Epoch {epoch} \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
+        f'[e {epoch}] \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
 
     # EARLY STOPPING
     if mae_accum <= min_loss:
-        print(f'Saving model... ({mae_accum}<{min_loss}')
+        print(f'Saving model... ({mae_accum:.2f}<{min_loss:.2f}')
         min_loss = mae_accum 
         torch.save(modelo, MODEL_FILENAME)
         accum = 0
