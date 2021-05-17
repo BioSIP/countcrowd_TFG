@@ -7,12 +7,12 @@ import os
 import matplotlib.pyplot as plt
 from torch import optim
 import pickle
-from datasets import load_datasets
+from datasets import load_datasets, LOG_PARA
 from torch.optim.lr_scheduler import StepLR
 
 # Nombre de archivo para guardar resultados
 SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
-MODEL_FILENAME = 'CSRNet_Prueba.pt'
+MODEL_FILENAME = 'CSRNet_Prueba.pth'
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
@@ -43,6 +43,7 @@ class CSRNet(nn.Module):
         x = self.output_layer(x)
         x = F.interpolate(x,scale_factor=8)
         return x
+
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -81,7 +82,7 @@ modelo = CSRNet()
 
 modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
-criterion = nn.MSELoss(reduction='mean')
+criterion = nn.MSELoss().to(device)
 # criterion = nn.L1Loss(reduction='mean')
 
 # convertimos train_loader en un iterador
@@ -94,7 +95,8 @@ x, y = dataiter.next()  # x e y son tensores
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
 #Y_NORM = 200
 
-losses = {'train': list(), 'validacion': list()}
+losses = {'train': list(), 'validacion': list(),
+            'val_mae': list(), 'val_mse': list()}
 
 # PRUEBAS:
 # print(x.size())
@@ -103,34 +105,37 @@ losses = {'train': list(), 'validacion': list()}
 # print(x)
 
 # Parámetros (de la configuracion china original)
-LR = 1e-4
-WD = 1e-4
-NUM_EPOCH_LR_DECAY = 1
+LR = 1e-5
 LR_DECAY = 0.99
+NUM_EPOCH_LR_DECAY = 1
+LR_DECAY_START = -1 
 
 # ENTRENAMIENTO 1
-n_epochs = 1000
-optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=WD)
+n_epochs = 200
+optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
 scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
 
 min_loss = float('Inf')
 MAX_ACCUM = 50
+accum = 0
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
-    total = 0
+    total_iter = 0
+
+    # Para iniciar el scheduler
+    if epoch > LR_DECAY_START:
+        scheduler.step()
 
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:
-        # ponemos a cero todos los gradientes en todas las neuronas:
-        optimizador.zero_grad()
-
-        # y=y/Y_NORM #normalizamos
-
         x = x.to(device)
         y = y.to(device)
-        total += y.shape[0]
+        total_iter += 1 # como estamos usando el total, auemntamos 1 y.shape[0]
+
+        # ponemos a cero todos los gradientes en todas las neuronas:
+        optimizador.zero_grad()
 
         output = modelo(x)  # forward
         loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
@@ -139,12 +144,14 @@ for epoch in range(n_epochs):
 
         training_loss += loss.cpu().item()  # acumulamos el loss de este batch
 
-    training_loss /= total
+    training_loss /= total_iter
         
     losses['train'].append(training_loss)  # .item())
 
     val_loss = 0.0
-    total = 0
+    mae_accum = 0.0
+    mse_accum = 0.0
+    total_iter = 0
 
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
@@ -153,22 +160,32 @@ for epoch in range(n_epochs):
         # y = y/Y_NORM  # normalizamos
         x = x.to(device)
         y = y.to(device)
-        total += y.shape[0]
+        total_iter += y.shape[0]
 
         output = modelo(x)
         #output = output.flatten()
         loss = criterion(output.squeeze(), y.squeeze())
         val_loss += loss.cpu().item()
 
-    val_loss /= total
+        output_num = output.detach().cpu().sum()/LOG_PARA
+        y_num = y.sum()//LOG_PARA
+        mae_accum += abs(output_num - y_num)
+        mse_accum += (output_num-y_num)**2
+
+    val_loss /= total_iter
+    mae_accum /= total_iter
+    mse_accum = torch.sqrt(mse_accum/total_iter)
+
     losses['validacion'].append(val_loss)  # .item())
+    losses['val_mae'].append(mae_accum)  # .item())
+    losses['val_mse'].append(mse_accum)  # .item())
     print(
-        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+        f'Epoch {epoch} \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
 
     # EARLY STOPPING
-    if val_loss <= min_loss:
-        print('Saving model...')
-        min_loss = val_loss 
+    if mae_accum <= min_loss:
+        print(f'Saving model... ({mae_accum}<{min_loss}')
+        min_loss = mae_accum 
         torch.save(modelo, MODEL_FILENAME)
         accum = 0
     else: 
