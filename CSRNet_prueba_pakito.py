@@ -189,10 +189,10 @@ for epoch in range(n_epochs):
         torch.save(modelo, MODEL_FILENAME)
         accum = 0
         if mae_accum <= min_loss_mae:
-            print(f'({mae_accum:.2f}<{min_loss_mae:.2f}')
+            print(f'MAE: ({mae_accum:.2f}<{min_loss_mae:.2f})')
             min_loss_mae = mae_accum 
         if mse_accum <= min_loss_mse:
-            print(f'({mae_accum:.2f}<{min_loss_mae:.2f}')
+            print(f'MSE: ({mse_accum:.2f}<{min_loss_mse:.2f})')
             min_loss_mse = mse_accum 
     else: 
         accum += 1
