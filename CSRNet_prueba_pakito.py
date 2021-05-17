@@ -115,18 +115,15 @@ n_epochs = 200
 optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
 scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
 
-min_loss = float('Inf')
-MAX_ACCUM = 50
+min_loss_mae = float('Inf')
+min_loss_mse = float('Inf')
+MAX_ACCUM = 10
 accum = 0
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
     total_iter = 0
-
-    # Para iniciar el scheduler
-    if epoch > LR_DECAY_START:
-        scheduler.step()
 
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:
@@ -148,6 +145,10 @@ for epoch in range(n_epochs):
         
     losses['train'].append(training_loss)  # .item())
 
+    # Para iniciar el scheduler (siempre tras optimizer.step())
+    if epoch > LR_DECAY_START:
+        scheduler.step()
+
     val_loss = 0.0
     mae_accum = 0.0
     mse_accum = 0.0
@@ -168,7 +169,7 @@ for epoch in range(n_epochs):
         val_loss += loss.cpu().item()
 
         output_num = output.detach().cpu().sum()/LOG_PARA
-        y_num = y.sum()//LOG_PARA
+        y_num = y.sum()/LOG_PARA
         mae_accum += abs(output_num - y_num)
         mse_accum += (output_num-y_num)**2
 
@@ -183,11 +184,16 @@ for epoch in range(n_epochs):
         f'[e {epoch}] \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
 
     # EARLY STOPPING
-    if mae_accum <= min_loss:
-        print(f'Saving model... ({mae_accum:.2f}<{min_loss:.2f}')
-        min_loss = mae_accum 
+    if (mae_accum <= min_loss_mae) or (mse_accum <= min_loss_mse):
+        print(f'Saving model...')
         torch.save(modelo, MODEL_FILENAME)
         accum = 0
+        if mae_accum <= min_loss_mae:
+            print(f'({mae_accum:.2f}<{min_loss_mae:.2f}')
+            min_loss_mae = mae_accum 
+        if mse_accum <= min_loss_mse:
+            print(f'({mae_accum:.2f}<{min_loss_mae:.2f}')
+            min_loss_mse = mse_accum 
     else: 
         accum += 1
         if accum>MAX_ACCUM:
@@ -257,11 +263,11 @@ for epoch in range(n_epochs):
 # TEST
 modelo.eval()  # Preparar el modelo para validación y/o test
 print("Testing... \n")
-total = 0
 
 # definimos la pérdida
-mse = nn.MSELoss(reduction='sum')
-mae = nn.L1Loss(reduction='sum')
+total_iter = 0
+mse = nn.MSELoss()
+test_loss = 0.0
 test_loss_mse = 0.0
 test_loss_mae = 0.0
 
@@ -274,23 +280,25 @@ for x, y in test_loader:
 
     x = x.to(device)
     y = y.to(device)
-    total += y.shape[0]
+    total_iter += y.shape[0]
 
     output = modelo(x)
     #output = output.flatten()
     mse_loss = mse(output.squeeze(), y.squeeze())
-    test_loss_mse += mse_loss.cpu().item()
-    mae_loss = mae(output.squeeze(), y.squeeze())
-    test_loss_mae += mae_loss.cpu().item()
+    test_loss += mse_loss.detach().cpu().numpy()
+
+    output_num = output.detach().cpu().sum()/LOG_PARA
+    y_num = y.sum()/LOG_PARA
+    test_loss_mae += abs(output_num - y_num)
+    test_loss_mse += (output_num-y_num)**2
 
     # para guardar las etqieutas.
     yreal.append(y.detach().cpu().numpy())
     ypredicha.append(output.detach().cpu().numpy())
 
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mse /= total # *= Y_NORM/total
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mae /= total # *= Y_NORM/total
+test_loss /= total_iter
+test_loss_mae /= total_iter
+test_loss_mse = torch.sqrt(test_loss_mse/total_iter)
 
 # yreal = np.array(yreal).flatten()
 # ypredicha = np.array(ypredicha).flatten() # comprobar si funciona.
