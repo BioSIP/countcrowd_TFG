@@ -166,26 +166,27 @@ class VGGish(nn.Module):
         self.pools = [4, 4, 2, 2]
         self.features = nn.Sequential(
             nn.Conv2d(2, 64, (1, 7),  stride=(1, self.pools[0]), padding=(0, 3)),
-            nn.ELU(),
+            nn.ReLU(),
 
             nn.Conv2d(64, 128, (1, 5), stride=(1, self.pools[1]), padding=(0, 2)),
-            nn.ELU(),
+            nn.ReLU(),
 
             nn.Conv2d(128, 256, (1, 3), stride=1, padding=(0, 1)),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Conv2d(256, 256, (1, 3), stride=(1, self.pools[2]), padding=(0, 1)),
-            nn.ELU(),
+            nn.ReLU(),
 
             nn.Conv2d(256, 512, (1, 3), stride=1, padding=(0, 1)),
-            nn.ELU(),
+            nn.ReLU(),
             nn.Conv2d(512, 1024, (1, 3), stride=1, padding=(0, 1)),
-            nn.ELU(),
+            nn.ReLU(),
             # nn.MaxPool2d((1,self.pools[3]), stride=self.pools[3])
         )
         self.avgpool = GlobalAvgPool2d()
         self.fc = nn.Sequential(
             nn.Linear(1024, 4096),
-            nn.Linear(4096, 1)
+            nn.Linear(4096, 1),
+            nn.ReLU()
         )
         # así y todo se nos queda en 1572864000
 
@@ -203,7 +204,7 @@ modelo = VGGish()
 modelo = modelo.to(device)
 criterion = nn.MSELoss()  # definimos la pérdida
 # criterion = LogCoshLoss(reduction='sum')
-optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
+optimizador = optim.Adam(modelo.parameters(), lr=1e-4)#, weight_decay=1e-4)
 # optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
 # print(modelo)
 
@@ -212,9 +213,9 @@ optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
 
 # TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
-dataiter = iter(train_loader)
-# y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
-x, y = dataiter.next()
+# dataiter = iter(train_loader)
+# # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
+# x, y = dataiter.next()
 
 # print(x)
 # print(x.size())
@@ -228,7 +229,7 @@ losses = {'train': list(), 'validacion': list()}
 min_val_loss = float('Inf') 
 expcode = 'vggish_adam_mse'
 
-for epoch in range(20):
+for epoch in range(30):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
     total = 0
@@ -247,6 +248,7 @@ for epoch in range(20):
 
         output = modelo(x)  # forward
         loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
+        # print(f'loss: {loss:.4f}')
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
@@ -289,6 +291,7 @@ n_epochs = 500
 modelo = torch.load(filename)
 optimizador = optim.SGD(modelo.parameters(), lr=1e-7, momentum=0.9)
 epoch_ni = 0 # epochs not improving. 
+MAX_ITER = 100
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
@@ -342,7 +345,7 @@ for epoch in range(n_epochs):
         epoch_ni = 0
     else:
         epoch_ni +=1
-        if epoch_ni > 100:
+        if epoch_ni > MAX_ITER:
             break
 
     losses['validacion'].append(val_loss)  # .item())
