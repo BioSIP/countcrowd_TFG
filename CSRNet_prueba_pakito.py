@@ -1,14 +1,39 @@
-import torch
-import torchvision
-import torch.nn as nn
-import numpy as np
-from scipy.io import loadmat
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@File    :   CSRNet_prueba_pakito.py
+@Time    :   2021/05/18 09:52:22
+@Author  :   F.J. Martinez-Murcia 
+@Version :   1.0
+@Contact :   pakitochus@gmail.com
+@License :   (C)Copyright 2021, SiPBA-BioSIP
+@Desc    :   None
+
+Diferencias: 
+- Variable() está obsoleto, no se usa. 
+- to(device) se prefiere a .cuda() en versiones modernas, pero no difieren. 
+- 1o optimizer, luego scheduler. En el original va al revés, salta warning. 
+- Se define criterion.to(device). No sé por qué. 
+
+'''
+
+# here put the import lib
+
 import os
-import matplotlib.pyplot as plt
-from torch import optim
 import pickle
-from datasets import load_datasets, LOG_PARA
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from scipy.io import loadmat
+from torch import optim
+from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
+from torchvision import models
+
+from datasets import LOG_PARA, load_datasets
 
 # SEed for reproducibility
 SEED = 3035
@@ -26,10 +51,6 @@ use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
 train_loader, val_loader, test_loader, restore_transform = load_datasets()
-
-from torchvision import models
-import torch.nn.functional as F
-
 
 class CSRNet(nn.Module):
     def __init__(self, load_weights=False):
@@ -82,11 +103,11 @@ def make_layers(cfg, in_channels = 3,batch_norm=False,dilation = False):
 
 
 modelo = CSRNet()
+modelo = modelo.to(device)
 
 #pytorch_total_params = sum(p.numel() for p in modelo.parameters())
 #print(pytorch_total_params)
 
-modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
 criterion = nn.MSELoss().to(device)
 # criterion = nn.L1Loss(reduction='mean')
@@ -100,6 +121,7 @@ criterion = nn.MSELoss().to(device)
 # PODEMOS NORMALIZAR EL MAPA DE DENSIDAD???!!!??
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
 #Y_NORM = 200
+# UPDATE: Ahora se normaliza en dataset.py con LOG_PARA
 
 losses = {'train': list(), 'validacion': list(),
             'val_mae': list(), 'val_mse': list()}
@@ -110,7 +132,7 @@ losses = {'train': list(), 'validacion': list(),
 # print(torch.max(x))
 # print(x)
 
-# Parámetros (de la configuracion china original)
+# Parámetros (de la configuracion original)
 LR = 1e-5
 LR_DECAY = 0.99
 NUM_EPOCH_LR_DECAY = 1
@@ -121,8 +143,8 @@ n_epochs = 200
 optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
 scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
 
-min_loss_mae = float('Inf')
-min_loss_mse = float('Inf')
+train_record = {'best_mae': float('Inf'), 'best_mse': float('Inf')}
+# Para early stopping: guarda el modelo si mejora en acumulados, para si se sobrepasa MAX_ACCUM
 MAX_ACCUM = 100
 accum = 0
 
@@ -140,15 +162,18 @@ for epoch in range(n_epochs):
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
-        output = modelo(x)  # forward
-        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
+        pred_map = modelo(x)  # forward
+        loss = criterion(pred_map.squeeze(), y.squeeze())  # evaluación del loss
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
-        training_loss += loss.cpu().item()  # acumulamos el loss de este batch
+        training_loss += loss.data.cpu().item()  # acumulamos el loss de este batch
 
     training_loss /= total_iter
-        
+    lr_computed = optimizador.param_groups[0]['lr']*10000
+    orig_count = y[0].sum().data/LOG_PARA
+    pred_count = pred_map[0].sum().data/LOG_PARA 
+    print( f'[ep {epoch}][loss {training_loss:.4f}][lr {lr_computed:.4f}][cnt: den: {orig_count:.1f} pred: {pred_count:.1f}]')   
     losses['train'].append(training_loss)  # .item())
 
     # Para iniciar el scheduler (siempre tras optimizer.step())
@@ -159,28 +184,30 @@ for epoch in range(n_epochs):
     mae_accum = 0.0
     mse_accum = 0.0
     total_iter = 0
+    total = 0
 
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
-    with torch.no_grad():
-        for x, y in val_loader:
+    for x, y in val_loader:
+        x = x.to(device)
+        y = y.to(device)
+        total_iter += 1
 
+        with torch.no_grad():
             # y = y/Y_NORM  # normalizamoss
-            x = x.to(device)
-            y = y.to(device)
-            total_iter += 1
-
-            output = modelo(x)
+            pred_map = modelo(x)
             #output = output.flatten()
-            loss = criterion(output.squeeze(), y.squeeze())
+            loss = criterion(pred_map.squeeze(), y.squeeze())
             val_loss += loss.cpu().item()
 
-            output_num = output.detach().cpu().sum()/LOG_PARA
-            y_num = y.sum()/LOG_PARA
-            mae_accum += abs(y_num-output_num)
-            mse_accum += (output_num-y_num)*(output_num-y_num)
+            for i_img in range(pred_map.shape[0]):
+                pred_num = pred_map[i_img].sum().data/LOG_PARA
+                y_num = y[i_img].sum().data/LOG_PARA
+                mae_accum += abs(y_num-pred_num)
+                mse_accum += (pred_num-y_num)*(pred_num-y_num)
+                total += 1
 
-    val_loss /= total_iter
+    val_loss /= total
     mae_accum /= total_iter
     mse_accum = torch.sqrt(mse_accum/total_iter)
 
@@ -191,16 +218,16 @@ for epoch in range(n_epochs):
         f'[e {epoch}] \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
 
     # EARLY STOPPING
-    if (mae_accum <= min_loss_mae) or (mse_accum <= min_loss_mse):
+    if (mae_accum <= train_record['best_mae']) or (mse_accum <= train_record['best_mse']):
         print(f'Saving model...')
         torch.save(modelo, MODEL_FILENAME)
         accum = 0
-        if mae_accum <= min_loss_mae:
-            print(f'MAE: ({mae_accum:.2f}<{min_loss_mae:.2f})')
-            min_loss_mae = mae_accum 
-        if mse_accum <= min_loss_mse:
-            print(f'MSE: ({mse_accum:.2f}<{min_loss_mse:.2f})')
-            min_loss_mse = mse_accum 
+        if mae_accum <= train_record['best_mae']:
+            print(f'MAE: ({mae_accum:.2f}<{train_record["best_mae"]:.2f})')
+            train_record['best_mae'] = mae_accum 
+        if mse_accum <= train_record['best_mse']:
+            print(f'MSE: ({mse_accum:.2f}<{train_record["best_mse"]:.2f})')
+            train_record['best_mse'] = mse_accum 
     else: 
         accum += 1
         if accum>MAX_ACCUM:
@@ -273,6 +300,7 @@ print("Testing... \n")
 
 # definimos la pérdida
 total_iter = 0
+total = 0
 mse = nn.MSELoss()
 test_loss = 0.0
 test_loss_mse = 0.0
@@ -290,10 +318,17 @@ with torch.no_grad():
         y = y.to(device)
         total_iter += 1
 
-        output = modelo(x)
+        pred_map = modelo(x)
         #output = output.flatten()
-        mse_loss = mse(output.squeeze(), y.squeeze())
-        test_loss += mse_loss.detach().cpu().numpy()
+        loss = mse(pred_map.squeeze(), y.squeeze())
+        test_loss += loss.cpu().item()
+
+        for i_img in range(pred_map.shape[0]):
+            pred_num = pred_map[i_img].sum().data/LOG_PARA
+            y_num = y[i_img].sum().data/LOG_PARA
+            mae_accum += abs(y_num-pred_num)
+            mse_accum += (pred_num-y_num)*(pred_num-y_num)
+            total += 1
 
         output_num = output.detach().cpu().sum()/LOG_PARA
         y_num = y.sum()/LOG_PARA
@@ -301,10 +336,10 @@ with torch.no_grad():
         test_loss_mse += (output_num-y_num)**2
 
         # para guardar las etqieutas.
-        yreal.append(y.detach().cpu().numpy())
-        ypredicha.append(output.detach().cpu().numpy())
+        yreal.append(y.data.cpu().numpy())
+        ypredicha.append(pred_map.data.cpu().numpy())
 
-test_loss /= total_iter
+test_loss /= total
 test_loss_mae /= total_iter
 test_loss_mse = torch.sqrt(test_loss_mse/total_iter)
 

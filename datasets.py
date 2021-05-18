@@ -165,6 +165,9 @@ class DISCO(data.Dataset):
         self.imagefiles = [
             el + '.jpg' for el in self.imagefiles_wo_ext if el in self.mapfiles_wo_ext]
 
+        self.imagefiles = sorted(self.imagefiles)
+        self.mapfiles_wo_ext = sorted(self.mapfiles_wo_ext)
+
         self.main_transform = main_transform # se aplica a todos: mapas e imágenes. Solo en training para generar más sample
         self.img_transform = img_transform # se aplica solo a imágenes
         self.den_transform = den_transform # se aplica solo a mapas de densidad
