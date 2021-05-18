@@ -42,6 +42,8 @@ class AudioDataset(Dataset):
         self.audiofiles = [
             el + '.wav' for el in self.audiofiles_wo_ext if el in self.mapfiles_wo_ext]
 
+        self.audiofiles = sorted(self.audiofiles)
+        self.mapfiles = sorted(self.mapfiles)
         # Añadir extensiones a archivos de audio:
         # for i in range(len(self.audiofiles)):
         # Añado la extensión al nombre del archivo que quiero importar:
@@ -91,7 +93,7 @@ testset = AudioDataset(audio_path, test_density_path)
 # print(valset.__getitem__(20))
 
 #BATCH_SIZE: pequeño (1-3)
-batch_size = 2
+batch_size = 48
 # BATCH_SIZE: pequeño (1-3)
 train_loader = DataLoader(trainset, batch_size, shuffle=True)
 val_loader = DataLoader(valset, 32, shuffle=False)
@@ -199,9 +201,9 @@ class VGGish(nn.Module):
 
 modelo = VGGish()
 modelo = modelo.to(device)
-criterion = nn.MSELoss(reduction='sum')  # definimos la pérdida
+criterion = nn.MSELoss()  # definimos la pérdida
 # criterion = LogCoshLoss(reduction='sum')
-optimizador = optim.Adam(modelo.parameters())#, lr=0.01, weight_decay=1e-4)
+optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
 # optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
 # print(modelo)
 
@@ -234,7 +236,7 @@ for epoch in range(20):
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:
 
-        total += y.shape[0]
+        total += 1
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
@@ -244,8 +246,7 @@ for epoch in range(20):
         y = y.to(device)
 
         output = modelo(x)  # forward
-        output = output.squeeze()
-        loss = criterion(output, y)  # evaluación del loss
+        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
@@ -253,12 +254,13 @@ for epoch in range(20):
 
     training_loss *= Y_NORM/total
     losses['train'].append(training_loss)  # .item())
+
     val_loss = 0.0
     total = 0
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
     for x, y in val_loader:
-        total += y.shape[0]
+        total += 1
 
         y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
 
@@ -266,8 +268,7 @@ for epoch in range(20):
         y = y.to(device)
 
         output = modelo(x)
-        output = output.squeeze()
-        loss = criterion(output, y)
+        loss = criterion(output.squeeze(), y.squeeze())
         val_loss += loss.item()
 
     val_loss *= Y_NORM/total
@@ -286,7 +287,7 @@ for epoch in range(20):
 n_epochs = 500
 
 modelo = torch.load(filename)
-optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
+optimizador = optim.SGD(modelo.parameters(), lr=1e-7, momentum=0.9)
 epoch_ni = 0 # epochs not improving. 
 
 for epoch in range(n_epochs):
@@ -297,7 +298,7 @@ for epoch in range(n_epochs):
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:
 
-        total += y.shape[0]
+        total += 1
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
@@ -307,8 +308,8 @@ for epoch in range(n_epochs):
         y = y.to(device)
 
         output = modelo(x)  # forward
-        output = output.squeeze()
-        loss = criterion(output, y)  # evaluación del loss
+        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
+        # print(f'loss: {loss}')
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
@@ -321,16 +322,15 @@ for epoch in range(n_epochs):
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
     for x, y in val_loader:
-        total += y.shape[0]
+        total += 1
 
         y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
 
         x = x.to(device)
         y = y.to(device)
 
-        output = modelo(x)
-        output = output.squeeze()
-        loss = criterion(output, y)
+        output = modelo(x)  # forward
+        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
         val_loss += loss.item()
 
     val_loss *= Y_NORM/total
@@ -342,7 +342,7 @@ for epoch in range(n_epochs):
         epoch_ni = 0
     else:
         epoch_ni +=1
-        if epoch_ni > 50:
+        if epoch_ni > 100:
             break
 
     losses['validacion'].append(val_loss)  # .item())

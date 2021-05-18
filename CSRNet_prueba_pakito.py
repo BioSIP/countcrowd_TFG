@@ -9,6 +9,8 @@
 @License :   (C)Copyright 2021, SiPBA-BioSIP
 @Desc    :   None
 
+CORREGIDO EL LOADER. 
+
 Diferencias: 
 - Variable() está obsoleto, no se usa. 
 - to(device) se prefiere a .cuda() en versiones modernas, pero no difieren. 
@@ -35,7 +37,7 @@ from torchvision import models
 
 from datasets import LOG_PARA, load_datasets
 
-# SEed for reproducibility
+# Seed for reproducibility
 SEED = 3035
 if SEED is not None:
     np.random.seed(SEED)
@@ -326,11 +328,11 @@ with torch.no_grad():
         for i_img in range(pred_map.shape[0]):
             pred_num = pred_map[i_img].sum().data/LOG_PARA
             y_num = y[i_img].sum().data/LOG_PARA
-            mae_accum += abs(y_num-pred_num)
-            mse_accum += (pred_num-y_num)*(pred_num-y_num)
+            test_loss_mae += abs(y_num-pred_num)
+            test_loss_mse += (pred_num-y_num)*(pred_num-y_num)
             total += 1
 
-        output_num = output.detach().cpu().sum()/LOG_PARA
+        output_num = pred_map.data.cpu().sum()/LOG_PARA
         y_num = y.sum()/LOG_PARA
         test_loss_mae += abs(output_num - y_num)
         test_loss_mse += (output_num-y_num)**2
@@ -356,3 +358,11 @@ losses['test_mae'] = test_loss_mae  # .item())
 
 with open(SAVE_FILENAME, 'wb') as handle:
     pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+#%% VISUALIZATION
+# fig, ax = plt.subplots(2, 1, figsize=(30,10))
+# img_orig = x.data.cpu().numpy().squeeze().transpose((1,2,0))
+# img_orig = (img_orig-img_orig.min())/(img_orig.max()-img_orig.min())
+# ax[0].imshow(img_orig)
+# ax[1].imshow(y.data.cpu().numpy().squeeze())
