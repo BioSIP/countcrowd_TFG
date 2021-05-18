@@ -10,8 +10,15 @@ import pickle
 from datasets import load_datasets, LOG_PARA
 from torch.optim.lr_scheduler import StepLR
 
+# SEed for reproducibility
+SEED = 3035
+if SEED is not None:
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+
 # Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'UNET_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
+SAVE_FILENAME = 'CSRNet_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
 MODEL_FILENAME = 'CSRNet_Prueba.pth'
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -22,6 +29,7 @@ train_loader, val_loader, test_loader, restore_transform = load_datasets()
 
 from torchvision import models
 import torch.nn.functional as F
+
 
 class CSRNet(nn.Module):
     def __init__(self, load_weights=False):
@@ -43,7 +51,6 @@ class CSRNet(nn.Module):
         x = self.output_layer(x)
         x = F.interpolate(x,scale_factor=8)
         return x
-
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -71,8 +78,7 @@ def make_layers(cfg, in_channels = 3,batch_norm=False,dilation = False):
             else:
                 layers += [conv2d, nn.ReLU(inplace=True)]
             in_channels = v
-    return nn.Sequential(*layers)                
-
+    return nn.Sequential(*layers)             
 
 
 modelo = CSRNet()
@@ -86,9 +92,9 @@ criterion = nn.MSELoss().to(device)
 # criterion = nn.L1Loss(reduction='mean')
 
 # convertimos train_loader en un iterador
-dataiter = iter(train_loader)
+# dataiter = iter(train_loader)
 # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
-x, y = dataiter.next()  # x e y son tensores
+# x, y = dataiter.next()  # x e y son tensores
 
 
 # PODEMOS NORMALIZAR EL MAPA DE DENSIDAD???!!!??
@@ -117,7 +123,7 @@ scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)
 
 min_loss_mae = float('Inf')
 min_loss_mse = float('Inf')
-MAX_ACCUM = 10
+MAX_ACCUM = 100
 accum = 0
 
 for epoch in range(n_epochs):
@@ -156,22 +162,23 @@ for epoch in range(n_epochs):
 
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
-    for x, y in val_loader:
+    with torch.no_grad():
+        for x, y in val_loader:
 
-        # y = y/Y_NORM  # normalizamos
-        x = x.to(device)
-        y = y.to(device)
-        total_iter += y.shape[0]
+            # y = y/Y_NORM  # normalizamoss
+            x = x.to(device)
+            y = y.to(device)
+            total_iter += 1
 
-        output = modelo(x)
-        #output = output.flatten()
-        loss = criterion(output.squeeze(), y.squeeze())
-        val_loss += loss.cpu().item()
+            output = modelo(x)
+            #output = output.flatten()
+            loss = criterion(output.squeeze(), y.squeeze())
+            val_loss += loss.cpu().item()
 
-        output_num = output.detach().cpu().sum()/LOG_PARA
-        y_num = y.sum()/LOG_PARA
-        mae_accum += abs(output_num - y_num)
-        mse_accum += (output_num-y_num)**2
+            output_num = output.detach().cpu().sum()/LOG_PARA
+            y_num = y.sum()/LOG_PARA
+            mae_accum += abs(y_num-output_num)
+            mse_accum += (output_num-y_num)*(output_num-y_num)
 
     val_loss /= total_iter
     mae_accum /= total_iter
@@ -274,27 +281,28 @@ test_loss_mae = 0.0
 yreal = list()
 ypredicha = list()
 
-for x, y in test_loader:
+with torch.no_grad():
+    for x, y in test_loader:
 
-    # y=y/Y_NORM #normalizamos
+        # y=y/Y_NORM #normalizamos
 
-    x = x.to(device)
-    y = y.to(device)
-    total_iter += y.shape[0]
+        x = x.to(device)
+        y = y.to(device)
+        total_iter += 1
 
-    output = modelo(x)
-    #output = output.flatten()
-    mse_loss = mse(output.squeeze(), y.squeeze())
-    test_loss += mse_loss.detach().cpu().numpy()
+        output = modelo(x)
+        #output = output.flatten()
+        mse_loss = mse(output.squeeze(), y.squeeze())
+        test_loss += mse_loss.detach().cpu().numpy()
 
-    output_num = output.detach().cpu().sum()/LOG_PARA
-    y_num = y.sum()/LOG_PARA
-    test_loss_mae += abs(output_num - y_num)
-    test_loss_mse += (output_num-y_num)**2
+        output_num = output.detach().cpu().sum()/LOG_PARA
+        y_num = y.sum()/LOG_PARA
+        test_loss_mae += abs(output_num - y_num)
+        test_loss_mse += (output_num-y_num)**2
 
-    # para guardar las etqieutas.
-    yreal.append(y.detach().cpu().numpy())
-    ypredicha.append(output.detach().cpu().numpy())
+        # para guardar las etqieutas.
+        yreal.append(y.detach().cpu().numpy())
+        ypredicha.append(output.detach().cpu().numpy())
 
 test_loss /= total_iter
 test_loss_mae /= total_iter
