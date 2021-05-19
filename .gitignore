@@ -1,2 +1,4 @@
 
 models/SCC_Model/pytorch_vggish.pth
+RESULTADOS/CSRNet_prueba.pickle
+RESULTADOS/CANNet_Prueba.pickle

@@ -45,7 +45,7 @@ if SEED is not None:
     torch.cuda.manual_seed(SEED)
 
 # Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'CSRNet_MSEsum_(120)Adam0.01_batch2(eval_y_train).pickle'
+SAVE_FILENAME = 'CSRNet_Prueba.pickle'
 MODEL_FILENAME = 'CSRNet_Prueba.pth'
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:

@@ -20,9 +20,9 @@ from torch.utils import data
 import torchvision.transforms as standard_transforms
 
 # VARIABLES PARA INICIAR
-# PATH = '/media/NAS/home/cristfg/datasets/'
-# PATH = '/Volumes/Cristina /TFG/Data/'
-PATH = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/'
+#PATH = '/media/NAS/home/cristfg/datasets/'
+PATH = '/Volumes/Cristina /TFG/Data/'
+# PATH = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/'
 
 STD_SIZE = (768, 1024)
 TRAIN_SIZE = (576, 768)  # 2D tuple or 1D scalar
@@ -39,7 +39,7 @@ LABEL_FACTOR = 1  # must be 1
 LOG_PARA = 100.
 
 RESUME_MODEL = ''  # model path
-TRAIN_BATCH_SIZE = 48  # imgs
+TRAIN_BATCH_SIZE = 12  # imgs
 VAL_BATCH_SIZE = 1  # must be 1
 
 
