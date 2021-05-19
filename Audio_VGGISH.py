@@ -422,6 +422,9 @@ for x, y in test_loader:
     with torch.no_grad():
         output = modelo(x)
 
+    yreal.append(inverse_transform(y.data.cpu().numpy()))
+    ypredicha.append(inverse_transform(output.data.cpu().numpy()))
+
     mae_accum, mse_accum = get_mae_mse(output.squeeze(), y.squeeze(), inverse_transform)
     mae += mae_accum
     mse += mse_accum
@@ -430,18 +433,23 @@ for x, y in test_loader:
 val_loss  = val_loss/total
 mae = mae/total
 mse = mse/total
-print(f'[ep {epoch}][Val MAE: {mae:.4f}][Val MSE: {mse:.4f}]')
+print(f'[ep {epoch}][Test MAE: {mae:.4f}][Test MSE: {mse:.4f}]')
 
 # yreal = np.array(yreal).flatten()
 # ypredicha = np.array(ypredicha).flatten() # comprobar si funciona.
 
-losses['yreal'] = yreal
-losses['ypredicha'] = ypredicha
+losses['yreal'] = np.array([el.item() for a in yreal for el in a])
+losses['ypredicha'] = np.array([el.item() for a in ypredicha for el in a])
 
-print(f'Test Loss (MSE): {test_loss_mse}')
-losses['test_mse'] = test_loss_mse  # .item())
-print(f'Test Loss (MAE): {test_loss_mae}')
-losses['test_mae'] = test_loss_mae  # .item())
+print(f'Test Loss (MSE): {mse}')
+losses['test_mse'] = mse  # .item())
+print(f'Test Loss (MAE): {mae}')
+losses['test_mae'] = mae  # .item())
+
+import pickle
+SAVE_FILENAME = 'vggish_adam_mse_log_results.pickle'
+with open(SAVE_FILENAME, 'wb') as handle:
+    pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
 #%% 
 '''
 Testing... 
