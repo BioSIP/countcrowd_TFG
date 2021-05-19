@@ -9,6 +9,7 @@ import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
 import numpy as np
+from torch.optim.lr_scheduler import StepLR
 # https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
@@ -185,8 +186,7 @@ class VGGish(nn.Module):
         self.avgpool = GlobalAvgPool2d()
         self.fc = nn.Sequential(
             nn.Linear(1024, 4096),
-            nn.Linear(4096, 1),
-            nn.ReLU()
+            nn.Linear(4096, 1)
         )
         # así y todo se nos queda en 1572864000
 
@@ -204,7 +204,7 @@ modelo = VGGish()
 modelo = modelo.to(device)
 criterion = nn.MSELoss()  # definimos la pérdida
 # criterion = LogCoshLoss(reduction='sum')
-optimizador = optim.Adam(modelo.parameters(), lr=1e-4)#, weight_decay=1e-4)
+optimizador = optim.Adam(modelo.parameters(), lr=1e-3)#, weight_decay=1e-4)
 # optimizador = optim.SGD(modelo.parameters(), lr=1e-4)
 # print(modelo)
 
@@ -222,14 +222,31 @@ optimizador = optim.Adam(modelo.parameters(), lr=1e-4)#, weight_decay=1e-4)
 # print(y)
 # print(y.size())
 
+def get_mae_mse(ypred, y, transform):
+    mse_loss = 0.0
+    mae_loss = 0.0
+    total = 0 
+    ypred, y = transform(ypred.data), transform(y.data)
+    for ix in range(y.shape[0]):
+        total += 1
+        mae_loss += abs(ypred[ix] - y[ix])
+        mse_loss += (ypred[ix] - y[ix])*(ypred[ix] - y[ix])
+    return mae_loss/total, torch.sqrt(mse_loss/total)
+
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
-Y_NORM = 100
+Y_NORM = 10
 
 losses = {'train': list(), 'validacion': list()}
-min_val_loss = float('Inf') 
-expcode = 'vggish_adam_mse'
+min_val_loss = {'mae': float('Inf'), 'mse': float('Inf'), 'loss': float('Inf') }
+expcode = 'vggish_adam_mse_log'
 
-for epoch in range(30):
+def transform(x):
+    return torch.log(x/Y_NORM)
+
+def inverse_transform(x):
+    return Y_NORM*torch.exp(torch.as_tensor(x))
+
+for epoch in range(100):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
     total = 0
@@ -241,7 +258,7 @@ for epoch in range(30):
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
-        y = y/Y_NORM  # normalizamos
+        y = transform(y)  # normalizamos
 
         x = x.to(device)
         y = y.to(device)
@@ -254,17 +271,18 @@ for epoch in range(30):
 
         training_loss += loss.item()  # acumulamos el loss de este batch
 
-    training_loss *= Y_NORM/total
+    training_loss = training_loss/total
     losses['train'].append(training_loss)  # .item())
 
     val_loss = 0.0
+    mae, mse = 0,0 
     total = 0
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
     for x, y in val_loader:
         total += 1
 
-        y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
+        y = transform(y)  # normalizamos
 
         x = x.to(device)
         y = y.to(device)
@@ -272,28 +290,47 @@ for epoch in range(30):
         output = modelo(x)
         loss = criterion(output.squeeze(), y.squeeze())
         val_loss += loss.item()
+        mae_accum, mse_accum = get_mae_mse(output.squeeze(), y.squeeze(), inverse_transform)
+        mae += mae_accum
+        mse += mse_accum
 
-    val_loss *= Y_NORM/total
-    if val_loss <= min_val_loss:
-        min_val_loss = val_loss
+    val_loss  = val_loss/total
+    mae = mae/total
+    mse = mse/total
+    losses['validacion'].append(val_loss)  # .item())
+    print(f'[ep {epoch}] [Train: {training_loss:.4f}][Val: {val_loss:.4f}]')
+    print(f'\t[Val MAE: {mae:.4f}][Val MSE: {mse:.4f}]')
+
+    # Early stopping
+    if (val_loss <= min_val_loss['loss']) or (mse <= min_val_loss['mse']) or (mae<=min_val_loss['mae']):
         filename = expcode+'.pt'
         print(f'Saving as {filename}')
         torch.save(modelo, filename)
 
-    losses['validacion'].append(val_loss)  # .item())
-    print(
-        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+        if val_loss <= min_val_loss['loss']:
+            min_val_loss['loss'] = val_loss
+        if mse <= min_val_loss['mse']:
+            min_val_loss['mse'] = mse 
+        if mae<=min_val_loss['mae']: 
+            min_val_loss['mae'] = mae
 
+
+last_epoch = epoch
+# last_lr = scheduler.get_last_lr()
 
 # ENTRENAMIENTO
 n_epochs = 500
 
+LR_DECAY = 0.99
+NUM_EPOCH_LR_DECAY = 1
 modelo = torch.load(filename)
-optimizador = optim.SGD(modelo.parameters(), lr=1e-7, momentum=0.9)
+optimizador = optim.SGD(modelo.parameters(), lr=1e-4, momentum=0.9)
+scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
+
 epoch_ni = 0 # epochs not improving. 
 MAX_ITER = 100
 
-for epoch in range(n_epochs):
+for epoch in range(last_epoch, n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
     total = 0
@@ -305,7 +342,7 @@ for epoch in range(n_epochs):
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
-        y = y/Y_NORM  # normalizamos
+        y = transform(y)  # normalizamos
 
         x = x.to(device)
         y = y.to(device)
@@ -318,40 +355,49 @@ for epoch in range(n_epochs):
 
         training_loss += loss.item()  # acumulamos el loss de este batch
 
-    training_loss *= Y_NORM/total
+    training_loss = training_loss/total
     losses['train'].append(training_loss)  # .item())
     val_loss = 0.0
     total = 0
+    mae, mse = 0,0 
+
+    scheduler.step() # rebaja un poco la LR del SGD
+
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
     for x, y in val_loader:
         total += 1
 
-        y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
+        y = transform(y)  # normalizamos
 
         x = x.to(device)
         y = y.to(device)
 
         output = modelo(x)  # forward
-        loss = criterion(output.squeeze(), y.squeeze())  # evaluación del loss
-        val_loss += loss.item()
+        loss = criterion(output.squeeze(), y.squeeze()) 
+        mae_accum, mse_accum = get_mae_mse(output.squeeze(), y.squeeze(), inverse_transform)
+        mae += mae_accum
+        mse += mse_accum
 
-    val_loss *= Y_NORM/total
-    if val_loss <= min_val_loss:
-        min_val_loss = val_loss
+    val_loss  = val_loss/total
+    mae = mae/total
+    mse = mse/total
+    losses['validacion'].append(val_loss)  # .item())
+    print(f'[ep {epoch}] [Train: {training_loss:.4f}][Val: {val_loss:.4f}]')
+    print(f'\t[Val MAE: {mae:.4f}][Val MSE: {mse:.4f}]')
+
+    # Early stopping
+    if (val_loss <= min_val_loss['loss']) or (mse <= min_val_loss['mse']) or (mae<=min_val_loss['mae']):
         filename = expcode+'.pt'
         print(f'Saving as {filename}')
         torch.save(modelo, filename)
-        epoch_ni = 0
-    else:
-        epoch_ni +=1
-        if epoch_ni > MAX_ITER:
-            break
-
-    losses['validacion'].append(val_loss)  # .item())
-    print(
-        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
-
+        
+        if val_loss <= min_val_loss['loss']:
+            min_val_loss['loss'] = val_loss
+        if mse <= min_val_loss['mse']:
+            min_val_loss['mse'] = mse 
+        if mae<=min_val_loss['mae']: 
+            min_val_loss['mae'] = mae
 
 
 # TEST
@@ -361,8 +407,6 @@ modelo.eval()  # Preparar el modelo para validación y/o test
 print("Testing... \n")
 total = 0
 
-mse = nn.MSELoss(reduction='sum')  # definimos la pérdida
-mae = nn.L1Loss(reduction='sum')
 test_loss_mse = 0.0
 test_loss_mae = 0.0
 
@@ -371,27 +415,22 @@ ypredicha = list()
 
 for x, y in test_loader:
 
-    y = y/Y_NORM  # normalizamos
+    y = transform(y)  # normalizamos
 
     x = x.to(device)
     y = y.to(device)
-    total += y.shape[0]
+    with torch.no_grad():
+        output = modelo(x)
 
-    output = modelo(x)
-    output = output.squeeze()
-    mse_loss = mse(output, y)
-    test_loss_mse += mse_loss.cpu().item()
-    mae_loss = mae(output, y)
-    test_loss_mae += mae_loss.cpu().item()
+    mae_accum, mse_accum = get_mae_mse(output.squeeze(), y.squeeze(), inverse_transform)
+    mae += mae_accum
+    mse += mse_accum
+    total += 1
 
-    # para guardar las etqieutas.
-    yreal.append(y.detach().cpu().numpy())
-    ypredicha.append(output.detach().cpu().numpy())
-
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mse *= Y_NORM/total
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mae *= Y_NORM/total
+val_loss  = val_loss/total
+mae = mae/total
+mse = mse/total
+print(f'[ep {epoch}][Val MAE: {mae:.4f}][Val MSE: {mse:.4f}]')
 
 # yreal = np.array(yreal).flatten()
 # ypredicha = np.array(ypredicha).flatten() # comprobar si funciona.
