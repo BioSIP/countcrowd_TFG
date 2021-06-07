@@ -1,114 +1,61 @@
-#PROBAR LUEGO EL DATA PARALELL DE CUDA Y MÁS OPTIMIZACIÓN DE ESTE ESTILO!
-#PROBAR PONER SCHEDULER TRAS OPTIM PARA QUE NO SE SALTE EL VALOR INICIAL DE LR
-import torch
-import torchvision
-import torch.nn as nn
-from torch.utils.data import Dataset
-import numpy as np
-from scipy.io import loadmat
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@File    :   CSRNet_prueba_pakito.py
+@Time    :   2021/05/18 09:52:22
+@Author  :   F.J. Martinez-Murcia 
+@Version :   1.0
+@Contact :   pakitochus@gmail.com
+@License :   (C)Copyright 2021, SiPBA-BioSIP
+@Desc    :   None
+
+CORREGIDO EL LOADER. 
+
+Diferencias: 
+- Variable() está obsoleto, no se usa. 
+- to(device) se prefiere a .cuda() en versiones modernas, pero no difieren. 
+- 1o optimizer, luego scheduler. En el original va al revés, salta warning. 
+- Se define criterion.to(device). No sé por qué. 
+
+'''
+
+# here put the import lib
+
 import os
-import matplotlib.pyplot as plt
-from torch.utils.data import DataLoader
-from torch import optim
-from torchvision import models
-from torch.optim.lr_scheduler import StepLR
-from torch.nn import functional as F
 import pickle
 
-# Nombre de archivo para guardar resultados
-SAVE_FILENAME = 'CANNet_MSEmean_(20)Adam1e-5_batch2(eval_y_train).pickle'
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from scipy.io import loadmat
+from torch import optim
+from torch.autograd import Variable
+from torch.optim.lr_scheduler import StepLR
+from torchvision import models
 
+from datasets import LOG_PARA, load_datasets
+
+# Seed for reproducibility
+SEED = 3035
+if SEED is not None:
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+
+# Nombre de archivo para guardar resultados
+SAVE_FILENAME = 'CANNet_Prueba.pickle'
+MODEL_FILENAME = 'CANNet_Prueba.pth'
 
 # Para comprobar si tenemos GPUs disponibles para usar o no:
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-
-image_path = '/media/NAS/home/cristfg/datasets/imgs/'
-train_density_path = '/media/NAS/home/cristfg/datasets/density/train/'
-val_density_path = '/media/NAS/home/cristfg/datasets/density/val/'
-test_density_path = '/media/NAS/home/cristfg/datasets/density/test/'
-
-'''
-image_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/imgs/'
-train_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/train/'
-val_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/val/'
-test_density_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/density/test/'
-'''
-
-'''
-image_path = '/Volumes/Cristina /TFG/Data/imgs/'
-train_density_path = '/Volumes/Cristina /TFG/Data/density/train/'
-val_density_path = '/Volumes/Cristina /TFG/Data/density/val/'
-test_density_path = '/Volumes/Cristina /TFG/Data/density/test/'	
-'''
+train_loader, val_loader, test_loader, restore_transform = load_datasets()
 
 
-class ImageDataset(Dataset):
-    def __init__(self, image_path, density_path):
-
-        self.density_path = density_path
-        self.image_path = image_path
-
-        self.mapfiles = os.listdir(self.density_path)
-        # Para no incluir los archivos con '._':
-        self.mapfiles = [
-            el for el in self.mapfiles if el.startswith('._') == False]
-        self.mapfiles_wo_ext = [el[:-4] for el in self.mapfiles]
-
-        self.imagefiles = os.listdir(image_path)
-        self.imagefiles_wo_ext = [el[:-4] for el in self.imagefiles]
-        self.imagefiles = [
-            el + '.jpg' for el in self.imagefiles_wo_ext if el in self.mapfiles_wo_ext]
-
-    def __len__(self):
-        return len(self.imagefiles)
-
-    def __getitem__(self, idx):
-
-        # DENSITY MAP
-        map_path = self.density_path + self.mapfiles[idx]
-        y = loadmat(map_path)
-        y = torch.as_tensor(y['map'], dtype=torch.float32)
-        y = y.unsqueeze(0)
-
-        # IMAGES
-        filename = str(self.imagefiles[idx])
-        filename = filename.lstrip("['")
-        filename = filename.rstrip("']")
-        img_path = self.image_path + filename
-        # Cargamos la imagen:
-        x = plt.imread(img_path).copy()
-
-        x = x.transpose((2, 0, 1))  # Cambiar posición
-        x = torch.as_tensor(x, dtype=torch.float32)
-        # X normalizada a los 255 valores de brillo:
-        x = x / 255.0
-
-        return x, y
-
-
-# CARGAMOS LOS DATOS:
-trainset = ImageDataset(image_path, train_density_path)
-valset = ImageDataset(image_path, val_density_path)
-testset = ImageDataset(image_path, test_density_path)
-
-# PRUEBA
-# print(trainset.__getitem__(20))
-#torch.set_printoptions(profile="full")
-#print(testset.__getitem__(70)[1])
-#print(testset.__getitem__(70)[1].sum())
-
-
-train_batch_size = 2
-eval_batch_size = 2
-# train BATCH_SIZE: pequeño (1-3)
-train_loader = DataLoader(trainset, train_batch_size, shuffle=True)
-val_loader = DataLoader(valset, eval_batch_size, shuffle=False)
-test_loader = DataLoader(testset, eval_batch_size, shuffle=False)
-
-
-
+#RED
 class ContextualModule(nn.Module):
     def __init__(self, features, out_features=512, sizes=(1, 2, 3, 6)):
         super(ContextualModule, self).__init__()
@@ -193,26 +140,28 @@ def make_layers(cfg, in_channels = 3,batch_norm=False,dilation = False):
 
 
 modelo = CANNet()
+modelo = modelo.to(device)
 
 #pytorch_total_params = sum(p.numel() for p in modelo.parameters())
 #print(pytorch_total_params)
 
-modelo = modelo.to(device)
 # Definimos el criterion de pérdida:
-criterion = nn.MSELoss() #(reduction='mean')
-# criterion = nn.L1Loss(reduction='sum')
+criterion = nn.MSELoss().to(device)
+# criterion = nn.L1Loss(reduction='mean')
 
 # convertimos train_loader en un iterador
-dataiter = iter(train_loader)
+# dataiter = iter(train_loader)
 # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
-x, y = dataiter.next()  # x e y son tensores
+# x, y = dataiter.next()  # x e y son tensores
 
 
 # PODEMOS NORMALIZAR EL MAPA DE DENSIDAD???!!!??
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
 #Y_NORM = 200
+# UPDATE: Ahora se normaliza en dataset.py con LOG_PARA
 
-losses = {'train': list(), 'validacion': list()}
+losses = {'train': list(), 'validacion': list(),
+            'val_mae': list(), 'val_mse': list()}
 
 # PRUEBAS:
 # print(x.size())
@@ -220,65 +169,106 @@ losses = {'train': list(), 'validacion': list()}
 # print(torch.max(x))
 # print(x)
 
+# Parámetros (de la configuracion original)
+LR = 1e-5
+LR_DECAY = 0.99
+NUM_EPOCH_LR_DECAY = 1
+LR_DECAY_START = -1 
 
 # ENTRENAMIENTO 1
-n_epochs = 20
-optimizador = optim.Adam(modelo.parameters(), lr=1e-5, weight_decay=1e-4)
-scheduler = StepLR(optimizador, step_size=1, gamma=0.99)
-LR_DECAY_START=-1; #Cuando se sobrepasa esta epoch, el LR empezará a decaer.
+n_epochs = 200
+optimizador = optim.Adam(modelo.parameters(), lr=LR, weight_decay=1e-4)
+scheduler = StepLR(optimizador, step_size=NUM_EPOCH_LR_DECAY, gamma=LR_DECAY)    
+
+train_record = {'best_mae': float('Inf'), 'best_mse': float('Inf')}
+# Para early stopping: guarda el modelo si mejora en acumulados, para si se sobrepasa MAX_ACCUM
+MAX_ACCUM = 100
+accum = 0
 
 for epoch in range(n_epochs):
     print("Entrenando... \n")  # Esta será la parte de entrenamiento
     training_loss = 0.0  # el loss en cada epoch de entrenamiento
-    total = 0
-
-    if epoch > LR_DECAY_START:
-        scheduler.step()
-                
+    total_iter = 0
 
     modelo.train()  # Para preparar el modelo para el training
     for x, y in train_loader:
+        x = x.to(device)
+        y = y.to(device)
+        total_iter += 1 # como estamos usando el total, auemntamos 1 y.shape[0]
+
         # ponemos a cero todos los gradientes en todas las neuronas:
         optimizador.zero_grad()
 
-        # y=y/Y_NORM #normalizamos
-
-        x = x.to(device)
-        y = y.to(device)
-        total += y.shape[0]
-
-        output = modelo(x)  # forward
-        loss = criterion(output, y)  # evaluación del loss
+        pred_map = modelo(x)  # forward
+        loss = criterion(pred_map.squeeze(), y.squeeze())  # evaluación del loss
         loss.backward()  # backward pass
         optimizador.step()  # optimización
 
-        training_loss += loss.cpu().item()  # acumulamos el loss de este batch
+        training_loss += loss.data.cpu().item()  # acumulamos el loss de este batch
 
-    training_loss /= total
+    training_loss /= total_iter
+    lr_computed = optimizador.param_groups[0]['lr']*10000
+    orig_count = y[0].sum().data/LOG_PARA
+    pred_count = pred_map[0].sum().data/LOG_PARA 
+    print( f'[ep {epoch}][loss {training_loss:.4f}][lr {lr_computed:.4f}][cnt: den: {orig_count:.1f} pred: {pred_count:.1f}]')   
     losses['train'].append(training_loss)  # .item())
 
+    # Para iniciar el scheduler (siempre tras optimizer.step())
+    if epoch > LR_DECAY_START:
+        scheduler.step()
+
     val_loss = 0.0
+    mae_accum = 0.0
+    mse_accum = 0.0
+    total_iter = 0
     total = 0
 
     modelo.eval()  # Preparar el modelo para validación y/o test
     print("Validando... \n")
     for x, y in val_loader:
-
-        # y = y/Y_NORM  # normalizamos
         x = x.to(device)
         y = y.to(device)
-        total += y.shape[0]
+        total_iter += 1
 
-        output = modelo(x)
-        #output = output.flatten()
-        loss = criterion(output, y)
-        val_loss += loss.cpu().item()
+        with torch.no_grad():
+            # y = y/Y_NORM  # normalizamoss
+            pred_map = modelo(x)
+            #output = output.flatten()
+            loss = criterion(pred_map.squeeze(), y.squeeze())
+            val_loss += loss.cpu().item()
+
+            for i_img in range(pred_map.shape[0]):
+                pred_num = pred_map[i_img].sum().data/LOG_PARA
+                y_num = y[i_img].sum().data/LOG_PARA
+                mae_accum += abs(y_num-pred_num)
+                mse_accum += (pred_num-y_num)*(pred_num-y_num)
+                total += 1
 
     val_loss /= total
-    losses['validacion'].append(val_loss)  # .item())
+    mae_accum /= total_iter
+    mse_accum = torch.sqrt(mse_accum/total_iter)
 
+    losses['validacion'].append(val_loss)  # .item())
+    losses['val_mae'].append(mae_accum)  # .item())
+    losses['val_mse'].append(mse_accum)  # .item())
     print(
-        f'Epoch {epoch} \t\t Training Loss: {training_loss} \t\t Validation Loss: {val_loss}')
+        f'[e {epoch}] \t Train: {training_loss:.4f} \t Val_loss: {val_loss:.4f}, MAE: {mae_accum:.2f}, MSE: {mse_accum:.2f}')
+
+    # EARLY STOPPING
+    if (mae_accum <= train_record['best_mae']) or (mse_accum <= train_record['best_mse']):
+        print(f'Saving model...')
+        torch.save(modelo, MODEL_FILENAME)
+        accum = 0
+        if mae_accum <= train_record['best_mae']:
+            print(f'MAE: ({mae_accum:.2f}<{train_record["best_mae"]:.2f})')
+            train_record['best_mae'] = mae_accum 
+        if mse_accum <= train_record['best_mse']:
+            print(f'MSE: ({mse_accum:.2f}<{train_record["best_mse"]:.2f})')
+            train_record['best_mse'] = mse_accum 
+    else: 
+        accum += 1
+        if accum>MAX_ACCUM:
+            break
 
     with open(SAVE_FILENAME, 'wb') as handle:
         pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -344,40 +334,51 @@ for epoch in range(n_epochs):
 # TEST
 modelo.eval()  # Preparar el modelo para validación y/o test
 print("Testing... \n")
-total = 0
 
 # definimos la pérdida
-mse = nn.MSELoss(reduction='sum')
-mae = nn.L1Loss(reduction='sum')
+total_iter = 0
+total = 0
+mse = nn.MSELoss()
+test_loss = 0.0
 test_loss_mse = 0.0
 test_loss_mae = 0.0
 
 yreal = list()
 ypredicha = list()
 
-for x, y in test_loader:
+with torch.no_grad():
+    for x, y in test_loader:
 
-    # y=y/Y_NORM #normalizamos
+        # y=y/Y_NORM #normalizamos
 
-    x = x.to(device)
-    y = y.to(device)
-    total += y.shape[0]
+        x = x.to(device)
+        y = y.to(device)
+        total_iter += 1
 
-    output = modelo(x)
-    #output = output.flatten()
-    mse_loss = mse(output, y)
-    test_loss_mse += mse_loss.cpu().item()
-    mae_loss = mae(output, y)
-    test_loss_mae += mae_loss.cpu().item()
+        pred_map = modelo(x)
+        #output = output.flatten()
+        loss = mse(pred_map.squeeze(), y.squeeze())
+        test_loss += loss.cpu().item()
 
-    # para guardar las etqieutas.
-    yreal.append(y.detach().cpu().numpy())
-    ypredicha.append(output.detach().cpu().numpy())
+        for i_img in range(pred_map.shape[0]):
+            pred_num = pred_map[i_img].sum().data/LOG_PARA
+            y_num = y[i_img].sum().data/LOG_PARA
+            test_loss_mae += abs(y_num-pred_num)
+            test_loss_mse += (pred_num-y_num)*(pred_num-y_num)
+            total += 1
 
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mse /= total # *= Y_NORM/total
-# Esto siemrpe que reduction='sum' -> equiparable a número de personas.
-test_loss_mae /= total # *= Y_NORM/total
+        output_num = pred_map.data.cpu().sum()/LOG_PARA
+        y_num = y.sum()/LOG_PARA
+        test_loss_mae += abs(output_num - y_num)
+        test_loss_mse += (output_num-y_num)**2
+
+        # para guardar las etqieutas.
+        yreal.append(y.data.cpu().numpy())
+        ypredicha.append(pred_map.data.cpu().numpy())
+
+test_loss /= total
+test_loss_mae /= total_iter
+test_loss_mse = torch.sqrt(test_loss_mse/total_iter)
 
 # yreal = np.array(yreal).flatten()
 # ypredicha = np.array(ypredicha).flatten() # comprobar si funciona.
@@ -392,3 +393,11 @@ losses['test_mae'] = test_loss_mae  # .item())
 
 with open(SAVE_FILENAME, 'wb') as handle:
     pickle.dump(losses, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+#%% VISUALIZATION
+# fig, ax = plt.subplots(2, 1, figsize=(30,10))
+# img_orig = x.data.cpu().numpy().squeeze().transpose((1,2,0))
+# img_orig = (img_orig-img_orig.min())/(img_orig.max()-img_orig.min())
+# ax[0].imshow(img_orig)
+# ax[1].imshow(y.data.cpu().numpy().squeeze())

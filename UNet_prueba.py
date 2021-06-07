@@ -106,7 +106,6 @@ class UNET(nn.Module):
         return block
 
     def forward(self, x):
-        print(x.size())
         contracting_11_out = self.contracting_11(x)  # [-1, 64, 256, 256]
         x = self.contracting_12(
             contracting_11_out)  # [-1, 64, 128, 128]
@@ -140,7 +139,6 @@ class UNET(nn.Module):
             torch.cat((x, contracting_11_out), dim=1))
         # [-1, num_classes, 256, 256]
         x = self.output(x)
-        print(x.size())
         return x
 
 

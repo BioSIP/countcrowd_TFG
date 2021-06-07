@@ -2,7 +2,7 @@
 import pickle
 import matplotlib.pyplot as plt
 
-with open('CSRNet_prueba.pickle', 'rb') as handle: 
+with open('CANNet_Prueba.pickle', 'rb') as handle: 
 	b = pickle.load(handle)
 	#b = torch.load(handle,map_location=torch.device('cpu'))
 
