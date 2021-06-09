@@ -27,7 +27,10 @@ for fil in files:
     with open(filename, 'rb') as handle: 
         b = pickle.load(handle)
 
-
+    if title[:4] in ['UNet', 'CANN', 'CSRN']:
+        norm = 1/100
+    else:
+        norm = 1
     #%% 
 
     if type(b['yreal']) is list:
@@ -37,6 +40,8 @@ for fil in files:
         yreal = b['yreal']
         ypredicha = b['ypredicha']
 
+    yreal *= norm
+    ypredicha *=norm 
     fig, ax = plt.subplots()
     ax.scatter(yreal, ypredicha)
     ax.set_title(title)
