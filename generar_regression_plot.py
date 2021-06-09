@@ -38,9 +38,11 @@ for fil in files:
         ypredicha = b['ypredicha']
 
     fig, ax = plt.subplots()
-    ax.scatter(yreal*100, ypredicha*100)
+    ax.scatter(yreal, ypredicha)
     ax.set_title(title)
     ax.set_xlabel('# personas etiquetadas')
     ax.set_ylabel('# personas predichas')
+    xmin, xmax = 0, yreal.max()
+    ax.set_ylim(xmin-xmax/50, xmax+xmax/50)
     fig.savefig(title+'.jpg')
 # %%
