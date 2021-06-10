@@ -31,13 +31,19 @@ for fil in files:
 
     if title[:4] in ['UNet', 'CANN', 'CSRN']:
         norm = 1/100
+    elif 'Audio' in title:
+        norm = 100
     else:
         norm = 1
     #%% 
 
     if type(b['yreal']) is list:
-        yreal = np.array([el.sum() for el in b['yreal']])
-        ypredicha = np.array([el.sum() for el in b['ypredicha']])
+        if b['yreal'][0].ndim>1:
+            yreal = np.array([el.sum() for el in b['yreal']])
+            ypredicha = np.array([el.sum() for el in b['ypredicha']])
+        else:
+            yreal = np.concatenate(b['yreal'])
+            ypredicha = np.concatenate(b['ypredicha'])
     else:
         yreal = b['yreal']
         ypredicha = b['ypredicha']
