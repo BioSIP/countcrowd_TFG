@@ -17,6 +17,7 @@ import pickle
 import os
 import matplotlib.pyplot as plt 
 from sklearn.metrics import r2_score
+from scipy.stats import pearsonr
 
 # PATH = '/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/RESULTADOS'
 PATH = '/home/pakitochus/Descargas/cosas_cristfg/Pickles'
@@ -45,8 +46,9 @@ for fil in files:
     ypredicha *=norm 
     fig, ax = plt.subplots()
     ax.scatter(yreal, ypredicha)
-    r2 = r2_score(yreal, ypredicha)
-    ax.set_title(f'{title} (R2: {r2:.3f})')
+    # r2 = r2_score(yreal, ypredicha)
+    r2, p = pearsonr(yreal, ypredicha) # correlacion de pearson
+    ax.set_title(f'{title} (R: {r2:.3f})')
     ax.set_xlabel('# personas etiquetadas')
     ax.set_ylabel('# personas predichas')
     xmin, xmax = 0, yreal.max()
