@@ -16,6 +16,7 @@ import numpy as np
 import pickle
 import os
 import matplotlib.pyplot as plt 
+from sklearn.metrics import r2_score
 
 # PATH = '/home/pakitochus/Dropbox/Docencia/TFGs/Cristina/countcrowd_TFG/RESULTADOS'
 PATH = '/home/pakitochus/Descargas/cosas_cristfg/Pickles'
@@ -44,7 +45,8 @@ for fil in files:
     ypredicha *=norm 
     fig, ax = plt.subplots()
     ax.scatter(yreal, ypredicha)
-    ax.set_title(title)
+    r2 = r2_score(yreal, ypredicha)
+    ax.set_title(f'{title} (R2: {r2:.3f})')
     ax.set_xlabel('# personas etiquetadas')
     ax.set_ylabel('# personas predichas')
     xmin, xmax = 0, yreal.max()
