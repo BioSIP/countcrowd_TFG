@@ -1,0 +1,3438 @@
+Entrenando... 
+
+Validando... 
+
+[ep 0] [Train: 929.9702][Val: 1.5594]
+	[Val MAE: 89.1318][Val MSE: 107.3541]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 1] [Train: 1.1819][Val: 1.6189]
+	[Val MAE: 105.2957][Val MSE: 159.4796]
+Entrenando... 
+
+Validando... 
+
+[ep 2] [Train: 1.1743][Val: 1.2425]
+	[Val MAE: 78.5085][Val MSE: 95.5318]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 3] [Train: 1.0475][Val: 1.3659]
+	[Val MAE: 85.3298][Val MSE: 104.4002]
+Entrenando... 
+
+Validando... 
+
+[ep 4] [Train: 1.0206][Val: 1.2129]
+	[Val MAE: 81.5408][Val MSE: 100.0134]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 5] [Train: 0.9865][Val: 1.1145]
+	[Val MAE: 79.0590][Val MSE: 96.7310]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 6] [Train: 0.9658][Val: 1.3932]
+	[Val MAE: 87.6680][Val MSE: 107.3800]
+Entrenando... 
+
+Validando... 
+
+[ep 7] [Train: 0.9405][Val: 1.1093]
+	[Val MAE: 67.4253][Val MSE: 89.5758]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 8] [Train: 0.8158][Val: 1.0605]
+	[Val MAE: 91.9541][Val MSE: 128.5103]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 9] [Train: 0.7999][Val: 0.9180]
+	[Val MAE: 58.0036][Val MSE: 78.2972]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 10] [Train: 0.7458][Val: 0.9785]
+	[Val MAE: 88.7507][Val MSE: 133.5715]
+Entrenando... 
+
+Validando... 
+
+[ep 11] [Train: 0.6935][Val: 0.8888]
+	[Val MAE: 75.6376][Val MSE: 106.0292]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 12] [Train: 0.6595][Val: 0.8758]
+	[Val MAE: 75.5851][Val MSE: 112.9659]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 13] [Train: 0.6169][Val: 0.8462]
+	[Val MAE: 60.7102][Val MSE: 78.1170]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 14] [Train: 0.6182][Val: 0.9449]
+	[Val MAE: 61.4119][Val MSE: 89.7119]
+Entrenando... 
+
+Validando... 
+
+[ep 15] [Train: 0.5199][Val: 0.9222]
+	[Val MAE: 67.5017][Val MSE: 95.0446]
+Entrenando... 
+
+Validando... 
+
+[ep 16] [Train: 0.5705][Val: 0.8013]
+	[Val MAE: 55.6769][Val MSE: 77.7513]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 17] [Train: 0.5185][Val: 1.0818]
+	[Val MAE: 70.3309][Val MSE: 89.1704]
+Entrenando... 
+
+Validando... 
+
+[ep 18] [Train: 0.4895][Val: 0.8580]
+	[Val MAE: 62.9223][Val MSE: 86.4409]
+Entrenando... 
+
+Validando... 
+
+[ep 19] [Train: 0.4159][Val: 0.8700]
+	[Val MAE: 75.8931][Val MSE: 110.8992]
+Entrenando... 
+
+Validando... 
+
+[ep 20] [Train: 0.3889][Val: 0.9060]
+	[Val MAE: 58.2876][Val MSE: 94.1041]
+Entrenando... 
+
+Validando... 
+
+[ep 21] [Train: 0.3755][Val: 1.2314]
+	[Val MAE: 69.4701][Val MSE: 93.9247]
+Entrenando... 
+
+Validando... 
+
+[ep 22] [Train: 0.3544][Val: 0.8482]
+	[Val MAE: 55.4643][Val MSE: 76.6283]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 23] [Train: 0.2992][Val: 0.8428]
+	[Val MAE: 54.0564][Val MSE: 86.0120]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 24] [Train: 0.3181][Val: 0.8944]
+	[Val MAE: 54.6588][Val MSE: 82.5882]
+Entrenando... 
+
+Validando... 
+
+[ep 25] [Train: 0.3228][Val: 0.9030]
+	[Val MAE: 62.6997][Val MSE: 99.4400]
+Entrenando... 
+
+Validando... 
+
+[ep 26] [Train: 0.2706][Val: 0.9406]
+	[Val MAE: 53.7847][Val MSE: 80.1735]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 27] [Train: 0.2465][Val: 0.9396]
+	[Val MAE: 83.6267][Val MSE: 107.7684]
+Entrenando... 
+
+Validando... 
+
+[ep 28] [Train: 0.2555][Val: 0.9150]
+	[Val MAE: 68.2335][Val MSE: 98.5556]
+Entrenando... 
+
+Validando... 
+
+[ep 29] [Train: 0.2487][Val: 0.9679]
+	[Val MAE: 60.4990][Val MSE: 80.3979]
+Entrenando... 
+
+Validando... 
+
+[ep 30] [Train: 0.2009][Val: 0.8811]
+	[Val MAE: 59.4852][Val MSE: 101.4387]
+Entrenando... 
+
+Validando... 
+
+[ep 31] [Train: 0.2070][Val: 0.9523]
+	[Val MAE: 64.6160][Val MSE: 109.4180]
+Entrenando... 
+
+Validando... 
+
+[ep 32] [Train: 0.1692][Val: 0.8592]
+	[Val MAE: 57.6360][Val MSE: 91.9815]
+Entrenando... 
+
+Validando... 
+
+[ep 33] [Train: 0.1557][Val: 0.9882]
+	[Val MAE: 77.9056][Val MSE: 109.1712]
+Entrenando... 
+
+Validando... 
+
+[ep 34] [Train: 0.1494][Val: 0.9089]
+	[Val MAE: 54.6526][Val MSE: 84.3411]
+Entrenando... 
+
+Validando... 
+
+[ep 35] [Train: 0.1299][Val: 0.9860]
+	[Val MAE: 61.8369][Val MSE: 104.5504]
+Entrenando... 
+
+Validando... 
+
+[ep 36] [Train: 0.1245][Val: 0.8692]
+	[Val MAE: 49.6024][Val MSE: 77.2607]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 37] [Train: 0.1200][Val: 0.9819]
+	[Val MAE: 66.6193][Val MSE: 92.7900]
+Entrenando... 
+
+Validando... 
+
+[ep 38] [Train: 0.1309][Val: 1.0374]
+	[Val MAE: 67.7881][Val MSE: 89.4498]
+Entrenando... 
+
+Validando... 
+
+[ep 39] [Train: 0.1135][Val: 0.9377]
+	[Val MAE: 56.6059][Val MSE: 81.6172]
+Entrenando... 
+
+Validando... 
+
+[ep 40] [Train: 0.0910][Val: 0.9299]
+	[Val MAE: 52.0252][Val MSE: 79.4188]
+Entrenando... 
+
+Validando... 
+
+[ep 41] [Train: 0.0762][Val: 0.8889]
+	[Val MAE: 51.5667][Val MSE: 79.9107]
+Entrenando... 
+
+Validando... 
+
+[ep 42] [Train: 0.0789][Val: 0.8987]
+	[Val MAE: 54.4433][Val MSE: 84.0293]
+Entrenando... 
+
+Validando... 
+
+[ep 43] [Train: 0.0762][Val: 0.8927]
+	[Val MAE: 48.9351][Val MSE: 73.7653]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 44] [Train: 0.0653][Val: 0.9431]
+	[Val MAE: 54.6451][Val MSE: 83.4637]
+Entrenando... 
+
+Validando... 
+
+[ep 45] [Train: 0.0632][Val: 1.0557]
+	[Val MAE: 67.8495][Val MSE: 95.7369]
+Entrenando... 
+
+Validando... 
+
+[ep 46] [Train: 0.0670][Val: 0.9295]
+	[Val MAE: 58.8980][Val MSE: 90.0923]
+Entrenando... 
+
+Validando... 
+
+[ep 47] [Train: 0.0788][Val: 0.8981]
+	[Val MAE: 52.5100][Val MSE: 74.7961]
+Entrenando... 
+
+Validando... 
+
+[ep 48] [Train: 0.0674][Val: 1.0121]
+	[Val MAE: 57.3105][Val MSE: 81.8895]
+Entrenando... 
+
+Validando... 
+
+[ep 49] [Train: 0.0561][Val: 0.8548]
+	[Val MAE: 53.5420][Val MSE: 73.1157]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 50] [Train: 0.0470][Val: 0.9004]
+	[Val MAE: 54.2063][Val MSE: 76.1406]
+Entrenando... 
+
+Validando... 
+
+[ep 51] [Train: 0.0345][Val: 0.9479]
+	[Val MAE: 54.8018][Val MSE: 83.5436]
+Entrenando... 
+
+Validando... 
+
+[ep 52] [Train: 0.0323][Val: 0.8739]
+	[Val MAE: 56.3699][Val MSE: 79.2494]
+Entrenando... 
+
+Validando... 
+
+[ep 53] [Train: 0.0311][Val: 0.9226]
+	[Val MAE: 62.5674][Val MSE: 86.6249]
+Entrenando... 
+
+Validando... 
+
+[ep 54] [Train: 0.0273][Val: 0.8829]
+	[Val MAE: 51.5449][Val MSE: 77.1537]
+Entrenando... 
+
+Validando... 
+
+[ep 55] [Train: 0.0246][Val: 0.9402]
+	[Val MAE: 58.3139][Val MSE: 82.2041]
+Entrenando... 
+
+Validando... 
+
+[ep 56] [Train: 0.0243][Val: 0.8604]
+	[Val MAE: 53.7960][Val MSE: 78.6267]
+Entrenando... 
+
+Validando... 
+
+[ep 57] [Train: 0.0243][Val: 0.8766]
+	[Val MAE: 54.4255][Val MSE: 82.0849]
+Entrenando... 
+
+Validando... 
+
+[ep 58] [Train: 0.0272][Val: 0.8759]
+	[Val MAE: 54.4764][Val MSE: 76.0597]
+Entrenando... 
+
+Validando... 
+
+[ep 59] [Train: 0.0238][Val: 0.8799]
+	[Val MAE: 55.0530][Val MSE: 80.2937]
+Entrenando... 
+
+Validando... 
+
+[ep 60] [Train: 0.0220][Val: 0.8900]
+	[Val MAE: 49.1551][Val MSE: 71.5955]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 61] [Train: 0.0205][Val: 0.9107]
+	[Val MAE: 58.1826][Val MSE: 81.2167]
+Entrenando... 
+
+Validando... 
+
+[ep 62] [Train: 0.0208][Val: 0.8862]
+	[Val MAE: 51.0676][Val MSE: 74.9206]
+Entrenando... 
+
+Validando... 
+
+[ep 63] [Train: 0.0235][Val: 0.9139]
+	[Val MAE: 54.0303][Val MSE: 77.0658]
+Entrenando... 
+
+Validando... 
+
+[ep 64] [Train: 0.0239][Val: 0.8901]
+	[Val MAE: 50.4326][Val MSE: 78.4778]
+Entrenando... 
+
+Validando... 
+
+[ep 65] [Train: 0.0247][Val: 0.8276]
+	[Val MAE: 47.8125][Val MSE: 71.0007]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 66] [Train: 0.0255][Val: 0.8708]
+	[Val MAE: 52.7909][Val MSE: 76.0651]
+Entrenando... 
+
+Validando... 
+
+[ep 67] [Train: 0.0219][Val: 0.8945]
+	[Val MAE: 57.5847][Val MSE: 84.7843]
+Entrenando... 
+
+Validando... 
+
+[ep 68] [Train: 0.0233][Val: 0.8665]
+	[Val MAE: 47.7123][Val MSE: 71.7520]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 69] [Train: 0.0216][Val: 0.8608]
+	[Val MAE: 49.6734][Val MSE: 70.0545]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 70] [Train: 0.0185][Val: 0.8571]
+	[Val MAE: 56.2100][Val MSE: 78.9217]
+Entrenando... 
+
+Validando... 
+
+[ep 71] [Train: 0.0132][Val: 0.8348]
+	[Val MAE: 50.7819][Val MSE: 73.0412]
+Entrenando... 
+
+Validando... 
+
+[ep 72] [Train: 0.0145][Val: 0.8254]
+	[Val MAE: 47.0554][Val MSE: 70.7598]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 73] [Train: 0.0128][Val: 0.8683]
+	[Val MAE: 55.8089][Val MSE: 78.4722]
+Entrenando... 
+
+Validando... 
+
+[ep 74] [Train: 0.0126][Val: 0.8420]
+	[Val MAE: 55.3621][Val MSE: 76.2955]
+Entrenando... 
+
+Validando... 
+
+[ep 75] [Train: 0.0109][Val: 0.8521]
+	[Val MAE: 53.0324][Val MSE: 73.8889]
+Entrenando... 
+
+Validando... 
+
+[ep 76] [Train: 0.0096][Val: 0.8255]
+	[Val MAE: 47.6452][Val MSE: 70.8531]
+Entrenando... 
+
+Validando... 
+
+[ep 77] [Train: 0.0118][Val: 0.8303]
+	[Val MAE: 48.2799][Val MSE: 70.7768]
+Entrenando... 
+
+Validando... 
+
+[ep 78] [Train: 0.0152][Val: 0.8859]
+	[Val MAE: 57.8709][Val MSE: 79.0022]
+Entrenando... 
+
+Validando... 
+
+[ep 79] [Train: 0.0163][Val: 0.8572]
+	[Val MAE: 51.9699][Val MSE: 75.1471]
+Entrenando... 
+
+Validando... 
+
+[ep 80] [Train: 0.0137][Val: 0.8337]
+	[Val MAE: 49.3929][Val MSE: 69.3685]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 81] [Train: 0.0138][Val: 0.8458]
+	[Val MAE: 54.0553][Val MSE: 79.6664]
+Entrenando... 
+
+Validando... 
+
+[ep 82] [Train: 0.0128][Val: 0.8327]
+	[Val MAE: 50.4446][Val MSE: 72.2120]
+Entrenando... 
+
+Validando... 
+
+[ep 83] [Train: 0.0124][Val: 0.8280]
+	[Val MAE: 52.7132][Val MSE: 73.6382]
+Entrenando... 
+
+Validando... 
+
+[ep 84] [Train: 0.0125][Val: 0.8668]
+	[Val MAE: 53.0580][Val MSE: 77.3141]
+Entrenando... 
+
+Validando... 
+
+[ep 85] [Train: 0.0164][Val: 0.8521]
+	[Val MAE: 55.0924][Val MSE: 75.6079]
+Entrenando... 
+
+Validando... 
+
+[ep 86] [Train: 0.0211][Val: 0.8546]
+	[Val MAE: 55.7935][Val MSE: 78.0422]
+Entrenando... 
+
+Validando... 
+
+[ep 87] [Train: 0.0225][Val: 0.8998]
+	[Val MAE: 62.9142][Val MSE: 83.7308]
+Entrenando... 
+
+Validando... 
+
+[ep 88] [Train: 0.0253][Val: 0.8752]
+	[Val MAE: 56.9560][Val MSE: 80.0311]
+Entrenando... 
+
+Validando... 
+
+[ep 89] [Train: 0.0230][Val: 0.8301]
+	[Val MAE: 50.3204][Val MSE: 71.1761]
+Entrenando... 
+
+Validando... 
+
+[ep 90] [Train: 0.0189][Val: 0.8419]
+	[Val MAE: 56.3274][Val MSE: 76.9030]
+Entrenando... 
+
+Validando... 
+
+[ep 91] [Train: 0.0158][Val: 0.8342]
+	[Val MAE: 46.5701][Val MSE: 65.8802]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 92] [Train: 0.0136][Val: 0.8234]
+	[Val MAE: 48.4049][Val MSE: 69.8227]
+Entrenando... 
+
+Validando... 
+
+[ep 93] [Train: 0.0127][Val: 0.8401]
+	[Val MAE: 52.3846][Val MSE: 73.6198]
+Entrenando... 
+
+Validando... 
+
+[ep 94] [Train: 0.0131][Val: 0.8146]
+	[Val MAE: 48.4576][Val MSE: 69.4214]
+Entrenando... 
+
+Validando... 
+
+[ep 95] [Train: 0.0136][Val: 0.8504]
+	[Val MAE: 53.2691][Val MSE: 74.2145]
+Entrenando... 
+
+Validando... 
+
+[ep 96] [Train: 0.0119][Val: 0.8426]
+	[Val MAE: 56.6813][Val MSE: 77.2546]
+Entrenando... 
+
+Validando... 
+
+[ep 97] [Train: 0.0110][Val: 0.8632]
+	[Val MAE: 55.0580][Val MSE: 76.0350]
+Entrenando... 
+
+Validando... 
+
+[ep 98] [Train: 0.0114][Val: 0.8313]
+	[Val MAE: 54.8458][Val MSE: 76.3975]
+Entrenando... 
+
+Validando... 
+
+[ep 99] [Train: 0.0106][Val: 0.8678]
+	[Val MAE: 51.8082][Val MSE: 73.3982]
+Entrenando... 
+
+Validando... 
+
+[ep 99] [Train: 0.0100][Val: 0.0000]
+	[Val MAE: 48.4292][Val MSE: 70.0011]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 100] [Train: 0.0079][Val: 0.0000]
+	[Val MAE: 49.5594][Val MSE: 70.5119]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 101] [Train: 0.0071][Val: 0.0000]
+	[Val MAE: 50.2715][Val MSE: 71.2080]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 102] [Train: 0.0065][Val: 0.0000]
+	[Val MAE: 49.3195][Val MSE: 70.3542]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 103] [Train: 0.0060][Val: 0.0000]
+	[Val MAE: 50.0138][Val MSE: 70.6732]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 104] [Train: 0.0058][Val: 0.0000]
+	[Val MAE: 51.0625][Val MSE: 71.8887]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 105] [Train: 0.0056][Val: 0.0000]
+	[Val MAE: 51.1541][Val MSE: 71.7524]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 106] [Train: 0.0053][Val: 0.0000]
+	[Val MAE: 50.3731][Val MSE: 70.9441]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 107] [Train: 0.0051][Val: 0.0000]
+	[Val MAE: 50.6910][Val MSE: 71.2450]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 108] [Train: 0.0050][Val: 0.0000]
+	[Val MAE: 50.7843][Val MSE: 71.1786]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 109] [Train: 0.0047][Val: 0.0000]
+	[Val MAE: 51.4492][Val MSE: 71.9757]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 110] [Train: 0.0045][Val: 0.0000]
+	[Val MAE: 50.4304][Val MSE: 70.9956]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 111] [Train: 0.0043][Val: 0.0000]
+	[Val MAE: 50.4895][Val MSE: 70.9063]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 112] [Train: 0.0042][Val: 0.0000]
+	[Val MAE: 51.6112][Val MSE: 72.0523]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 113] [Train: 0.0040][Val: 0.0000]
+	[Val MAE: 51.2363][Val MSE: 71.6530]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 114] [Train: 0.0039][Val: 0.0000]
+	[Val MAE: 50.8289][Val MSE: 71.2381]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 115] [Train: 0.0038][Val: 0.0000]
+	[Val MAE: 51.1557][Val MSE: 71.5986]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 116] [Train: 0.0037][Val: 0.0000]
+	[Val MAE: 51.0861][Val MSE: 71.4986]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 117] [Train: 0.0037][Val: 0.0000]
+	[Val MAE: 51.5942][Val MSE: 71.9711]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 118] [Train: 0.0035][Val: 0.0000]
+	[Val MAE: 51.1719][Val MSE: 71.5739]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 119] [Train: 0.0034][Val: 0.0000]
+	[Val MAE: 51.1971][Val MSE: 71.5348]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 120] [Train: 0.0033][Val: 0.0000]
+	[Val MAE: 51.1346][Val MSE: 71.5699]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 121] [Train: 0.0033][Val: 0.0000]
+	[Val MAE: 51.6180][Val MSE: 71.9912]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 122] [Train: 0.0032][Val: 0.0000]
+	[Val MAE: 51.5016][Val MSE: 71.8380]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 123] [Train: 0.0031][Val: 0.0000]
+	[Val MAE: 51.1222][Val MSE: 71.5176]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 124] [Train: 0.0031][Val: 0.0000]
+	[Val MAE: 51.1785][Val MSE: 71.5783]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 125] [Train: 0.0030][Val: 0.0000]
+	[Val MAE: 51.5521][Val MSE: 71.9698]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 126] [Train: 0.0030][Val: 0.0000]
+	[Val MAE: 50.9759][Val MSE: 71.4015]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 127] [Train: 0.0029][Val: 0.0000]
+	[Val MAE: 51.3472][Val MSE: 71.7320]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 128] [Train: 0.0028][Val: 0.0000]
+	[Val MAE: 51.0899][Val MSE: 71.4579]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 129] [Train: 0.0028][Val: 0.0000]
+	[Val MAE: 51.4425][Val MSE: 71.8590]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 130] [Train: 0.0027][Val: 0.0000]
+	[Val MAE: 51.1768][Val MSE: 71.5438]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 131] [Train: 0.0027][Val: 0.0000]
+	[Val MAE: 51.1881][Val MSE: 71.6244]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 132] [Train: 0.0027][Val: 0.0000]
+	[Val MAE: 51.4388][Val MSE: 71.8581]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 133] [Train: 0.0026][Val: 0.0000]
+	[Val MAE: 51.2113][Val MSE: 71.6248]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 134] [Train: 0.0026][Val: 0.0000]
+	[Val MAE: 51.1672][Val MSE: 71.5447]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 135] [Train: 0.0025][Val: 0.0000]
+	[Val MAE: 51.3064][Val MSE: 71.7270]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 136] [Train: 0.0025][Val: 0.0000]
+	[Val MAE: 51.1568][Val MSE: 71.4856]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 137] [Train: 0.0024][Val: 0.0000]
+	[Val MAE: 51.2401][Val MSE: 71.6458]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 138] [Train: 0.0024][Val: 0.0000]
+	[Val MAE: 51.3804][Val MSE: 71.8040]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 139] [Train: 0.0024][Val: 0.0000]
+	[Val MAE: 51.3116][Val MSE: 71.7172]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 140] [Train: 0.0024][Val: 0.0000]
+	[Val MAE: 51.6746][Val MSE: 72.0487]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 141] [Train: 0.0023][Val: 0.0000]
+	[Val MAE: 51.1146][Val MSE: 71.5112]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 142] [Train: 0.0023][Val: 0.0000]
+	[Val MAE: 51.2873][Val MSE: 71.6822]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 143] [Train: 0.0022][Val: 0.0000]
+	[Val MAE: 51.3259][Val MSE: 71.7137]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 144] [Train: 0.0022][Val: 0.0000]
+	[Val MAE: 51.3408][Val MSE: 71.7180]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 145] [Train: 0.0022][Val: 0.0000]
+	[Val MAE: 51.2314][Val MSE: 71.6284]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 146] [Train: 0.0022][Val: 0.0000]
+	[Val MAE: 51.1997][Val MSE: 71.6373]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 147] [Train: 0.0021][Val: 0.0000]
+	[Val MAE: 51.3878][Val MSE: 71.7523]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 148] [Train: 0.0021][Val: 0.0000]
+	[Val MAE: 51.4072][Val MSE: 71.7198]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 149] [Train: 0.0021][Val: 0.0000]
+	[Val MAE: 51.2682][Val MSE: 71.6510]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 150] [Train: 0.0021][Val: 0.0000]
+	[Val MAE: 51.2411][Val MSE: 71.6129]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 151] [Train: 0.0020][Val: 0.0000]
+	[Val MAE: 51.4352][Val MSE: 71.8049]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 152] [Train: 0.0020][Val: 0.0000]
+	[Val MAE: 51.3882][Val MSE: 71.7659]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 153] [Train: 0.0020][Val: 0.0000]
+	[Val MAE: 51.5034][Val MSE: 71.8413]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 154] [Train: 0.0020][Val: 0.0000]
+	[Val MAE: 51.5515][Val MSE: 71.9109]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 155] [Train: 0.0020][Val: 0.0000]
+	[Val MAE: 51.2146][Val MSE: 71.6162]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 156] [Train: 0.0019][Val: 0.0000]
+	[Val MAE: 51.3410][Val MSE: 71.7394]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 157] [Train: 0.0019][Val: 0.0000]
+	[Val MAE: 51.5302][Val MSE: 71.9009]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 158] [Train: 0.0019][Val: 0.0000]
+	[Val MAE: 51.6406][Val MSE: 72.0152]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 159] [Train: 0.0019][Val: 0.0000]
+	[Val MAE: 51.2011][Val MSE: 71.5721]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 160] [Train: 0.0019][Val: 0.0000]
+	[Val MAE: 51.2274][Val MSE: 71.5963]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 161] [Train: 0.0018][Val: 0.0000]
+	[Val MAE: 51.1702][Val MSE: 71.5688]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 162] [Train: 0.0018][Val: 0.0000]
+	[Val MAE: 51.3896][Val MSE: 71.7938]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 163] [Train: 0.0018][Val: 0.0000]
+	[Val MAE: 51.3071][Val MSE: 71.6926]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 164] [Train: 0.0018][Val: 0.0000]
+	[Val MAE: 51.2421][Val MSE: 71.6238]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 165] [Train: 0.0018][Val: 0.0000]
+	[Val MAE: 51.3754][Val MSE: 71.7125]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 166] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.3572][Val MSE: 71.7247]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 167] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.5625][Val MSE: 71.9295]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 168] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.2892][Val MSE: 71.6760]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 169] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.3623][Val MSE: 71.7611]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 170] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.1175][Val MSE: 71.5113]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 171] [Train: 0.0017][Val: 0.0000]
+	[Val MAE: 51.5880][Val MSE: 71.9607]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 172] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.2708][Val MSE: 71.6455]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 173] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.4457][Val MSE: 71.7943]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 174] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.3440][Val MSE: 71.7039]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 175] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.3623][Val MSE: 71.7228]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 176] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.3866][Val MSE: 71.7536]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 177] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.3567][Val MSE: 71.7180]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 178] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.3520][Val MSE: 71.6998]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 179] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.3606][Val MSE: 71.7395]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 180] [Train: 0.0016][Val: 0.0000]
+	[Val MAE: 51.2760][Val MSE: 71.6327]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 181] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.2827][Val MSE: 71.6537]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 182] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.2966][Val MSE: 71.6557]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 183] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.3373][Val MSE: 71.6756]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 184] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.3504][Val MSE: 71.6926]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 185] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.3710][Val MSE: 71.7316]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 186] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.3685][Val MSE: 71.7654]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 187] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.4785][Val MSE: 71.8185]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 188] [Train: 0.0015][Val: 0.0000]
+	[Val MAE: 51.2866][Val MSE: 71.6658]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 189] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.4736][Val MSE: 71.8111]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 190] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3235][Val MSE: 71.6603]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 191] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.2882][Val MSE: 71.6564]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 192] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.4127][Val MSE: 71.7679]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 193] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.4013][Val MSE: 71.7577]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 194] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3242][Val MSE: 71.6905]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 195] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3332][Val MSE: 71.7151]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 196] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3806][Val MSE: 71.7647]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 197] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3611][Val MSE: 71.7463]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 198] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.4125][Val MSE: 71.7412]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 199] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.3849][Val MSE: 71.7449]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 200] [Train: 0.0014][Val: 0.0000]
+	[Val MAE: 51.4097][Val MSE: 71.7508]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 201] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3250][Val MSE: 71.6714]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 202] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3624][Val MSE: 71.7285]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 203] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3176][Val MSE: 71.6793]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 204] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.2411][Val MSE: 71.6094]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 205] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3525][Val MSE: 71.7259]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 206] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.1274][Val MSE: 71.4835]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 207] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3637][Val MSE: 71.7220]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 208] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.4502][Val MSE: 71.8008]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 209] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3717][Val MSE: 71.7293]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 210] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3046][Val MSE: 71.6685]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 211] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3235][Val MSE: 71.7017]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 212] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.2971][Val MSE: 71.6574]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 213] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.4499][Val MSE: 71.7936]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 214] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.2341][Val MSE: 71.6003]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 215] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3903][Val MSE: 71.7491]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 216] [Train: 0.0013][Val: 0.0000]
+	[Val MAE: 51.3572][Val MSE: 71.6772]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 217] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3335][Val MSE: 71.6692]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 218] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3971][Val MSE: 71.7478]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 219] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3757][Val MSE: 71.7233]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 220] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.2458][Val MSE: 71.5883]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 221] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.4046][Val MSE: 71.7482]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 222] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3730][Val MSE: 71.7075]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 223] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.2728][Val MSE: 71.6357]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 224] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3014][Val MSE: 71.6445]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 225] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.4089][Val MSE: 71.7402]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 226] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.2751][Val MSE: 71.6272]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 227] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3992][Val MSE: 71.7530]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 228] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3640][Val MSE: 71.7282]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 229] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3834][Val MSE: 71.7156]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 230] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3412][Val MSE: 71.6892]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 231] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3502][Val MSE: 71.7109]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 232] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3547][Val MSE: 71.6954]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 233] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3896][Val MSE: 71.7350]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 234] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.2945][Val MSE: 71.6478]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 235] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3752][Val MSE: 71.7091]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 236] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.3137][Val MSE: 71.6577]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 237] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3311][Val MSE: 71.6794]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 238] [Train: 0.0012][Val: 0.0000]
+	[Val MAE: 51.2808][Val MSE: 71.6256]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 239] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3742][Val MSE: 71.7220]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 240] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3103][Val MSE: 71.6545]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 241] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3268][Val MSE: 71.6516]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 242] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3123][Val MSE: 71.6696]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 243] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3049][Val MSE: 71.6488]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 244] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3750][Val MSE: 71.7186]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 245] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.2528][Val MSE: 71.6064]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 246] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3088][Val MSE: 71.6574]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 247] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3909][Val MSE: 71.7296]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 248] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3580][Val MSE: 71.7042]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 249] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3499][Val MSE: 71.6913]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 250] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3069][Val MSE: 71.6575]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 251] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3187][Val MSE: 71.6591]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 252] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3619][Val MSE: 71.7017]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 253] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3707][Val MSE: 71.7035]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 254] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3379][Val MSE: 71.6886]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 255] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3100][Val MSE: 71.6500]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 256] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3279][Val MSE: 71.6717]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 257] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3491][Val MSE: 71.6847]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 258] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3340][Val MSE: 71.6620]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 259] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3662][Val MSE: 71.7045]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 260] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3634][Val MSE: 71.6962]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 261] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3202][Val MSE: 71.6562]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 262] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.2679][Val MSE: 71.6106]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 263] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3248][Val MSE: 71.6619]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 264] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3067][Val MSE: 71.6452]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 265] [Train: 0.0011][Val: 0.0000]
+	[Val MAE: 51.3904][Val MSE: 71.7094]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 266] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3394][Val MSE: 71.6820]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 267] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3528][Val MSE: 71.6885]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 268] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3006][Val MSE: 71.6458]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 269] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3051][Val MSE: 71.6417]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 270] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3435][Val MSE: 71.6876]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 271] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3375][Val MSE: 71.6723]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 272] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.2938][Val MSE: 71.6309]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 273] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.4264][Val MSE: 71.7594]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 274] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3190][Val MSE: 71.6586]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 275] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3261][Val MSE: 71.6685]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 276] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3499][Val MSE: 71.6943]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 277] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.2938][Val MSE: 71.6359]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 278] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3906][Val MSE: 71.7148]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 279] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.2974][Val MSE: 71.6395]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 280] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3500][Val MSE: 71.6813]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 281] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3231][Val MSE: 71.6580]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 282] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3377][Val MSE: 71.6770]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 283] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3346][Val MSE: 71.6652]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 284] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3651][Val MSE: 71.6875]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 285] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.2879][Val MSE: 71.6271]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 286] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3663][Val MSE: 71.6973]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 287] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3763][Val MSE: 71.7133]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 288] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3583][Val MSE: 71.6948]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 289] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3302][Val MSE: 71.6675]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 290] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3397][Val MSE: 71.6782]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 291] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3262][Val MSE: 71.6632]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 292] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3559][Val MSE: 71.6925]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 293] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3444][Val MSE: 71.6837]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 294] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3203][Val MSE: 71.6578]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 295] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3475][Val MSE: 71.6878]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 296] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3387][Val MSE: 71.6741]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 297] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3441][Val MSE: 71.6804]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 298] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3209][Val MSE: 71.6648]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 299] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3733][Val MSE: 71.6997]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 300] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3124][Val MSE: 71.6501]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 301] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3362][Val MSE: 71.6692]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 302] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3521][Val MSE: 71.6958]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 303] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3211][Val MSE: 71.6524]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 304] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3400][Val MSE: 71.6762]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 305] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3631][Val MSE: 71.6955]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 306] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3350][Val MSE: 71.6658]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 307] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3403][Val MSE: 71.6792]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 308] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3033][Val MSE: 71.6436]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 309] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3275][Val MSE: 71.6600]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 310] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3271][Val MSE: 71.6606]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 311] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3365][Val MSE: 71.6779]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 312] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3230][Val MSE: 71.6600]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 313] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3103][Val MSE: 71.6501]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 314] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3533][Val MSE: 71.6907]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 315] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3619][Val MSE: 71.6913]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 316] [Train: 0.0010][Val: 0.0000]
+	[Val MAE: 51.3490][Val MSE: 71.6859]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 317] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3606][Val MSE: 71.6973]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 318] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3321][Val MSE: 71.6732]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 319] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3204][Val MSE: 71.6619]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 320] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3414][Val MSE: 71.6750]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 321] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3285][Val MSE: 71.6679]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 322] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3429][Val MSE: 71.6799]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 323] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3372][Val MSE: 71.6728]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 324] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3417][Val MSE: 71.6793]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 325] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3334][Val MSE: 71.6696]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 326] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3292][Val MSE: 71.6673]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 327] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3491][Val MSE: 71.6896]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 328] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3474][Val MSE: 71.6862]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 329] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3034][Val MSE: 71.6454]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 330] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3180][Val MSE: 71.6583]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 331] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3124][Val MSE: 71.6520]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 332] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3339][Val MSE: 71.6690]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 333] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3403][Val MSE: 71.6751]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 334] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3252][Val MSE: 71.6688]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 335] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3451][Val MSE: 71.6821]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 336] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3399][Val MSE: 71.6772]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 337] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.2989][Val MSE: 71.6424]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 338] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3122][Val MSE: 71.6546]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 339] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3402][Val MSE: 71.6797]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 340] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3324][Val MSE: 71.6763]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 341] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3339][Val MSE: 71.6746]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 342] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3220][Val MSE: 71.6626]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 343] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3340][Val MSE: 71.6712]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 344] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3292][Val MSE: 71.6698]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 345] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3320][Val MSE: 71.6732]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 346] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3313][Val MSE: 71.6732]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 347] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3406][Val MSE: 71.6863]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 348] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3482][Val MSE: 71.6872]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 349] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.2960][Val MSE: 71.6401]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 350] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3486][Val MSE: 71.6832]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 351] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3542][Val MSE: 71.6927]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 352] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3582][Val MSE: 71.6960]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 353] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3330][Val MSE: 71.6701]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 354] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3342][Val MSE: 71.6715]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 355] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3384][Val MSE: 71.6791]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 356] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3310][Val MSE: 71.6725]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 357] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3189][Val MSE: 71.6600]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 358] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3460][Val MSE: 71.6818]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 359] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3438][Val MSE: 71.6854]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 360] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3126][Val MSE: 71.6548]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 361] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3139][Val MSE: 71.6535]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 362] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3510][Val MSE: 71.6919]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 363] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3345][Val MSE: 71.6791]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 364] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3476][Val MSE: 71.6851]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 365] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3382][Val MSE: 71.6807]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 366] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3251][Val MSE: 71.6694]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 367] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3509][Val MSE: 71.6925]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 368] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3324][Val MSE: 71.6746]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 369] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3420][Val MSE: 71.6828]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 370] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3386][Val MSE: 71.6796]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 371] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3268][Val MSE: 71.6684]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 372] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3402][Val MSE: 71.6854]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 373] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3481][Val MSE: 71.6944]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 374] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3398][Val MSE: 71.6821]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 375] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3242][Val MSE: 71.6685]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 376] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3384][Val MSE: 71.6791]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 377] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3132][Val MSE: 71.6570]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 378] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3429][Val MSE: 71.6842]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 379] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3298][Val MSE: 71.6678]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 380] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3275][Val MSE: 71.6687]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 381] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3494][Val MSE: 71.6885]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 382] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3224][Val MSE: 71.6650]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 383] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3177][Val MSE: 71.6647]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 384] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3268][Val MSE: 71.6682]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 385] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3512][Val MSE: 71.6895]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 386] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3303][Val MSE: 71.6700]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 387] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3424][Val MSE: 71.6851]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 388] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3277][Val MSE: 71.6676]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 389] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3307][Val MSE: 71.6717]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 390] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3344][Val MSE: 71.6728]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 391] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3228][Val MSE: 71.6661]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 392] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3300][Val MSE: 71.6706]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 393] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3361][Val MSE: 71.6752]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 394] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3356][Val MSE: 71.6749]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 395] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3300][Val MSE: 71.6749]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 396] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3304][Val MSE: 71.6735]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 397] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3147][Val MSE: 71.6581]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 398] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3527][Val MSE: 71.6925]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 399] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3234][Val MSE: 71.6637]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 400] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3355][Val MSE: 71.6758]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 401] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3228][Val MSE: 71.6662]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 402] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3247][Val MSE: 71.6645]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 403] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3443][Val MSE: 71.6868]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 404] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3271][Val MSE: 71.6667]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 405] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3200][Val MSE: 71.6645]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 406] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3330][Val MSE: 71.6788]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 407] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3097][Val MSE: 71.6539]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 408] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3307][Val MSE: 71.6728]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 409] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3307][Val MSE: 71.6720]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 410] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3376][Val MSE: 71.6790]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 411] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3364][Val MSE: 71.6817]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 412] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3365][Val MSE: 71.6766]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 413] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3260][Val MSE: 71.6713]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 414] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3380][Val MSE: 71.6771]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 415] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3322][Val MSE: 71.6739]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 416] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3489][Val MSE: 71.6912]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 417] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3457][Val MSE: 71.6886]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 418] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3420][Val MSE: 71.6837]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 419] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3206][Val MSE: 71.6651]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 420] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3316][Val MSE: 71.6734]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 421] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3409][Val MSE: 71.6857]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 422] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3230][Val MSE: 71.6627]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 423] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3252][Val MSE: 71.6669]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 424] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3420][Val MSE: 71.6800]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 425] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3370][Val MSE: 71.6798]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 426] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3219][Val MSE: 71.6653]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 427] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3408][Val MSE: 71.6830]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 428] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3335][Val MSE: 71.6759]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 429] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3440][Val MSE: 71.6850]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 430] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3302][Val MSE: 71.6728]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 431] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3151][Val MSE: 71.6592]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 432] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3413][Val MSE: 71.6819]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 433] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3332][Val MSE: 71.6729]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 434] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3297][Val MSE: 71.6692]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 435] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3413][Val MSE: 71.6813]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 436] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3404][Val MSE: 71.6812]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 437] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3364][Val MSE: 71.6768]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 438] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3355][Val MSE: 71.6755]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 439] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3376][Val MSE: 71.6821]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 440] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3289][Val MSE: 71.6723]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 441] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3303][Val MSE: 71.6717]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 442] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3300][Val MSE: 71.6746]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 443] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3313][Val MSE: 71.6747]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 444] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3406][Val MSE: 71.6800]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 445] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3266][Val MSE: 71.6688]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 446] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3290][Val MSE: 71.6714]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 447] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3292][Val MSE: 71.6699]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 448] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3335][Val MSE: 71.6757]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 449] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3340][Val MSE: 71.6748]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 450] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3276][Val MSE: 71.6666]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 451] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3366][Val MSE: 71.6784]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 452] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3246][Val MSE: 71.6654]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 453] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3457][Val MSE: 71.6843]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 454] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3206][Val MSE: 71.6622]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 455] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3284][Val MSE: 71.6691]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 456] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3238][Val MSE: 71.6670]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 457] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3381][Val MSE: 71.6761]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 458] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3204][Val MSE: 71.6607]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 459] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3355][Val MSE: 71.6755]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 460] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3261][Val MSE: 71.6665]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 461] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3356][Val MSE: 71.6725]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 462] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3302][Val MSE: 71.6704]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 463] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3310][Val MSE: 71.6705]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 464] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3326][Val MSE: 71.6727]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 465] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3258][Val MSE: 71.6656]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 466] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3340][Val MSE: 71.6725]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 467] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3336][Val MSE: 71.6730]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 468] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3268][Val MSE: 71.6665]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 469] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3321][Val MSE: 71.6713]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 470] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3281][Val MSE: 71.6683]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 471] [Train: 0.0009][Val: 0.0000]
+	[Val MAE: 51.3325][Val MSE: 71.6715]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 472] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3410][Val MSE: 71.6768]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 473] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3375][Val MSE: 71.6742]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 474] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3271][Val MSE: 71.6652]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 475] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3242][Val MSE: 71.6661]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 476] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3292][Val MSE: 71.6702]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 477] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3287][Val MSE: 71.6690]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 478] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3347][Val MSE: 71.6734]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 479] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3286][Val MSE: 71.6678]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 480] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3309][Val MSE: 71.6702]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 481] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3281][Val MSE: 71.6683]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 482] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3251][Val MSE: 71.6661]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 483] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3249][Val MSE: 71.6638]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 484] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3279][Val MSE: 71.6678]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 485] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3267][Val MSE: 71.6646]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 486] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3348][Val MSE: 71.6739]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 487] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3322][Val MSE: 71.6697]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 488] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3306][Val MSE: 71.6686]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 489] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3191][Val MSE: 71.6583]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 490] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3294][Val MSE: 71.6670]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 491] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3156][Val MSE: 71.6577]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 492] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3267][Val MSE: 71.6668]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 493] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3264][Val MSE: 71.6666]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 494] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3256][Val MSE: 71.6649]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 495] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3235][Val MSE: 71.6623]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 496] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3288][Val MSE: 71.6682]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 497] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3256][Val MSE: 71.6654]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 498] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3308][Val MSE: 71.6699]
+Saving as cris_melspectrogram_mselog.pt
+Entrenando... 
+
+Validando... 
+
+[ep 499] [Train: 0.0008][Val: 0.0000]
+	[Val MAE: 51.3292][Val MSE: 71.6682]
+Saving as cris_melspectrogram_mselog.pt
+Testing... 
+
+[ep 499][Test MAE: 61.2823][Test MSE: 79.8361]
+Test Loss (MSE): 79.83605194091797
+Test Loss (MAE): 61.28229904174805
+Proceso finalizado el jue may 20 03:09:41 CEST 2021
+___________________________________________________

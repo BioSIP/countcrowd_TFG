@@ -1,0 +1,1185 @@
+Entrenando... 
+
+/usr/local/lib64/python3.6/site-packages/torchaudio/functional/functional.py:358: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (201) may be set too high. Or, the value for `n_freqs` (201) may be set too low.
+  "At least one mel filterbank has all zero values. "
+Validando... 
+
+[ep 0] [Train: 1.0619][Val: 1.1233]
+	[Val MAE: 80.4993][Val MSE: 93.9468]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 1] [Train: 0.9662][Val: 1.0427]
+	[Val MAE: 81.7091][Val MSE: 94.1463]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 2] [Train: 0.9431][Val: 1.1200]
+	[Val MAE: 81.4678][Val MSE: 94.1541]
+Entrenando... 
+
+Validando... 
+
+[ep 3] [Train: 0.9374][Val: 1.2755]
+	[Val MAE: 82.8330][Val MSE: 96.6403]
+Entrenando... 
+
+Validando... 
+
+[ep 4] [Train: 0.9294][Val: 1.1656]
+	[Val MAE: 81.4065][Val MSE: 94.4494]
+Entrenando... 
+
+Validando... 
+
+[ep 5] [Train: 0.9315][Val: 0.9757]
+	[Val MAE: 79.8463][Val MSE: 92.2417]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 6] [Train: 0.9180][Val: 0.9517]
+	[Val MAE: 78.8634][Val MSE: 91.3381]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 7] [Train: 0.9480][Val: 1.1356]
+	[Val MAE: 80.3735][Val MSE: 93.4405]
+Entrenando... 
+
+Validando... 
+
+[ep 8] [Train: 0.9131][Val: 0.9760]
+	[Val MAE: 77.3612][Val MSE: 89.9026]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 9] [Train: 0.9086][Val: 0.9935]
+	[Val MAE: 77.6756][Val MSE: 90.2438]
+Entrenando... 
+
+Validando... 
+
+[ep 10] [Train: 0.8921][Val: 0.8462]
+	[Val MAE: 73.7552][Val MSE: 86.8796]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 11] [Train: 0.9217][Val: 1.0871]
+	[Val MAE: 78.0906][Val MSE: 91.2895]
+Entrenando... 
+
+Validando... 
+
+[ep 12] [Train: 0.8950][Val: 0.7684]
+	[Val MAE: 70.3780][Val MSE: 83.2943]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 13] [Train: 0.8887][Val: 0.8133]
+	[Val MAE: 72.3672][Val MSE: 85.0181]
+Entrenando... 
+
+Validando... 
+
+[ep 14] [Train: 0.8327][Val: 0.7257]
+	[Val MAE: 66.9273][Val MSE: 79.9162]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 15] [Train: 0.8477][Val: 0.8076]
+	[Val MAE: 70.6472][Val MSE: 83.8731]
+Entrenando... 
+
+Validando... 
+
+[ep 16] [Train: 0.8330][Val: 1.3579]
+	[Val MAE: 83.8391][Val MSE: 99.2458]
+Entrenando... 
+
+Validando... 
+
+[ep 17] [Train: 0.8366][Val: 1.3237]
+	[Val MAE: 83.5763][Val MSE: 98.2433]
+Entrenando... 
+
+Validando... 
+
+[ep 18] [Train: 0.7764][Val: 0.8858]
+	[Val MAE: 72.1627][Val MSE: 85.7060]
+Entrenando... 
+
+Validando... 
+
+[ep 19] [Train: 0.7098][Val: 0.7168]
+	[Val MAE: 62.7815][Val MSE: 78.6881]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 20] [Train: 0.6961][Val: 0.7819]
+	[Val MAE: 68.1917][Val MSE: 84.3334]
+Entrenando... 
+
+Validando... 
+
+[ep 21] [Train: 0.6611][Val: 0.7524]
+	[Val MAE: 63.3877][Val MSE: 79.7212]
+Entrenando... 
+
+Validando... 
+
+[ep 22] [Train: 0.6005][Val: 0.8868]
+	[Val MAE: 70.8476][Val MSE: 86.8471]
+Entrenando... 
+
+Validando... 
+
+[ep 23] [Train: 0.5254][Val: 0.9983]
+	[Val MAE: 74.3335][Val MSE: 90.0234]
+Entrenando... 
+
+Validando... 
+
+[ep 24] [Train: 0.5357][Val: 0.8069]
+	[Val MAE: 67.5782][Val MSE: 85.3829]
+Entrenando... 
+
+Validando... 
+
+[ep 25] [Train: 0.3774][Val: 1.1175]
+	[Val MAE: 75.0174][Val MSE: 92.9319]
+Entrenando... 
+
+Validando... 
+
+[ep 26] [Train: 0.5072][Val: 1.0360]
+	[Val MAE: 75.0609][Val MSE: 91.8540]
+Entrenando... 
+
+Validando... 
+
+[ep 27] [Train: 0.4585][Val: 0.8787]
+	[Val MAE: 69.6812][Val MSE: 87.7051]
+Entrenando... 
+
+Validando... 
+
+[ep 28] [Train: 0.3505][Val: 1.0333]
+	[Val MAE: 72.0560][Val MSE: 88.7948]
+Entrenando... 
+
+Validando... 
+
+[ep 29] [Train: 0.3082][Val: 1.0624]
+	[Val MAE: 75.4325][Val MSE: 91.7942]
+Entrenando... 
+
+Validando... 
+
+[ep 29] [Train: 0.6823][Val: 0.0000]
+	[Val MAE: 62.7952][Val MSE: 78.6867]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 30] [Train: 0.6829][Val: 0.0000]
+	[Val MAE: 62.8146][Val MSE: 78.6857]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 31] [Train: 0.6848][Val: 0.0000]
+	[Val MAE: 62.8334][Val MSE: 78.6846]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 32] [Train: 0.6800][Val: 0.0000]
+	[Val MAE: 62.8523][Val MSE: 78.6848]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 33] [Train: 0.6813][Val: 0.0000]
+	[Val MAE: 62.8717][Val MSE: 78.6850]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 34] [Train: 0.6791][Val: 0.0000]
+	[Val MAE: 62.8903][Val MSE: 78.6853]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 35] [Train: 0.6805][Val: 0.0000]
+	[Val MAE: 62.9084][Val MSE: 78.6866]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 36] [Train: 0.6739][Val: 0.0000]
+	[Val MAE: 62.9260][Val MSE: 78.6877]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 37] [Train: 0.6753][Val: 0.0000]
+	[Val MAE: 62.9460][Val MSE: 78.6896]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 38] [Train: 0.6805][Val: 0.0000]
+	[Val MAE: 62.9659][Val MSE: 78.6919]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 39] [Train: 0.6727][Val: 0.0000]
+	[Val MAE: 62.9841][Val MSE: 78.6944]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 40] [Train: 0.6682][Val: 0.0000]
+	[Val MAE: 63.0026][Val MSE: 78.6968]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 41] [Train: 0.6752][Val: 0.0000]
+	[Val MAE: 63.0203][Val MSE: 78.7001]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 42] [Train: 0.6808][Val: 0.0000]
+	[Val MAE: 63.0384][Val MSE: 78.7029]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 43] [Train: 0.6700][Val: 0.0000]
+	[Val MAE: 63.0548][Val MSE: 78.7062]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 44] [Train: 0.6692][Val: 0.0000]
+	[Val MAE: 63.0735][Val MSE: 78.7102]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 45] [Train: 0.6771][Val: 0.0000]
+	[Val MAE: 63.0891][Val MSE: 78.7138]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 46] [Train: 0.6679][Val: 0.0000]
+	[Val MAE: 63.1047][Val MSE: 78.7173]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 47] [Train: 0.6795][Val: 0.0000]
+	[Val MAE: 63.1200][Val MSE: 78.7210]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 48] [Train: 0.6792][Val: 0.0000]
+	[Val MAE: 63.1363][Val MSE: 78.7258]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 49] [Train: 0.6651][Val: 0.0000]
+	[Val MAE: 63.1502][Val MSE: 78.7291]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 50] [Train: 0.6647][Val: 0.0000]
+	[Val MAE: 63.1644][Val MSE: 78.7332]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 51] [Train: 0.6735][Val: 0.0000]
+	[Val MAE: 63.1800][Val MSE: 78.7376]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 52] [Train: 0.6675][Val: 0.0000]
+	[Val MAE: 63.1941][Val MSE: 78.7421]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 53] [Train: 0.6630][Val: 0.0000]
+	[Val MAE: 63.2088][Val MSE: 78.7472]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 54] [Train: 0.6699][Val: 0.0000]
+	[Val MAE: 63.2218][Val MSE: 78.7512]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 55] [Train: 0.6609][Val: 0.0000]
+	[Val MAE: 63.2356][Val MSE: 78.7563]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 56] [Train: 0.6613][Val: 0.0000]
+	[Val MAE: 63.2486][Val MSE: 78.7609]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 57] [Train: 0.6633][Val: 0.0000]
+	[Val MAE: 63.2615][Val MSE: 78.7655]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 58] [Train: 0.6580][Val: 0.0000]
+	[Val MAE: 63.2739][Val MSE: 78.7703]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 59] [Train: 0.6582][Val: 0.0000]
+	[Val MAE: 63.2874][Val MSE: 78.7757]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 60] [Train: 0.6609][Val: 0.0000]
+	[Val MAE: 63.2999][Val MSE: 78.7811]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 61] [Train: 0.6608][Val: 0.0000]
+	[Val MAE: 63.3121][Val MSE: 78.7855]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 62] [Train: 0.6602][Val: 0.0000]
+	[Val MAE: 63.3226][Val MSE: 78.7900]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 63] [Train: 0.6577][Val: 0.0000]
+	[Val MAE: 63.3346][Val MSE: 78.7955]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 64] [Train: 0.6587][Val: 0.0000]
+	[Val MAE: 63.3459][Val MSE: 78.8002]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 65] [Train: 0.6596][Val: 0.0000]
+	[Val MAE: 63.3574][Val MSE: 78.8054]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 66] [Train: 0.6587][Val: 0.0000]
+	[Val MAE: 63.3695][Val MSE: 78.8113]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 67] [Train: 0.6559][Val: 0.0000]
+	[Val MAE: 63.3786][Val MSE: 78.8156]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 68] [Train: 0.6561][Val: 0.0000]
+	[Val MAE: 63.3899][Val MSE: 78.8209]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 69] [Train: 0.6558][Val: 0.0000]
+	[Val MAE: 63.3993][Val MSE: 78.8252]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 70] [Train: 0.6545][Val: 0.0000]
+	[Val MAE: 63.4099][Val MSE: 78.8309]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 71] [Train: 0.6569][Val: 0.0000]
+	[Val MAE: 63.4205][Val MSE: 78.8360]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 72] [Train: 0.6564][Val: 0.0000]
+	[Val MAE: 63.4308][Val MSE: 78.8410]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 73] [Train: 0.6558][Val: 0.0000]
+	[Val MAE: 63.4398][Val MSE: 78.8458]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 74] [Train: 0.6580][Val: 0.0000]
+	[Val MAE: 63.4507][Val MSE: 78.8512]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 75] [Train: 0.6527][Val: 0.0000]
+	[Val MAE: 63.4602][Val MSE: 78.8556]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 76] [Train: 0.6557][Val: 0.0000]
+	[Val MAE: 63.4703][Val MSE: 78.8607]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 77] [Train: 0.6526][Val: 0.0000]
+	[Val MAE: 63.4803][Val MSE: 78.8656]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 78] [Train: 0.6508][Val: 0.0000]
+	[Val MAE: 63.4909][Val MSE: 78.8713]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 79] [Train: 0.6586][Val: 0.0000]
+	[Val MAE: 63.5007][Val MSE: 78.8767]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 80] [Train: 0.6544][Val: 0.0000]
+	[Val MAE: 63.5090][Val MSE: 78.8807]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 81] [Train: 0.6604][Val: 0.0000]
+	[Val MAE: 63.5189][Val MSE: 78.8859]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 82] [Train: 0.6635][Val: 0.0000]
+	[Val MAE: 63.5273][Val MSE: 78.8904]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 83] [Train: 0.6531][Val: 0.0000]
+	[Val MAE: 63.5349][Val MSE: 78.8944]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 84] [Train: 0.6520][Val: 0.0000]
+	[Val MAE: 63.5448][Val MSE: 78.8998]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 85] [Train: 0.6568][Val: 0.0000]
+	[Val MAE: 63.5534][Val MSE: 78.9043]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 86] [Train: 0.6501][Val: 0.0000]
+	[Val MAE: 63.5623][Val MSE: 78.9094]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 87] [Train: 0.6490][Val: 0.0000]
+	[Val MAE: 63.5709][Val MSE: 78.9145]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 88] [Train: 0.6499][Val: 0.0000]
+	[Val MAE: 63.5790][Val MSE: 78.9187]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 89] [Train: 0.6463][Val: 0.0000]
+	[Val MAE: 63.5877][Val MSE: 78.9238]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 90] [Train: 0.6492][Val: 0.0000]
+	[Val MAE: 63.5953][Val MSE: 78.9285]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 91] [Train: 0.6478][Val: 0.0000]
+	[Val MAE: 63.6032][Val MSE: 78.9331]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 92] [Train: 0.6495][Val: 0.0000]
+	[Val MAE: 63.6111][Val MSE: 78.9376]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 93] [Train: 0.6519][Val: 0.0000]
+	[Val MAE: 63.6184][Val MSE: 78.9420]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 94] [Train: 0.6515][Val: 0.0000]
+	[Val MAE: 63.6252][Val MSE: 78.9461]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 95] [Train: 0.6505][Val: 0.0000]
+	[Val MAE: 63.6328][Val MSE: 78.9506]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 96] [Train: 0.6545][Val: 0.0000]
+	[Val MAE: 63.6403][Val MSE: 78.9551]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 97] [Train: 0.6603][Val: 0.0000]
+	[Val MAE: 63.6478][Val MSE: 78.9600]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 98] [Train: 0.6562][Val: 0.0000]
+	[Val MAE: 63.6554][Val MSE: 78.9644]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 99] [Train: 0.6465][Val: 0.0000]
+	[Val MAE: 63.6612][Val MSE: 78.9681]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 100] [Train: 0.6490][Val: 0.0000]
+	[Val MAE: 63.6684][Val MSE: 78.9726]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 101] [Train: 0.6482][Val: 0.0000]
+	[Val MAE: 63.6750][Val MSE: 78.9769]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 102] [Train: 0.6469][Val: 0.0000]
+	[Val MAE: 63.6821][Val MSE: 78.9811]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 103] [Train: 0.6462][Val: 0.0000]
+	[Val MAE: 63.6887][Val MSE: 78.9855]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 104] [Train: 0.6507][Val: 0.0000]
+	[Val MAE: 63.6958][Val MSE: 78.9902]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 105] [Train: 0.6533][Val: 0.0000]
+	[Val MAE: 63.7020][Val MSE: 78.9942]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 106] [Train: 0.6472][Val: 0.0000]
+	[Val MAE: 63.7080][Val MSE: 78.9981]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 107] [Train: 0.6438][Val: 0.0000]
+	[Val MAE: 63.7143][Val MSE: 79.0022]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 108] [Train: 0.6499][Val: 0.0000]
+	[Val MAE: 63.7202][Val MSE: 79.0062]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 109] [Train: 0.6448][Val: 0.0000]
+	[Val MAE: 63.7262][Val MSE: 79.0098]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 110] [Train: 0.6477][Val: 0.0000]
+	[Val MAE: 63.7326][Val MSE: 79.0138]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 111] [Train: 0.6452][Val: 0.0000]
+	[Val MAE: 63.7380][Val MSE: 79.0171]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 112] [Train: 0.6471][Val: 0.0000]
+	[Val MAE: 63.7456][Val MSE: 79.0218]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 113] [Train: 0.6508][Val: 0.0000]
+	[Val MAE: 63.7507][Val MSE: 79.0250]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 114] [Train: 0.6466][Val: 0.0000]
+	[Val MAE: 63.7576][Val MSE: 79.0297]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 115] [Train: 0.6441][Val: 0.0000]
+	[Val MAE: 63.7634][Val MSE: 79.0333]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 116] [Train: 0.6557][Val: 0.0000]
+	[Val MAE: 63.7684][Val MSE: 79.0365]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 117] [Train: 0.6488][Val: 0.0000]
+	[Val MAE: 63.7741][Val MSE: 79.0402]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 118] [Train: 0.6604][Val: 0.0000]
+	[Val MAE: 63.7797][Val MSE: 79.0437]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 119] [Train: 0.6492][Val: 0.0000]
+	[Val MAE: 63.7853][Val MSE: 79.0473]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 120] [Train: 0.6458][Val: 0.0000]
+	[Val MAE: 63.7912][Val MSE: 79.0513]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 121] [Train: 0.6481][Val: 0.0000]
+	[Val MAE: 63.7964][Val MSE: 79.0547]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 122] [Train: 0.6621][Val: 0.0000]
+	[Val MAE: 63.8022][Val MSE: 79.0585]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 123] [Train: 0.6474][Val: 0.0000]
+	[Val MAE: 63.8072][Val MSE: 79.0615]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 124] [Train: 0.6473][Val: 0.0000]
+	[Val MAE: 63.8119][Val MSE: 79.0650]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 125] [Train: 0.6492][Val: 0.0000]
+	[Val MAE: 63.8165][Val MSE: 79.0677]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 126] [Train: 0.6500][Val: 0.0000]
+	[Val MAE: 63.8219][Val MSE: 79.0716]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 127] [Train: 0.6430][Val: 0.0000]
+	[Val MAE: 63.8270][Val MSE: 79.0748]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 128] [Train: 0.6484][Val: 0.0000]
+	[Val MAE: 63.8316][Val MSE: 79.0778]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 129] [Train: 0.6432][Val: 0.0000]
+	[Val MAE: 63.8369][Val MSE: 79.0818]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 130] [Train: 0.6512][Val: 0.0000]
+	[Val MAE: 63.8416][Val MSE: 79.0846]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 131] [Train: 0.6460][Val: 0.0000]
+	[Val MAE: 63.8463][Val MSE: 79.0880]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 132] [Train: 0.6430][Val: 0.0000]
+	[Val MAE: 63.8509][Val MSE: 79.0912]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 133] [Train: 0.6395][Val: 0.0000]
+	[Val MAE: 63.8552][Val MSE: 79.0940]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 134] [Train: 0.6456][Val: 0.0000]
+	[Val MAE: 63.8606][Val MSE: 79.0978]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 135] [Train: 0.6444][Val: 0.0000]
+	[Val MAE: 63.8636][Val MSE: 79.0996]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 136] [Train: 0.6423][Val: 0.0000]
+	[Val MAE: 63.8680][Val MSE: 79.1028]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 137] [Train: 0.6456][Val: 0.0000]
+	[Val MAE: 63.8726][Val MSE: 79.1063]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 138] [Train: 0.6489][Val: 0.0000]
+	[Val MAE: 63.8773][Val MSE: 79.1092]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 139] [Train: 0.6389][Val: 0.0000]
+	[Val MAE: 63.8810][Val MSE: 79.1120]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 140] [Train: 0.6418][Val: 0.0000]
+	[Val MAE: 63.8857][Val MSE: 79.1153]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 141] [Train: 0.6479][Val: 0.0000]
+	[Val MAE: 63.8893][Val MSE: 79.1176]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 142] [Train: 0.6424][Val: 0.0000]
+	[Val MAE: 63.8941][Val MSE: 79.1212]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 143] [Train: 0.6496][Val: 0.0000]
+	[Val MAE: 63.8973][Val MSE: 79.1233]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 144] [Train: 0.6421][Val: 0.0000]
+	[Val MAE: 63.9017][Val MSE: 79.1264]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 145] [Train: 0.6433][Val: 0.0000]
+	[Val MAE: 63.9050][Val MSE: 79.1289]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 146] [Train: 0.6415][Val: 0.0000]
+	[Val MAE: 63.9094][Val MSE: 79.1320]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 147] [Train: 0.6387][Val: 0.0000]
+	[Val MAE: 63.9127][Val MSE: 79.1342]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 148] [Train: 0.6586][Val: 0.0000]
+	[Val MAE: 63.9173][Val MSE: 79.1377]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 149] [Train: 0.6463][Val: 0.0000]
+	[Val MAE: 63.9205][Val MSE: 79.1399]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 150] [Train: 0.6438][Val: 0.0000]
+	[Val MAE: 63.9239][Val MSE: 79.1423]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 151] [Train: 0.6510][Val: 0.0000]
+	[Val MAE: 63.9282][Val MSE: 79.1456]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 152] [Train: 0.6394][Val: 0.0000]
+	[Val MAE: 63.9309][Val MSE: 79.1473]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 153] [Train: 0.6419][Val: 0.0000]
+	[Val MAE: 63.9349][Val MSE: 79.1505]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 154] [Train: 0.6530][Val: 0.0000]
+	[Val MAE: 63.9384][Val MSE: 79.1530]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 155] [Train: 0.6485][Val: 0.0000]
+	[Val MAE: 63.9413][Val MSE: 79.1548]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 156] [Train: 0.6512][Val: 0.0000]
+	[Val MAE: 63.9448][Val MSE: 79.1575]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 157] [Train: 0.6507][Val: 0.0000]
+	[Val MAE: 63.9476][Val MSE: 79.1596]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 158] [Train: 0.6424][Val: 0.0000]
+	[Val MAE: 63.9514][Val MSE: 79.1623]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 159] [Train: 0.6415][Val: 0.0000]
+	[Val MAE: 63.9536][Val MSE: 79.1639]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 160] [Train: 0.6437][Val: 0.0000]
+	[Val MAE: 63.9574][Val MSE: 79.1667]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 161] [Train: 0.6444][Val: 0.0000]
+	[Val MAE: 63.9601][Val MSE: 79.1685]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 162] [Train: 0.6411][Val: 0.0000]
+	[Val MAE: 63.9638][Val MSE: 79.1714]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 163] [Train: 0.6527][Val: 0.0000]
+	[Val MAE: 63.9667][Val MSE: 79.1737]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 164] [Train: 0.6456][Val: 0.0000]
+	[Val MAE: 63.9698][Val MSE: 79.1759]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 165] [Train: 0.6405][Val: 0.0000]
+	[Val MAE: 63.9722][Val MSE: 79.1776]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 166] [Train: 0.6395][Val: 0.0000]
+	[Val MAE: 63.9755][Val MSE: 79.1801]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 167] [Train: 0.6388][Val: 0.0000]
+	[Val MAE: 63.9788][Val MSE: 79.1825]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 168] [Train: 0.6420][Val: 0.0000]
+	[Val MAE: 63.9817][Val MSE: 79.1846]
+Saving as vggish_melspectrogram.pt
+Entrenando... 
+
+Validando... 
+
+[ep 169] [Train: 0.6377][Val: 0.0000]
+	[Val MAE: 63.9849][Val MSE: 79.1866]
+Saving as vggish_melspectrogram.pt
+Testing... 
+
+[ep 169][Test MAE: 70.5563][Test MSE: 84.9902]
+Test Loss (MSE): 84.99016571044922
+Test Loss (MAE): 70.55628967285156
+Proceso finalizado el lun jun  7 20:05:02 CEST 2021
+___________________________________________________
