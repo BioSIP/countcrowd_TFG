@@ -120,7 +120,6 @@ criterion = nn.MSELoss().to(device)
 # x, y = dataiter.next()  # x e y son tensores
 
 
-# PODEMOS NORMALIZAR EL MAPA DE DENSIDAD???!!!??
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
 #Y_NORM = 200
 # UPDATE: Ahora se normaliza en dataset.py con LOG_PARA

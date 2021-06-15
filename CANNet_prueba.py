@@ -1,26 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-'''
-@File    :   CSRNet_prueba_pakito.py
-@Time    :   2021/05/18 09:52:22
-@Author  :   F.J. Martinez-Murcia 
-@Version :   1.0
-@Contact :   pakitochus@gmail.com
-@License :   (C)Copyright 2021, SiPBA-BioSIP
-@Desc    :   None
-
-CORREGIDO EL LOADER. 
-
-Diferencias: 
-- Variable() está obsoleto, no se usa. 
-- to(device) se prefiere a .cuda() en versiones modernas, pero no difieren. 
-- 1o optimizer, luego scheduler. En el original va al revés, salta warning. 
-- Se define criterion.to(device). No sé por qué. 
-
-'''
-
-# here put the import lib
-
 import os
 import pickle
 
@@ -155,7 +132,6 @@ criterion = nn.MSELoss().to(device)
 # x, y = dataiter.next()  # x e y son tensores
 
 
-# PODEMOS NORMALIZAR EL MAPA DE DENSIDAD???!!!??
 # Para predecir y, la normalizaremos. Siempre por el mismo valor:
 #Y_NORM = 200
 # UPDATE: Ahora se normaliza en dataset.py con LOG_PARA

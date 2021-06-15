@@ -68,15 +68,13 @@ class AudioDataset(Dataset):
         # Cargamos el audio:
         waveform, sample_rate = torchaudio.load(
             aud_path)  # waveform es un tensor
-        # SE USARÁ EL SAMPLE_RATE PARA ALGO????????????????
 
         x = waveform.view((2, 1, -1))  # dimensiones
         if self.transform:
             x = self.transform(x)
         return x, y
 
-# class SpectrogramDataset(Dataset):
-    # PROGRAMAR LUEGO!!!
+
 
 
 audio_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/auds/'
@@ -211,11 +209,6 @@ optimizador = optim.Adam(modelo.parameters(), lr=1e-3)#, weight_decay=1e-4)
 # print(train_loader)
 # print(type(train_loader))
 
-# TENGO QUE HACER ESTO O NO?
-# convertimos train_loader en un iterador
-# dataiter = iter(train_loader)
-# # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
-# x, y = dataiter.next()
 
 # print(x)
 # print(x.size())

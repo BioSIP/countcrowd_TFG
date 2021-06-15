@@ -78,8 +78,7 @@ class AudioDataset(Dataset):
 			x = self.transform(x)
 		return x, y
 
-# class SpectrogramDataset(Dataset):
-	# PROGRAMAR LUEGO!!!
+
 '''
 
 audio_path = '/home/pakitochus/Descargas/propuestas_tfg_cristina/crowd/definitivo/DISCO_dataset/auds/'
@@ -221,12 +220,6 @@ optimizador = optim.Adam(modelo.parameters(), lr=1e-4)#, weight_decay=1e-4)
 # print(train_loader)
 # print(type(train_loader))
 
-# TENGO QUE HACER ESTO O NO?
-# convertimos train_loader en un iterador
-# dataiter = iter(train_loader)
-# # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
-# x, y = dataiter.next()
-
 # print(x)
 # print(x.size())
 # print(y)
@@ -277,7 +270,7 @@ for epoch in range(30):
 	for x, y in val_loader:
 		total += 1
 
-		y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
+		y = y/Y_NORM  # normalizamos 
 
 		x = x.to(device)
 		y = y.to(device)
@@ -343,7 +336,7 @@ for epoch in range(n_epochs):
 	for x, y in val_loader:
 		total += 1
 
-		y = y/Y_NORM  # normalizamos ¿AQUÍ TAMBIÉN?
+		y = y/Y_NORM  # normalizamos 
 
 		x = x.to(device)
 		y = y.to(device)

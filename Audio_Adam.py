@@ -61,15 +61,13 @@ class AudioDataset(Dataset):
 		aud_path = self.audio_path + filename
 		#Cargamos el audio:
 		waveform, sample_rate = torchaudio.load(aud_path)	#waveform es un tensor
-		#SE USARÁ EL SAMPLE_RATE PARA ALGO????????????????
+
 		
 		x = waveform.view((2,1,-1)) # dimensiones
 		if self.transform:
 			x = self.transform(x)
 		return x, y
-		
-#class SpectrogramDataset(Dataset):
-	#PROGRAMAR LUEGO!!!
+
 
 
 
@@ -193,7 +191,6 @@ optimizador = optim.Adam(modelo.parameters(), lr=0.01, weight_decay=1e-4)
 #ENTRENAMIENTO
 n_epochs = 500
 
-#TENGO QUE HACER ESTO O NO?
 # convertimos train_loader en un iterador
 dataiter = iter(train_loader) 
 # y recuperamos el i-esimo elemento, un par de valores (imagenes, etiquetas)
@@ -238,7 +235,7 @@ for epoch in range(n_epochs):
 	print("Validando... \n")
 	for x,y in val_loader:
 		
-		y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN?
+		y=y/Y_NORM #normalizamos 
 
 		x = x.to(device)
 		y = y.to(device)
@@ -255,7 +252,7 @@ modelo.eval() #Preparar el modelo para validación y/o test
 print("Testing... \n")
 for x,y in test_loader:
 	
-	y=y/Y_NORM #normalizamos ¿AQUÍ TAMBIÉN? ---> ¿DÓNDE DESNORMALIZO?
+	y=y/Y_NORM
 
 	x = x.to(device)
 	y = y.to(device)
