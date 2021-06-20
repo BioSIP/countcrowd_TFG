@@ -1,63 +1,21 @@
 # countcrowd_TFG
-TFG para conteo de multitudes basado en audio
+TFG para conteo de multitudes basado en audio e imagen. Código en Python.
 
-# TODO
-1. Leer el paper
-2. Clonar los repositorios de los chinos y el nuestro. 
-3. Programar nuestra maravillosa red. 
+`countcrowd_TFG` es un proyecto experimental que investiga la viabilidad de los sistemas ya existentes de conteo de personas con Machine Learning, incluyendo nuevas alternativas. Como objetivo principal, se estudia la posibilidad del desarrollo de un sistema de conteo de personas exclusivo por audio. Para hacer esto posible, se someten a prueba distintas arquitecturas de redes neuronales profundas, algunas enfocadas para el conteo de personas a través de imagen y otras para sonido. 
 
-- crear dataloader (yo) 
-## pseudocodigo
-```python
-import os
-from scipy.io import loadmat 
-#algo para cargar audio como vector. buscar torchaudio. 
-# https://pytorch.org/tutorials/beginner/audio_preprocessing_tutorial.html
+## Uso
+1. Primero hay que descargar el conjunto de datos con el que funcionarán los modelos. Se propone el uso del conjunto de datos DISCO disponible para su descarga en el siguiente enlace: https://zenodo.org/record/3828468#.YM8JKpMzZKM.
+2. Elegir la arquitectura a ejecutar (ya sea de imagen o de audio). Para el caso de una arquitectura de imagen (CSRNet, CANNet y UNet), en el archivo *datasets.py* cambiar el parámetro **PATH** por la ruta donde se encuentran las tres carpetas descargadas de 'imgs', 'density' y 'auds'. Para el caso en el que se elija una arquitectura de audio (cualquier variante de VGGish o CrisNet), se han de cambiar los parámetros **audio_path**, **train_density_path**, **val_density_path**, **test_density_path** con las correspondientes rutas donde se encuentren los archivos de audio, los mapas de densidad de entrenamiento, los mapas de densidad de validación y los mapas de densidad de prueba respectivamente.
+3. Ejecutar el script para realizar el entrenamiento,validación y test de la red escogida.
 
-class AudioDataset(Dataset):
-	def __init__(self, audio_path, density_path, transform=None, ynorm=100):
-		self.mapfiles = os.listdir(density_path)
-		# [el[:-4] for el in self.mapfiles]
-		# list comprehension
-		# [el[:-4] for el in mapfiles if el.startswith('stage')==False]
-		self.audiofiles = os.listdir(audio_path)
-		self.audiofiles = [el for el in self.audiofiles if el in self.mapfiles]
-		# faltaría algo
-	
-	def __len__(self):
-		return len(self.audiofiles)
-		
-	def __getitem__(self, idx):
-		# cargar densitymap (scipy.io.loadmat())
-		# from scipy.io import loadmat
-		mapa = loadmat(self.mapfiles[idx])
-		y = torch.Tensor(mapa['map'].sum()) #/ynorm
-		x = loadaudio(self.audiofiles[idx]) # asegurate de que carge un tensor
-		x = x.view((1,-1,2)) # dimensiones
-		if self.transform:
-			x = self.transform(x)
-		return x, y
-		
-class SpectrogramDataset(Dataset):
-	#alsdjfañlskdfj a
-
-# creas dataset -> trainset = AudioDataset(audio_path, train_density_path)
-# testset = AudioDataset(audio_path, test_density_path)
-# train_loader = DataLoader(trainset), BATCH_SIZE: pequeño (1-3)
-	
-# MaxPool2d((1,2))
-# torch.nn.Conv2d(in_channels, out_channels, kernel_size) -> kernel_size = (1, 61)
-# in_channels ->2, out_channels -> [32,64]. 
-# optim - > adam
-
-for x,y in train_loader:
-	x = x.to(device)
-	y = y.to(device)
-	
-	yhat = model(x) # forward 
-	# loss estimation -> MSE, MAE
-	# optimizer step  
-	
-	
+## Cita
 ```
-- contar lo de los spectrogramas. 
+@article{countcrowd_TFG,
+  title={{Sistema de conteo de personas con Machine Learning},
+  author={Cristina Reyes Daneri},
+  organization={Universidad de Málaga}
+  year={2021}
+}
+``` 
+
+
