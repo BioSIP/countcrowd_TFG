@@ -1,7 +1,7 @@
 # countcrowd_TFG
 TFG para conteo de multitudes basado en audio e imagen. Código en Python.
 
-`countcrowd_TFG` es un proyecto experimental que investiga la viabilidad de los sistemas ya existentes de conteo de personas con Machine Learning, incluyendo nuevas alternativas. Como objetivo principal, se estudia la posibilidad del desarrollo de un sistema de conteo de personas exclusivo por audio. Para hacer esto posible, se someten a prueba distintas arquitecturas de redes neuronales profundas, algunas enfocadas para el conteo de personas a través de imagen y otras para sonido. 
+`countcrowd_TFG` es un proyecto experimental que investiga la viabilidad de los sistemas ya existentes de conteo de personas con Deep Learning, incluyendo nuevas alternativas. Como objetivo principal, se estudia la posibilidad del desarrollo de un sistema de conteo de personas exclusivo por audio. Para hacer esto posible, se someten a prueba distintas arquitecturas de redes neuronales profundas, algunas enfocadas para el conteo de personas a través de imagen y otras para sonido. 
 
 ## Uso
 1. Primero hay que descargar el conjunto de datos con el que funcionarán los modelos. Se propone el uso del conjunto de datos **DISCO** disponible para su descarga en el siguiente enlace: https://zenodo.org/record/3828468#.YM8JKpMzZKM.
@@ -11,7 +11,7 @@ TFG para conteo de multitudes basado en audio e imagen. Código en Python.
 ## Cita
 ```
 @article{countcrowd_TFG},
-  title={Sistema de conteo de personas con Machine Learning},
+  title={Sistema para la estimación del aforo mediante Deep Learning},
   author={Cristina Reyes Daneri},
   organization={Universidad de Málaga},
   year={2021}
